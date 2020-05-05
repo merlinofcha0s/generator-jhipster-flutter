@@ -1,0 +1,41 @@
+import 'package:<%= baseName %>/routes.dart';
+import 'package:<%= baseName %>/shared/bloc/bloc_provider.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'account/login/login_bloc.dart';
+import 'account/login/login_screen.dart';
+import 'account/register/register_bloc.dart';
+import 'account/register/register_screen.dart';
+import 'generated/l10n.dart';
+
+class <%= baseName %>App extends StatelessWidget {
+  const <%= baseName %>App({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Jhipster flutter app',
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+      ),
+      routes: {
+        <%= baseName %>Routes.login: (context) {
+          return BlocProvider<LoginBloc>(bloc: LoginBloc(), child: LoginScreen());
+        },
+        <%= baseName %>Routes.register: (context) {
+          return BlocProvider<RegisterBloc>(
+              bloc: RegisterBloc(), child: RegisterScreen());
+        },
+      },
+        localizationsDelegates: [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: S.delegate.supportedLocales
+    );
+  }
+}

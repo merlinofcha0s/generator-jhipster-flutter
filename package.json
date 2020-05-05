@@ -1,0 +1,68 @@
+{
+  "name": "generator-jhipster-flutter",
+  "version": "0.0.1",
+  "description": "A Flutter blueprint for JHipster. It will use Flutter as the frontend",
+  "keywords": [
+    "yeoman-generator",
+    "jhipster-blueprint",
+    "jhipster-6"
+  ],
+  "homepage": "https://github.com/merlinofcha0s/generator-jhipster-flutter.git",
+  "author": {
+    "name": "MerlinOfChaos",
+    "url": "https://github.com/merlinofcha0s"
+  },
+  "files": [
+    "generators"
+  ],
+  "main": "generators/app/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/merlinofcha0s/generator-jhipster-flutter.git"
+  },
+  "dependencies": {
+    "chalk": "2.4.1",
+    "eslint-config-airbnb": "17.1.0",
+    "generator-jhipster": "6.8.0",
+    "jhipster-core": "7.2.1",
+    "lodash": "4.17.13",
+    "mkdirp": "0.5.1",
+    "pluralize": "7.0.0",
+    "prettier": "1.13.5",
+    "randexp": "0.4.9",
+    "shelljs": "0.8.2"
+  },
+  "devDependencies": {
+    "chai": "4.1.2",
+    "ejs-lint": "0.3.0",
+    "eslint": "5.14.0",
+    "eslint-config-airbnb-base": "13.0.0",
+    "eslint-plugin-import": "2.12.0",
+    "fs-extra": "6.0.1",
+    "inquirer": "7.0.4",
+    "jsdoc": "3.6.3",
+    "mocha": "5.2.0",
+    "sinon": "6.0.0",
+    "yeoman-assert": "3.1.1",
+    "yeoman-test": "2.2.0"
+  },
+  "resolutions": {
+    "inquirer": "7.0.4"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "lint-fix": "npm run lint -- --fix",
+    "pretest": "npm run lint",
+    "test": "npm run test:unit -- test/*.spec.js",
+    "test:unit": "mocha --timeout 30000 --slow 0 --reporter spec",
+    "jsdoc": "jsdoc --configure jsdoc-conf.json",
+    "release": "git push && git push --tags && npm publish",
+    "release:patch": "npm version patch -a -m \"Update to %s\" && npm run release",
+    "release:minor": "npm version minor -a -m \"Update to %s\" && npm run release",
+    "release:major": "npm version major -a -m \"Update to %s\" && npm run release"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/merlinofcha0s/generator-jhipster-flutter.git/issues"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "generator-jhipster-blueprint": {
+    "promptValues": {
+      "githubName": "merlinofcha0s",
+      "authorName": "Cyril Casaucau",
+      "authorUrl": "https://twitter.com/ccasaucau"
+    }
+  }
+}

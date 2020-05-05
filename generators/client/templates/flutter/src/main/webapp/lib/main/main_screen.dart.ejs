@@ -1,0 +1,19 @@
+import 'package:<%= baseName %>/generated/l10n.dart';
+import 'package:<%= baseName %>/keys.dart';
+import 'package:<%= baseName %>/main/main_bloc.dart';
+import 'package:<%= baseName %>/shared/bloc/bloc_provider.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+
+class MainScreen extends StatelessWidget {
+  MainScreen({Key key}) : super(key: QuizzKeys.mainScreen);
+
+  @override
+  Widget build(BuildContext context) {
+    final mainBloc = BlocProvider.of<MainBloc>(context);
+    return Scaffold(
+        backgroundColor: Colors.grey,
+        body: Text('loooooool', style: TextStyle(fontSize: 20)),);
+  }
+}
