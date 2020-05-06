@@ -19,9 +19,8 @@
 const mkdirp = require('mkdirp');
 const constants = require('generator-jhipster/generators/generator-constants');
 
-const MAIN_SRC_DIR = constants.CLIENT_MAIN_SRC_DIR;
+const MAIN_SRC_DIR = 'lib/';
 const TEST_SRC_DIR = constants.CLIENT_TEST_SRC_DIR;
-const FLUTTER_DIR = constants.CLIENT_MAIN_SRC_DIR + 'lib/';
 const CLIENT_FLUTTER_TEMPLATES_DIR = 'flutter';
 
 module.exports = {
@@ -29,28 +28,21 @@ module.exports = {
 };
 
 const flutterFiles = {
-    root:[
-        {
-            templates: [
-                'package.json',
-            ]
-        }
-    ],
     common: [
         {
-            path: MAIN_SRC_DIR,
             templates: [
                 '.gitignore',
                 '.metadata',
                 'build.yaml',
                 'pubspec.yaml',
-                'README.md'
+                'README.md',
+                'package.json'
             ]
         }
     ],
     flutterApp: [
         {
-            path: FLUTTER_DIR,
+            path: MAIN_SRC_DIR,
             templates: [
                 'app.dart',
                 'environement.dart',
@@ -64,7 +56,7 @@ const flutterFiles = {
     ],
     shared: [
         {
-            path: FLUTTER_DIR,
+            path: MAIN_SRC_DIR,
             templates: [
                 'shared/bloc/bloc_provider.dart',
                 'shared/bloc/bloc.dart',
@@ -79,7 +71,7 @@ const flutterFiles = {
     ],
     main: [
         {
-            path: FLUTTER_DIR,
+            path: MAIN_SRC_DIR,
             templates: [
                 'main/main_bloc.dart',
                 'main/main_screen.dart',
@@ -88,7 +80,7 @@ const flutterFiles = {
     ],
     account: [
         {
-            path: FLUTTER_DIR,
+            path: MAIN_SRC_DIR,
             templates: [
                 'account/login/login_bloc.dart',
                 'account/login/login_repository.dart',
@@ -101,7 +93,7 @@ const flutterFiles = {
     ],
     i18n: [
         {
-            path: FLUTTER_DIR,
+            path: MAIN_SRC_DIR,
             templates: [
                 'l10n/intl_en.arb',
                 'l10n/intl_fr.arb'
@@ -110,7 +102,6 @@ const flutterFiles = {
     ],
     image: [
         {
-            path: MAIN_SRC_DIR,
             templates: [
                 { file: 'assets/images/jhipster_family_member_0.svg', method: 'copy' },
                 { file: 'assets/images/jhipster_family_member_1.svg', method: 'copy' },

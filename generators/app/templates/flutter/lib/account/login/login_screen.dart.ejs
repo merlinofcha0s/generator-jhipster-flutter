@@ -93,7 +93,7 @@ class LoginScreen extends StatelessWidget {
               style: TextStyle(fontSize: 15),
             ),
           )),
-      onPressed: () => Navigator.pushNamed(context, QuizzRoutes.register),
+      onPressed: () => Navigator.pushNamed(context, <%= baseName %>Routes.register),
     );
   }
 
@@ -146,7 +146,7 @@ class LoginScreen extends StatelessWidget {
   onAuthenticate(LoginBloc loginBloc, BuildContext context) async {
     bool authenticateSuccess = await loginBloc.authenticate();
     if (authenticateSuccess) {
-      Navigator.pushNamed(context, QuizzRoutes.main);
+      Navigator.pushNamed(context, <%= baseName %>Routes.main);
     }
   }
 
