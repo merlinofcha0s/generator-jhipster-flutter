@@ -100,7 +100,7 @@ module.exports = class extends ClientGenerator {
     get install() {
         return {
             installAndroidAndIOSDependencies() {
-                this.log(chalk.green('Adding android and IOS dependencies...'));
+                this.log(chalk.green('Adding Android and iOS dependencies...'));
                 this.spawnCommandSync('flutter', ['create', '--org', `${this.packageName}`, '--project-name', `${this.snakedBaseName}`, '.']);            
             },
             generateReflection() {
@@ -115,7 +115,14 @@ module.exports = class extends ClientGenerator {
     }
 
     get end() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
-        return super._end();
+        return {
+            end() {
+                this.log(chalk.green.bold('\Flutter application generated successfully.\n'));
+                const logMsg = `Start your favorite IDE for flutter (Visual Studio code, IntelliJ or Android Studio) or \n do ${chalk.yellow.bold(`flutter run`)}\n`;
+                this.log(chalk.green(logMsg));
+                const logMsgI18n = `Don't forget to install flutter-intl for the i18n (https://plugins.jetbrains.com/plugin/13666-flutter-intl) \n`;
+                this.log(chalk.blue(logMsgI18n));
+            },
+        };
     }
 };
