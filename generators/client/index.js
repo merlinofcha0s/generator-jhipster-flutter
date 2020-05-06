@@ -74,6 +74,10 @@ module.exports = class extends ClientGenerator {
             generateReflection() {
                 this.log(chalk.green('Generate reflection for the first time...'));
                 this.spawnCommandSync('flutter', ['pub', 'run', 'build_runner', 'build'], {cwd: MAIN_SRC_DIR});
+            },
+            generateTranslation() {
+                this.log(chalk.green('Generate I18n files...'));
+                this.spawnCommandSync('flutter', ['pub', 'global', 'run', 'intl_utils:generate'], {cwd: MAIN_SRC_DIR});
             }
         };
     }

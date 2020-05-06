@@ -99,6 +99,15 @@ const flutterFiles = {
             ]
         }
     ],
+    i18n: [
+        {
+            path: FLUTTER_DIR,
+            templates: [
+                'l10n/intl_en.arb',
+                'l10n/intl_fr.arb'
+            ]
+        }
+    ],
     image: [
         {
             path: MAIN_SRC_DIR,
