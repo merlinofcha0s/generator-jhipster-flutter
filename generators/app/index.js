@@ -34,7 +34,14 @@ module.exports = class extends ClientGenerator {
     get initializing() {
         const phaseFromJHipster = super._initializing();
         const flutterInitPhase = {
-            displayLogo() {
+            checkTools() {
+                this.log(chalk.blue.bold('Checking the presence of the Flutter SDK...'));
+                var flutterOK = this.spawnCommandSync('flutter', ['doctor']);
+                if(flutterOK.status === 1) {
+                    throw new Error(chalk.red.bold('Flutter CLI Not found, please install it before running this generator (https://flutter.dev/docs/get-started/install)'));
+                }
+             },
+             displayLogo() {
                 this.log(`${chalk.bold.cyan('       _ _    _ _____ _____   _____ _______ ______ _____    ______ _     _    _ _______ _______ ______ _____   ')}`);
                 this.log(`${chalk.bold.cyan('      | | |  | |_   _|  __ \ / ____|__   __|  ____|  __ \  |  ____| |   | |  | |__   __|__   __|  ____|  __ \  ')}`);
                 this.log(`${chalk.bold.cyan('      | | |__| | | | | |__) | (___    | |  | |__  | |__) | | |__  | |   | |  | |  | |     | |  | |__  | |__) | ')}`);
