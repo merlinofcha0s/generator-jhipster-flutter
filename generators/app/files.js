@@ -32,7 +32,6 @@ const flutterFiles = {
         {
             templates: [
                 '.gitignore',
-                '.metadata',
                 'build.yaml',
                 'pubspec.yaml',
                 'README.md',

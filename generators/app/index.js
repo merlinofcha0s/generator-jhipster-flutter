@@ -85,6 +85,7 @@ module.exports = class extends ClientGenerator {
                 this.camelizedBaseName = _.camelCase(this.configOptions.baseName);
                 this.dasherizedBaseName = _.kebabCase(this.configOptions.baseName);
                 this.lowercaseBaseName = this.baseName.toLowerCase();
+                this.hipster = this.getHipster(this.baseName);
                 this.humanizedBaseName = _.startCase(this.configOptions.baseName);
             }
         };

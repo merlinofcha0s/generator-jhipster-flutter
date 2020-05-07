@@ -20,19 +20,21 @@ class RegisterScreen extends StatelessWidget {
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(15.0),
           child: Column(children: <Widget>[
-            header(),
+            header(context),
             successZone(registerBloc),
             registerForm(registerBloc)
           ]),
         ));
   }
 
-  Widget header() {
+  Widget header(BuildContext context) {
     return Column(
       children: <Widget>[
-        Placeholder(
-          color: Colors.blue,
-          fallbackHeight: 150,
+        Image(
+          image:
+              AssetImage('assets/images/<%= hipster %>_head-512.png'),
+          fit: BoxFit.fill,
+          width: MediaQuery.of(context).size.width * 0.35,
         ),
         Padding(padding: EdgeInsets.symmetric(vertical: 20))
       ],
@@ -213,43 +215,44 @@ class RegisterScreen extends StatelessWidget {
   }
 
   Widget successZone(RegisterBloc registerBloc) {
-//    check_circle
     return StreamBuilder<bool>(
         stream: registerBloc.successRegisterStream,
         builder: (context, snapshot) {
           return Visibility(
             visible: snapshot.hasData && snapshot.data,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                  Icons.check_circle,
-                  color: Colors.indigoAccent,
-                  size: 125.0,
-                  semanticLabel: S.of(context).pageRegisterSuccessAltImg,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10),
-                ),
-                Text(S.of(context).pageRegisterSuccess.toUpperCase(),
-                    style: TextStyle(fontSize: 30, color: Colors.indigoAccent)),
-                Padding(
-                  padding: EdgeInsets.only(top: 10),
-                ),
-                Text(S.of(context).pageRegisterSuccessSub),
-                Padding(
-                  padding: EdgeInsets.only(top: 30),
-                ),
-                RaisedButton(
-                  color: Colors.blue,
-                  child: Container(
-                      width: MediaQuery.of(context).size.width * 0.3,
-                      child: Center(
-                          child: Text(S.of(context).pageRegisterFormLogin))),
-                  onPressed: () =>
-                      Navigator.pushNamed(context, <%= baseName %>Routes.login),
-                )
-              ],
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.check_circle,
+                    color: Colors.indigoAccent,
+                    size: 125.0,
+                    semanticLabel: S.of(context).pageRegisterSuccessAltImg,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                  ),
+                  Text(S.of(context).pageRegisterSuccess.toUpperCase(),
+                      style: TextStyle(fontSize: 30, color: Colors.indigoAccent)),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                  ),
+                  Text(S.of(context).pageRegisterSuccessSub),
+                  Padding(
+                    padding: EdgeInsets.only(top: 30),
+                  ),
+                  RaisedButton(
+                    color: Colors.blue,
+                    child: Container(
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        child: Center(
+                            child: Text(S.of(context).pageRegisterFormLogin))),
+                    onPressed: () =>
+                        Navigator.pushNamed(context, <%= baseName %>Routes.login),
+                  )
+                ],
+              ),
             ),
           );
         });

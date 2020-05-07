@@ -20,7 +20,7 @@ class LoginScreen extends StatelessWidget {
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(15.0),
           child: Column(children: <Widget>[
-            header(),
+            header(context),
             loginForm(loginBloc),
             Padding(
               padding: EdgeInsets.only(bottom: 50),
@@ -30,13 +30,12 @@ class LoginScreen extends StatelessWidget {
         ));
   }
 
-  Widget header() {
+  Widget header(BuildContext context) {
     return Column(
       children: <Widget>[
-        Placeholder(
-          color: Colors.blue,
-          fallbackHeight: 150,
-        ),
+        Image(image: AssetImage('assets/images/<%= hipster %>_head-512.png'),
+          fit: BoxFit.fill,
+          width: MediaQuery.of(context).size.width * 0.4,),
         Padding(padding: EdgeInsets.symmetric(vertical: 20))
       ],
     );

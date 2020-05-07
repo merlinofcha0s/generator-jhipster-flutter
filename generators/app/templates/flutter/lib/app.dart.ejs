@@ -1,5 +1,7 @@
 import 'package:<%= baseName %>/routes.dart';
 import 'package:<%= baseName %>/shared/bloc/bloc_provider.dart';
+import 'package:<%= baseName %>/main/main_bloc.dart';
+import 'package:<%= baseName %>/main/main_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -18,7 +20,7 @@ class <%= baseName %>App extends StatelessWidget {
     return MaterialApp(
       title: 'Jhipster flutter app',
       theme: ThemeData(
-        primarySwatch: Colors.indigo,
+        primarySwatch: Colors.teal,
       ),
       routes: {
         <%= baseName %>Routes.login: (context) {
@@ -27,6 +29,10 @@ class <%= baseName %>App extends StatelessWidget {
         <%= baseName %>Routes.register: (context) {
           return BlocProvider<RegisterBloc>(
               bloc: RegisterBloc(), child: RegisterScreen());
+        },
+        <%= baseName %>Routes.main: (context) {
+          return BlocProvider<MainBloc>(
+              bloc: MainBloc(), child: MainScreen());
         },
       },
         localizationsDelegates: [
@@ -38,4 +44,6 @@ class <%= baseName %>App extends StatelessWidget {
         supportedLocales: S.delegate.supportedLocales
     );
   }
+
+  
 }
