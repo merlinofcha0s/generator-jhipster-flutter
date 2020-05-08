@@ -2,6 +2,7 @@ import 'package:<%= baseName %>/shared/models/jwt_token.dart';
 import 'package:<%= baseName %>/shared/models/user_jwt.dart';
 import 'package:<%= baseName %>/shared/repository/http_utils.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LoginRepository {
   LoginRepository();
@@ -9,5 +10,10 @@ class LoginRepository {
   Future<JWTToken> authenticate(UserJWT userJWT) async {
     final authenticateRequest = await HttpUtils.postRequest<UserJWT>("/authenticate", userJWT);
     return JsonMapper.deserialize<JWTToken>(authenticateRequest.body);
+  }
+
+  Future<void> logout() async {
+    FlutterSecureStorage storage = new FlutterSecureStorage();
+    await storage.delete(key: HttpUtils.keyForJWTToken);
   }
 }

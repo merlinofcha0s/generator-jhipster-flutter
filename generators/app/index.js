@@ -2,12 +2,11 @@
 const chalk = require('chalk');
 const _ = require('lodash');
 const ClientGenerator = require('generator-jhipster/generators/client');
-const mainPrompts = require('generator-jhipster/generators/client/prompts');
 const prompts = require('./prompts');
 const writeFiles = require('./files').writeFiles;
 const blueprintPackagejs = require('../../package.json');
-
 const constants = require('generator-jhipster/generators/generator-constants');
+const flutterConstants = require('../flutter-generator-constants');
 
 const MAIN_SRC_DIR = constants.CLIENT_MAIN_SRC_DIR;
 
@@ -87,6 +86,8 @@ module.exports = class extends ClientGenerator {
                 this.lowercaseBaseName = this.baseName.toLowerCase();
                 this.hipster = this.getHipster(this.baseName);
                 this.humanizedBaseName = _.startCase(this.configOptions.baseName);
+                this.minSdkVersion = flutterConstants.MIN_SDK_VERSION;
+                this.targetSdkVersion = flutterConstants.TARGET_SDK_VERSION;
             }
         };
     }

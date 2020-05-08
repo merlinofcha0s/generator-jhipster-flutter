@@ -20,6 +20,7 @@ const mkdirp = require('mkdirp');
 const constants = require('generator-jhipster/generators/generator-constants');
 
 const MAIN_SRC_DIR = 'lib/';
+const ANDROID_SRC_DIR = 'android/';
 const TEST_SRC_DIR = constants.CLIENT_TEST_SRC_DIR;
 const CLIENT_FLUTTER_TEMPLATES_DIR = 'flutter';
 
@@ -59,7 +60,10 @@ const flutterFiles = {
             templates: [
                 'shared/bloc/bloc_provider.dart',
                 'shared/bloc/bloc.dart',
-                'shared/containers/loading_indicator_widget.dart',
+                'shared/widgets/loading_indicator_widget.dart',
+                'shared/widgets/drawer/drawer_widget.dart',
+                'shared/widgets/drawer/drawer_bloc.dart',
+                'shared/widgets/loading_indicator_widget.dart',
                 'shared/mixins/validators_mixin.dart',
                 'shared/models/jwt_token.dart',
                 'shared/models/user_jwt.dart',
@@ -96,6 +100,14 @@ const flutterFiles = {
             templates: [
                 'l10n/intl_en.arb',
                 'l10n/intl_fr.arb'
+            ]
+        }
+    ],
+    android: [
+        {
+            path: ANDROID_SRC_DIR,
+            templates: [
+                'app/build.gradle',
             ]
         }
     ],

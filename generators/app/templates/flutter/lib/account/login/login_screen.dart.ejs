@@ -15,6 +15,7 @@ class LoginScreen extends StatelessWidget {
     final loginBloc = BlocProvider.of<LoginBloc>(context);
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Text(S.of(context).pageLoginTitle),
         ),
         body: SingleChildScrollView(
