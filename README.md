@@ -7,6 +7,8 @@ This is a [JHipster](https://www.jhipster.tech/) blueprint.
 As this is a [JHipster](https://www.jhipster.tech/) blueprint, we expect you have JHipster and its related tools already installed:
 
 - [Installing JHipster](https://www.jhipster.tech/installation/)
+- [Installing Flutter SDK](https://flutter.dev/docs/get-started/install)
+- Generating server side
 
 # Installation
 

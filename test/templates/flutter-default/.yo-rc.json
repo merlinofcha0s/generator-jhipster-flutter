@@ -1,0 +1,10 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.sample",
+      "nativeLanguage": "en"
+    },
+    "jhipsterVersion": "6.8.0",
+    "applicationType": "monolith"
+  }
+}
