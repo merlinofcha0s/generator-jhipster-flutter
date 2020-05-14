@@ -8,8 +8,6 @@ const blueprintPackagejs = require('../../package.json');
 const constants = require('generator-jhipster/generators/generator-constants');
 const flutterConstants = require('../flutter-generator-constants');
 
-const MAIN_SRC_DIR = constants.CLIENT_MAIN_SRC_DIR;
-
 module.exports = class extends ClientGenerator {
     constructor(args, opts) {
         super(args, Object.assign({ fromBlueprint: true }, opts)); // fromBlueprint variable is important

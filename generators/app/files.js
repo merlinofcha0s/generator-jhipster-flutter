@@ -140,6 +140,5 @@ const flutterFiles = {
 
 function writeFiles() {
     mkdirp(MAIN_SRC_DIR);
-    // write Flutter files
     this.writeFilesToDisk(flutterFiles, this, false, `${CLIENT_FLUTTER_TEMPLATES_DIR}`);
 }
