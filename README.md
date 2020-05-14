@@ -1,6 +1,6 @@
 # Introduction
 
-This is a [JHipster](https://www.jhipster.tech/) blueprint.
+This is a [JHipster](https://www.jhipster.tech/) flutter blueprint.
 
 # Prerequisites
 
@@ -8,10 +8,23 @@ As this is a [JHipster](https://www.jhipster.tech/) blueprint, we expect you hav
 
 - [Installing JHipster](https://www.jhipster.tech/installation/)
 - [Installing Flutter SDK](https://flutter.dev/docs/get-started/install)
-- Generating server side
+- Generating server side with 
+
+```bash
+jhipster
+```
+
+# What's inside
+
+- Main Screen
+- Register
+- Login
+- I18n with EN and FR by default (WIP : need to add options for generate only desired languages)
+- BLoC Architecture
+- Android / iOS files by default (WIP : need to add options for generate only desired OS)
+- Kotlin / Swift by default
 
 # Installation
-
 
 ## With NPM
 
@@ -48,6 +61,15 @@ To use this blueprint, run
 ```bash
 jhipster --blueprints flutter
 ```
+
+# Architecture
+
+For now the app is using BLoC pattern [More informations](https://medium.com/flutterpub/architecting-your-flutter-project-bd04e144a8f1)
+
+## Main Libraries
+
+- [dart_json_mapper](https://pub.dev/packages/dart_json_mapper)
+- [flutter_intl](https://plugins.jetbrains.com/plugin/13666-flutter-intl)
 
 ## Running local Blueprint version for development
 
@@ -86,6 +108,10 @@ npm link generator-jhipster-flutter
 jhipster -d --blueprints flutter
 ```
 
+# Help and contribution to the project
+
+Feel free to help, the project is open to PR
+
 # License
 
-Apache-2.0 ©
+Apache-2.0 © Cyril Casaucau
