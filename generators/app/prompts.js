@@ -45,6 +45,7 @@ function askForFlutterApps(meta) {
             type: 'list',
             name: 'android',
             message: 'Which Android native code do you want to use?',
+            store: true,
             choices: [
                 {
                     value: 'kotlin',
@@ -57,6 +58,7 @@ function askForFlutterApps(meta) {
             type: 'list',
             name: 'ios',
             message: 'Which iOS native code do you want to use?',
+            store: true,
             choices: [
                 {
                     value: 'swift',
@@ -69,6 +71,7 @@ function askForFlutterApps(meta) {
             type: 'list',
             name: 'stateManageType',
             message: 'Which State-Management style do you want to use?',
+            store: true,
             choices: [
                 {
                     value: 'bloc',

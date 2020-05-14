@@ -74,7 +74,6 @@ module.exports = class extends ClientGenerator {
                 this.configOptions.stateManageType = this.props.stateManageType;
 
                 const fromPath = `${this.props.directoryPath}/.yo-rc.json`;
-                this.log(fromPath);
                 this.jhipsterAppConfig = this.fs.readJSON(fromPath)['generator-jhipster'];
             },
             configureGlobal() {

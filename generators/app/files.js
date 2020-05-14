@@ -17,11 +17,10 @@
  * limitations under the License.
  */
 const mkdirp = require('mkdirp');
-const constants = require('generator-jhipster/generators/generator-constants');
+const flutterConstants = require('../flutter-generator-constants');
 
-const MAIN_SRC_DIR = 'lib/';
-const ANDROID_SRC_DIR = 'android/';
-const TEST_SRC_DIR = constants.CLIENT_TEST_SRC_DIR;
+const MAIN_SRC_DIR = flutterConstants.MAIN_SRC_DIR;
+const ANDROID_SRC_DIR = flutterConstants.ANDROID_SRC_DIR;
 const CLIENT_FLUTTER_TEMPLATES_DIR = 'flutter';
 
 module.exports = {
@@ -35,8 +34,7 @@ const flutterFiles = {
                 '.gitignore',
                 'build.yaml',
                 'pubspec.yaml',
-                'README.md',
-                'package.json'
+                'README.md'
             ]
         }
     ],

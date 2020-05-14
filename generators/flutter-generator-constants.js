@@ -20,6 +20,8 @@ const semver = require('semver');
 
 const MIN_SDK_VERSION = '18';
 const TARGET_SDK_VERSION = '28';
+const MAIN_SRC_DIR = 'lib/';
+const ANDROID_SRC_DIR = 'android/';
 
 const LANGUAGES = [
     {
@@ -155,6 +157,8 @@ const constants = {
     MIN_SDK_VERSION,
     TARGET_SDK_VERSION,
     LANGUAGES,
+    MAIN_SRC_DIR,
+    ANDROID_SRC_DIR
 };
 
 module.exports = constants;
