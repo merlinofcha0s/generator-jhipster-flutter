@@ -19,9 +19,9 @@ jhipster
 - Main Screen
 - Register
 - Login
-- I18n with EN and FR by default (WIP : need to add options for generate only desired languages)
+- I18n with EN and FR by default (WIP : need to add options to generate only desired languages)
 - BLoC Architecture
-- Android / iOS files by default (WIP : need to add options for generate only desired OS)
+- Android / iOS files by default (WIP : need to add options to generate only desired OS)
 - Kotlin / Swift by default
 
 # Installation
