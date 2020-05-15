@@ -1,6 +1,6 @@
 {
   "name": "generator-jhipster-flutter",
-  "version": "0.0.1",
+  "version": "0.8.0",
   "description": "A Flutter blueprint for JHipster. It will use Flutter as the frontend",
   "keywords": [
     "yeoman-generator",
@@ -9,7 +9,7 @@
   ],
   "homepage": "https://github.com/merlinofcha0s/generator-jhipster-flutter.git",
   "author": {
-    "name": "MerlinOfChaos",
+    "name": "merlinofchaos",
     "url": "https://github.com/merlinofcha0s"
   },
   "files": [
