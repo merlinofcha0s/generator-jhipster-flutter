@@ -1,4 +1,5 @@
 const shelljs = require('shelljs');
+const chalk = require('chalk');
 
 module.exports = {
     askForFlutterApps
@@ -77,13 +78,10 @@ function askForFlutterApps(meta) {
                     value: 'bloc',
                     name: 'BLoC'
                 }
-                
             ],
             default: 'bloc'
         },
     ];
-
-    if (meta) return PROMPT; // eslint-disable-line consistent-return
 
     const done = this.async();
     this.prompt(prompts).then((props) => {

@@ -5,7 +5,6 @@ const ClientGenerator = require('generator-jhipster/generators/client');
 const prompts = require('./prompts');
 const writeFiles = require('./files').writeFiles;
 const blueprintPackagejs = require('../../package.json');
-const constants = require('generator-jhipster/generators/generator-constants');
 const flutterConstants = require('../flutter-generator-constants');
 
 module.exports = class extends ClientGenerator {
@@ -33,12 +32,13 @@ module.exports = class extends ClientGenerator {
         const flutterInitPhase = {
             checkTools() {
                 this.log(chalk.blue.bold('Checking the presence of the Flutter SDK...'));
-                var flutterOK = this.spawnCommandSync('flutter', ['doctor']);
-                if(flutterOK.status === 1) {
+                const flutterOK = this.spawnCommandSync('flutter', ['doctor']);
+                if (flutterOK.status === 1) {
                     throw new Error(chalk.red.bold('Flutter CLI Not found, please install it before running this generator (https://flutter.dev/docs/get-started/install)'));
                 }
-             },
-             displayLogo() {
+            },
+            displayLogo() {
+                /* eslint-disable no-useless-escape */
                 this.log(`${chalk.bold.cyan('       _ _    _ _____ _____   _____ _______ ______ _____    ______ _     _    _ _______ _______ ______ _____   ')}`);
                 this.log(`${chalk.bold.cyan('      | | |  | |_   _|  __ \ / ____|__   __|  ____|  __ \  |  ____| |   | |  | |__   __|__   __|  ____|  __ \  ')}`);
                 this.log(`${chalk.bold.cyan('      | | |__| | | | | |__) | (___    | |  | |__  | |__) | | |__  | |   | |  | |  | |     | |  | |__  | |__) | ')}`);
@@ -48,8 +48,9 @@ module.exports = class extends ClientGenerator {
                 this.log(`${chalk.bold.cyan('                                                                                                               ')}`);
 
                 this.log(`\nWelcome to the ${chalk.bold.yellow('JHipster-Flutter')} generator!`);
+                /* eslint-enable no-useless-escape */
             }
-        }
+        };
 
         return Object.assign(phaseFromJHipster, flutterInitPhase);
     }
@@ -67,7 +68,7 @@ module.exports = class extends ClientGenerator {
                 this.configOptions.packageName = this.props.packageName;
                 this.configOptions.directoryPath = this.props.directoryPath;
                 this.configOptions.packageFolder = this.props.baseName;
-                this.configOptions.android = this.props.android
+                this.configOptions.android = this.props.android;
                 this.configOptions.ios = this.props.ios;
                 this.configOptions.stateManageType = this.props.stateManageType;
 
@@ -107,7 +108,7 @@ module.exports = class extends ClientGenerator {
         return {
             installAndroidAndIOSDependencies() {
                 this.log(chalk.green('Adding Android and iOS dependencies...'));
-                this.spawnCommandSync('flutter', ['create', '--org', `${this.packageName}`, '--project-name', `${this.snakedBaseName}`, '.']);            
+                this.spawnCommandSync('flutter', ['create', '--org', `${this.packageName}`, '--project-name', `${this.snakedBaseName}`, '.']);
             },
             generateReflection() {
                 this.log(chalk.green('Generate reflection for the first time...'));
@@ -125,10 +126,10 @@ module.exports = class extends ClientGenerator {
     get end() {
         return {
             end() {
-                this.log(chalk.green.bold('\Flutter application generated successfully.\n'));
-                const logMsg = `Start your favorite IDE for flutter (Visual Studio code, IntelliJ or Android Studio) or \n do ${chalk.yellow.bold(`flutter run`)}\n`;
+                this.log(chalk.green.bold('Flutter application generated successfully.\n'));
+                const logMsg = `Start your favorite IDE for flutter (Visual Studio code, IntelliJ or Android Studio) or \n do ${chalk.yellow.bold('flutter run')}\n`;
                 this.log(chalk.green(logMsg));
-                const logMsgI18n = `Don't forget to install flutter-intl for the i18n (https://plugins.jetbrains.com/plugin/13666-flutter-intl) \n`;
+                const logMsgI18n = 'Don\'t forget to install flutter-intl for the i18n (https://plugins.jetbrains.com/plugin/13666-flutter-intl) \n';
                 this.log(chalk.blue(logMsgI18n));
             },
         };

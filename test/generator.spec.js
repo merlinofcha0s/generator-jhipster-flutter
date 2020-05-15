@@ -1,8 +1,6 @@
 const path = require('path');
 const assert = require('yeoman-assert');
 const helpers = require('yeoman-test');
-const constants = require('generator-jhipster/generators/generator-constants');
-const blueprintPackagejs = require('../package.json');
 const flutterConstants = require('../generators/flutter-generator-constants');
 
 const MAIN_SRC_DIR = flutterConstants.MAIN_SRC_DIR;
@@ -73,8 +71,8 @@ describe('Flutter JHipster blueprint', () => {
         });
 
         it('contains the specific change added by the blueprint', () => {
-            assert.fileContent('pubspec.yaml', "name: sampleDefaultFlutter");
-            assert.fileContent('pubspec.yaml', "description: sampleDefaultFlutter flutter project.");
+            assert.fileContent('pubspec.yaml', 'name: sampleDefaultFlutter');
+            assert.fileContent('pubspec.yaml', 'description: sampleDefaultFlutter flutter project.');
         });
     });
 });
