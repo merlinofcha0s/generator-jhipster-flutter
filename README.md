@@ -9,8 +9,8 @@ This is a [JHipster](https://www.jhipster.tech/) flutter blueprint.
 
 As this is a [JHipster](https://www.jhipster.tech/) blueprint, we expect you have JHipster and its related tools already installed:
 
-- [Installing JHipster (6.x.x min)](https://www.jhipster.tech/installation/)
-- [Installing Flutter SDK (1.17 min)](https://flutter.dev/docs/get-started/install)
+- [Installing JHipster (6.x.x)](https://www.jhipster.tech/installation/)
+- [Installing Flutter SDK (1.17)](https://flutter.dev/docs/get-started/install)
 - Generating server side with 
 
 ```bash
@@ -62,7 +62,7 @@ yarn global upgrade generator-jhipster-flutter-merlin
 To use this blueprint, run 
 
 ```bash
-jhipster --blueprints flutter
+jhipster --blueprints flutter-merlin
 ```
 
 # Architecture
@@ -107,8 +107,8 @@ Then, about **jhipster-flutter** :
 ```bash
 mkdir my-app
 cd my-app
-npm link generator-jhipster-flutter
-jhipster -d --blueprints flutter
+npm link generator-jhipster-flutter-merlin
+jhipster -d --blueprints flutter-merlin
 ```
 
 # Help and contribution to the project
