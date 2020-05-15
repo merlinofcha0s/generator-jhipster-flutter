@@ -1,6 +1,6 @@
 {
   "name": "generator-jhipster-flutter",
-  "version": "0.8.0",
+  "version": "1.0.0",
   "description": "A Flutter blueprint for JHipster. It will use Flutter as the frontend",
   "keywords": [
     "yeoman-generator",
