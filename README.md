@@ -92,8 +92,8 @@ You'll probably need the current master of **generator-jhipster** :
 
 Then, about **jhipster-flutter** :
 
-- fork jhipster-vuejs: `https://github.com/jhipster/jhipster-flutter/fork`
-- clone locally your fork: `git clone https://github.com/<your_username>/jhipster-vuejs`
+- fork jhipster-flutter: `https://github.com/jhipster/jhipster-flutter/fork`
+- clone locally your fork: `git clone https://github.com/<your_username>/jhipster-flutter`
 - `cd jhipster-flutter`
 - `git remote add upstream https://github.com/jhipster/jhipster-flutter`
 - so you'll be able to update regularly your fork, using `git fetch upstream && git checkout master && git rebase upstream/master`
