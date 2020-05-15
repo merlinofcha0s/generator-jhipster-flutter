@@ -33,13 +33,13 @@ jhipster
 To install this blueprint:
 
 ```bash
-npm install -g generator-jhipster-flutter
+npm install -g generator-jhipster-flutter-merlin
 ```
 
 To update this blueprint:
 
 ```bash
-npm update -g generator-jhipster-flutter
+npm update -g generator-jhipster-flutter-merlin
 ```
 
 ## With Yarn
@@ -47,13 +47,13 @@ npm update -g generator-jhipster-flutter
 To install this blueprint:
 
 ```bash
-yarn global add generator-jhipster-flutter
+yarn global add generator-jhipster-flutter-merlin
 ```
 
 To update this blueprint:
 
 ```bash
-yarn global upgrade generator-jhipster-flutter
+yarn global upgrade generator-jhipster-flutter-merlin
 ```
 
 # Usage
