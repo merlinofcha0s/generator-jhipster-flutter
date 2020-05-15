@@ -1,7 +1,7 @@
 # Introduction
 
 ![Generator](https://github.com/merlinofcha0s/generator-jhipster-flutter/workflows/Generator/badge.svg?branch=master&event=push)
-[![npm version](https://img.shields.io/npm/v/generator-jhipster-flutter-merlin)
+![npm version](https://img.shields.io/npm/v/generator-jhipster-flutter-merlin)
 
 This is a [JHipster](https://www.jhipster.tech/) flutter blueprint.
 
