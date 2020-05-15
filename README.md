@@ -1,3 +1,5 @@
+![Generator-master](https://github.com/merlinofcha0s/generator-jhipster-flutter/workflows/Generator/badge.svg?branch=master)
+
 # Introduction
 
 This is a [JHipster](https://www.jhipster.tech/) flutter blueprint.
