@@ -5,6 +5,7 @@ const flutterConstants = require('../generators/flutter-generator-constants');
 
 const MAIN_SRC_DIR = flutterConstants.MAIN_SRC_DIR;
 const ANDROID_SRC_DIR = flutterConstants.ANDROID_SRC_DIR;
+const MAIN_DIR = flutterConstants.MAIN_DIR;
 
 const expectedFiles = {
     i18n: [
@@ -13,10 +14,10 @@ const expectedFiles = {
     ],
 
     common: [
-        'pubspec.yaml',
-        '.gitignore',
-        'build.yaml',
-        'README.md'
+        `${MAIN_DIR}pubspec.yaml`,
+        `${MAIN_DIR}.gitignore`,
+        `${MAIN_DIR}build.yaml`,
+        `${MAIN_DIR}README.md`
     ],
 
     app: [
@@ -34,8 +35,8 @@ const expectedFiles = {
     ]
 };
 
-describe('Flutter JHipster blueprint', () => {
-    describe('Default', () => {
+describe('Flutter JHipster module', () => {
+    describe('Default generation', () => {
         before((done) => {
             helpers
                 .run('generator-jhipster/generators/app')
@@ -71,8 +72,8 @@ describe('Flutter JHipster blueprint', () => {
         });
 
         it('contains the specific change added by the blueprint', () => {
-            assert.fileContent('pubspec.yaml', 'name: sampleDefaultFlutter');
-            assert.fileContent('pubspec.yaml', 'description: sampleDefaultFlutter flutter project.');
+            assert.fileContent(`${MAIN_DIR}pubspec.yaml`, 'name: sampleDefaultFlutter');
+            assert.fileContent(`${MAIN_DIR}pubspec.yaml`, 'description: sampleDefaultFlutter flutter project.');
         });
     });
 });
