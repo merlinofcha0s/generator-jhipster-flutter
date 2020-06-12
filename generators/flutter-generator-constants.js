@@ -1,7 +1,8 @@
 const MIN_SDK_VERSION = '18';
 const TARGET_SDK_VERSION = '28';
-const MAIN_SRC_DIR = 'lib/';
-const ANDROID_SRC_DIR = 'android/';
+const MAIN_DIR = 'flutter-app/';
+const MAIN_SRC_DIR = `${MAIN_DIR}lib/`;
+const ANDROID_SRC_DIR = `${MAIN_DIR}android/`;
 
 const LANGUAGES = [
     {
@@ -138,7 +139,8 @@ const constants = {
     TARGET_SDK_VERSION,
     LANGUAGES,
     MAIN_SRC_DIR,
-    ANDROID_SRC_DIR
+    ANDROID_SRC_DIR,
+    MAIN_DIR
 };
 
 module.exports = constants;

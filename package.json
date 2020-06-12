@@ -4,7 +4,7 @@
   "description": "A Flutter blueprint for JHipster. It will use Flutter as the frontend",
   "keywords": [
     "yeoman-generator",
-    "jhipster-blueprint",
+    "jhipster-module",
     "jhipster-6"
   ],
   "homepage": "https://github.com/merlinofcha0s/generator-jhipster-flutter.git",
@@ -23,7 +23,7 @@
   "dependencies": {
     "chalk": "2.4.1",
     "eslint-config-airbnb": "17.1.0",
-    "generator-jhipster": "6.8.0",
+    "generator-jhipster": ">=6.0.0",
     "jhipster-core": "7.2.1",
     "lodash": "4.17.13",
     "mkdirp": "0.5.1",
