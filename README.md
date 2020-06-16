@@ -3,15 +3,15 @@
 ![Generator](https://github.com/merlinofcha0s/generator-jhipster-flutter/workflows/Generator/badge.svg?branch=master&event=push)
 ![npm version](https://img.shields.io/npm/v/generator-jhipster-flutter-merlin)
 
-This is a [JHipster](https://www.jhipster.tech/) flutter blueprint.
+This is a [JHipster](https://www.jhipster.tech/) flutter module.
 
 # Prerequisites
 
-As this is a [JHipster](https://www.jhipster.tech/) blueprint, we expect you have JHipster and its related tools already installed:
+As this is a [JHipster](https://www.jhipster.tech/) module, we expect you have JHipster and its related tools already installed:
 
 - [Installing JHipster (6.x.x)](https://www.jhipster.tech/installation/)
-- [Installing Flutter SDK (1.17)](https://flutter.dev/docs/get-started/install)
-- Generating server side with 
+- [Installing Flutter SDK (1.17.x)](https://flutter.dev/docs/get-started/install)
+- Generating your app with 
 
 ```bash
 jhipster
@@ -62,7 +62,7 @@ yarn global upgrade generator-jhipster-flutter-merlin
 To use this blueprint, run 
 
 ```bash
-jhipster --blueprints flutter-merlin
+yo jhipster-flutter-merlin
 ```
 
 # Architecture
@@ -108,7 +108,7 @@ Then, about **jhipster-flutter** :
 mkdir my-app
 cd my-app
 npm link generator-jhipster-flutter-merlin
-jhipster -d --blueprints flutter-merlin
+yo jhipster-flutter-merlin
 ```
 
 # Help and contribution to the project
