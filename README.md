@@ -74,9 +74,9 @@ For now the app is using BLoC pattern [More informations](https://medium.com/flu
 - [dart_json_mapper](https://pub.dev/packages/dart_json_mapper)
 - [flutter_intl](https://plugins.jetbrains.com/plugin/13666-flutter-intl)
 
-## Running local Blueprint version for development
+## Running local module version for development
 
-During development of blueprint, please note the below steps. They are very important.
+During development of module, please note the below steps. They are very important.
 
 1. Clone the projects
 
