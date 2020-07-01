@@ -117,7 +117,7 @@ module.exports = class extends BaseGenerator {
                 default: true,
             },
             {
-                when: response => response.enableTranslation === true,
+                when: (response) => response.enableTranslation === true,
                 type: 'list',
                 name: 'nativeLanguage',
                 message: 'Please choose the native language of the application',
@@ -126,11 +126,11 @@ module.exports = class extends BaseGenerator {
                 store: true,
             },
             {
-                when: response => response.enableTranslation === true,
+                when: (response) => response.enableTranslation === true,
                 type: 'checkbox',
                 name: 'languages',
                 message: 'Please choose additional languages to install',
-                choices: response => _.filter(SUPPORTED_LANGUAGES, o => o.value !== response.nativeLanguage),
+                choices: (response) => _.filter(SUPPORTED_LANGUAGES, (o) => o.value !== response.nativeLanguage),
             },
         ];
 
