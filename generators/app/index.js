@@ -10,6 +10,7 @@ const packagejs = require('../../package.json');
 const MAIN_SRC_DIR = flutterConstants.MAIN_SRC_DIR;
 const MAIN_DIR = flutterConstants.MAIN_DIR;
 const FLUTTER_FILES = flutterConstants.FLUTTER_FILES;
+const SUPPORTED_LANGUAGES = flutterConstants.LANGUAGES;
 const CLIENT_FLUTTER_TEMPLATES_DIR = 'flutter';
 
 module.exports = class extends BaseGenerator {
@@ -109,12 +110,35 @@ module.exports = class extends BaseGenerator {
                 ],
                 default: 'bloc'
             },
+            {
+                type: 'confirm',
+                name: 'enableTranslation',
+                message: 'Would you like to enable internationalization support?',
+                default: true,
+            },
+            {
+                when: response => response.enableTranslation === true,
+                type: 'list',
+                name: 'nativeLanguage',
+                message: 'Please choose the native language of the application',
+                choices: SUPPORTED_LANGUAGES,
+                default: 'en',
+                store: true,
+            },
+            {
+                when: response => response.enableTranslation === true,
+                type: 'checkbox',
+                name: 'languages',
+                message: 'Please choose additional languages to install',
+                choices: response => _.filter(SUPPORTED_LANGUAGES, o => o.value !== response.nativeLanguage),
+            },
         ];
 
-        this.prompt(prompts).then((props) => {
-            this.props = props;
-            done();
-        });
+        this.prompt(prompts)
+            .then((props) => {
+                this.props = props;
+                done();
+            });
     }
 
     writing() {
@@ -128,9 +152,17 @@ module.exports = class extends BaseGenerator {
         this.humanizedBaseName = _.startCase(this.props.baseName);
         this.minSdkVersion = flutterConstants.MIN_SDK_VERSION;
         this.targetSdkVersion = flutterConstants.TARGET_SDK_VERSION;
-
+        this.enableTranslation = this.props.enableTranslation;
+        this.nativeLanguage = this.props.nativeLanguage;
+        this.languages = this.props.languages || [];
         mkdirp(MAIN_SRC_DIR);
         this.writeFilesToDisk(FLUTTER_FILES, this, false, `${CLIENT_FLUTTER_TEMPLATES_DIR}`);
+        if (this.enableTranslation) {
+            this.copy(`${CLIENT_FLUTTER_TEMPLATES_DIR}/${MAIN_SRC_DIR}l10n/intl_${this.nativeLanguage}.arb.ejs`, `${MAIN_SRC_DIR}l10n/intl_${this.nativeLanguage}.arb`);
+            this.languages.forEach((language) => {
+                this.copy(`${CLIENT_FLUTTER_TEMPLATES_DIR}/${MAIN_SRC_DIR}l10n/intl_${language}.arb.ejs`, `${MAIN_SRC_DIR}l10n/intl_${language}.arb`);
+            });
+        }
     }
 
     install() {
@@ -143,17 +175,21 @@ module.exports = class extends BaseGenerator {
         this.spawnCommandSync('flutter', ['pub', 'run', 'build_runner', 'build'], { cwd: MAIN_DIR });
 
         // Generate Translation
-        this.log(chalk.green('Activating I18n...'));
-        this.spawnCommandSync('flutter', ['pub', 'global', 'activate', 'intl_utils', '1.4.0'], { cwd: MAIN_DIR });
-        this.log(chalk.green('Generate I18n files...'));
-        this.spawnCommandSync('flutter', ['pub', 'global', 'run', 'intl_utils:generate'], { cwd: MAIN_DIR });
+        if (this.enableTranslation) {
+            this.log(chalk.green('Activating I18n...'));
+            this.spawnCommandSync('flutter', ['pub', 'global', 'activate', 'intl_utils', '1.4.0'], { cwd: MAIN_DIR });
+            this.log(chalk.green('Generate I18n files...'));
+            this.spawnCommandSync('flutter', ['pub', 'global', 'run', 'intl_utils:generate'], { cwd: MAIN_DIR });
+        }
     }
 
     end() {
         this.log(chalk.green.bold('Flutter application generated successfully.\n'));
         const logMsg = `Start your favorite IDE for flutter (Visual Studio code, IntelliJ or Android Studio) or \n do ${chalk.yellow.bold('flutter run')}\n`;
         this.log(chalk.green(logMsg));
-        const logMsgI18n = 'Don\'t forget to install flutter-intl for the i18n (https://plugins.jetbrains.com/plugin/13666-flutter-intl) \n';
-        this.log(chalk.blue(logMsgI18n));
+        if (this.enableTranslation) {
+            const logMsgI18n = 'Don\'t forget to install flutter-intl for the i18n (https://plugins.jetbrains.com/plugin/13666-flutter-intl) \n';
+            this.log(chalk.blue(logMsgI18n));
+        }
     }
 };
