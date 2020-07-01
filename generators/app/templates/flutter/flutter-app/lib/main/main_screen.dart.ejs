@@ -1,4 +1,6 @@
+<%_ if (enableTranslation) { _%>
 import 'package:<%= baseName %>/generated/l10n.dart';
+<%_ } _%>
 import 'package:<%= baseName %>/keys.dart';
 import 'package:<%= baseName %>/main/main_bloc.dart';
 import 'package:<%= baseName %>/shared/bloc/bloc_provider.dart';
@@ -17,7 +19,7 @@ class MainScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(S.of(context).pageMainTitle),
+        title: Text(<%_ if (enableTranslation) { _%> S.of(context).pageMainTitle <%_ } else { _%> 'Main page' <%_ } _%>),
       ),
       body: body(context),
       drawer: BlocProvider<<%= baseName %>DrawerBloc>(bloc: <%= baseName %>DrawerBloc() ,child: <%= baseName %>Drawer())
@@ -32,7 +34,7 @@ class MainScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text(S.of(context).pageMainWelcome, style: TextStyle(fontSize: 20), textAlign: TextAlign.center,),
+            Text(<%_ if (enableTranslation) { _%> S.of(context).pageMainWelcome <%_ } else { _%> 'Welcome to your Jhipster flutter app' <%_ } _%>, style: TextStyle(fontSize: 20), textAlign: TextAlign.center,),
             Padding(padding: EdgeInsets.symmetric(vertical: 10),),
             linkWidget(context, 'Jhipster Docs', 'https://www.jhipster.tech/'),
             linkWidget(context, 'Stackoverflow', 'http://stackoverflow.com/tags/jhipster/info'),

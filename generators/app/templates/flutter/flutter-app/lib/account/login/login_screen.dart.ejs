@@ -1,4 +1,6 @@
+<%_ if (enableTranslation) { _%>
 import 'package:<%= baseName %>/generated/l10n.dart';
+<%_ } _%>
 import 'package:<%= baseName %>/keys.dart';
 import 'package:<%= baseName %>/shared/bloc/bloc_provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,7 +18,7 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: Text(S.of(context).pageLoginTitle),
+          title: <%_ if (enableTranslation) { _%>Text(S.of(context).pageLoginTitle) <%_ } else { _%> Text('Welcome to <%= baseName %>') <%_ } _%>,
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(15.0),
@@ -51,7 +53,7 @@ class LoginScreen extends StatelessWidget {
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: S.of(context).pageRegisterFormLogin,
+                  labelText: <%_ if (enableTranslation) { _%> S.of(context).pageRegisterFormLogin <%_ } else { _%> 'Login' <%_ } _%>,
                   errorText: snapshot.error));
         });
   }
@@ -65,7 +67,7 @@ class LoginScreen extends StatelessWidget {
               obscureText: true,
               decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: S.of(context).pageRegisterFormPassword,
+                  labelText: <%_ if (enableTranslation) { _%> S.of(context).pageRegisterFormPassword <%_ } else { _%> 'Password' <%_ } _%>,
                   errorText: snapshot.error));
         });
   }
@@ -89,7 +91,7 @@ class LoginScreen extends StatelessWidget {
           height: 50,
           child: Center(
             child: Text(
-              S.of(context).pageRegisterTitle.toUpperCase(),
+              <%_ if (enableTranslation) { _%> S.of(context).pageRegisterTitle.toUpperCase() <%_ } else { _%> 'Register'.toUpperCase() <%_ } _%>,
               style: TextStyle(fontSize: 15),
             ),
           )),
@@ -130,8 +132,8 @@ class LoginScreen extends StatelessWidget {
                           visible:
                               snapshotLoading.hasData && !snapshotLoading.data,
                           child: Text(
-                            S.of(context).pageLoginLoginButton.toUpperCase(),
-                            style: TextStyle(fontSize: 15),
+                                <%_ if (enableTranslation) { _%>S.of(context).pageLoginLoginButton.toUpperCase()<%_ } else { _%>'Sign in'.toUpperCase()<%_ } _%>,
+                                style: TextStyle(fontSize: 15),
                           ),
                         ),
                       );
@@ -153,7 +155,7 @@ class LoginScreen extends StatelessWidget {
   String generateError(AsyncSnapshot<bool> snapshot, BuildContext context) {
     String errorTranslated = '';
     if (snapshot.error.toString().compareTo(LoginBloc.authenticationFailKey) == 0) {
-      errorTranslated = S.of(context).pageLoginErrorAuthentication;
+      errorTranslated = <%_ if (enableTranslation) { _%> S.of(context).pageLoginErrorAuthentication <%_ } else { _%> 'Problem when authenticate, verify your credential' <%_ } _%>;
     }
     return errorTranslated;
   }

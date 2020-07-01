@@ -146,6 +146,7 @@ module.exports = class extends BaseGenerator {
         this.packageName = this.props.packageName;
         this.snakedBaseName = _.snakeCase(this.props.baseName);
         this.camelizedBaseName = _.camelCase(this.props.baseName);
+        this.camelizedUpperFirstBaseName = _.upperFirst(this.camelizedBaseName);
         this.dasherizedBaseName = _.kebabCase(this.props.baseName);
         this.lowercaseBaseName = this.baseName.toLowerCase();
         this.hipster = this.getHipster(this.baseName);
