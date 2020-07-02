@@ -26,6 +26,8 @@ jhipster
 - BLoC Architecture
 - Android / iOS files
 - Language choice : Java / Kotlin - Objective C / Swift
+- Dev and Prod Profiles
+- IntelliJ Config file for dev and prod profile
 
 # Installation
 
