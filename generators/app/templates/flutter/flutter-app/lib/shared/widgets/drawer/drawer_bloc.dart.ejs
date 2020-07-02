@@ -4,7 +4,7 @@ import 'package:<%= baseName %>/account/login/login_repository.dart';
 import 'package:<%= baseName %>/shared/bloc/bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-class <%= baseName %>DrawerBloc extends Bloc {
+class <%= camelizedUpperFirstBaseName %>DrawerBloc extends Bloc {
   final _signOut = BehaviorSubject<bool>();
 
   Stream<bool> get _signOutStream => _signOut.stream;
@@ -13,7 +13,7 @@ class <%= baseName %>DrawerBloc extends Bloc {
 
   Function(bool) get changeSignOut => _signOut.sink.add;
 
- <%= baseName %>DrawerBloc() {
+        <%= camelizedUpperFirstBaseName %>DrawerBloc() {
     _signOut.listen((signOutData) => signOut());
   }
 

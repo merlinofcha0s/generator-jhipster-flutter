@@ -25,14 +25,14 @@ class <%= camelizedUpperFirstBaseName %>App extends StatelessWidget {
         primarySwatch: Colors.teal,
       ),
       routes: {
-        <%= baseName %>Routes.login: (context) {
+        <%= camelizedUpperFirstBaseName %>Routes.login: (context) {
           return BlocProvider<LoginBloc>(bloc: LoginBloc(), child: LoginScreen());
         },
-        <%= baseName %>Routes.register: (context) {
+        <%= camelizedUpperFirstBaseName %>Routes.register: (context) {
           return BlocProvider<RegisterBloc>(
               bloc: RegisterBloc(), child: RegisterScreen());
         },
-        <%= baseName %>Routes.main: (context) {
+        <%= camelizedUpperFirstBaseName %>Routes.main: (context) {
           return BlocProvider<MainBloc>(
               bloc: MainBloc(), child: MainScreen());
         },

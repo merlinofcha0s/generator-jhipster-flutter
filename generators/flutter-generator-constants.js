@@ -4,6 +4,7 @@ const MAIN_DIR = 'flutter-app/';
 const MAIN_SRC_DIR = `${MAIN_DIR}lib/`;
 const ANDROID_SRC_DIR = `${MAIN_DIR}android/`;
 const IOS_SRC_DIR = `${MAIN_DIR}ios/`;
+const MAIN_TEST_DIR = `${MAIN_DIR}test/`;
 
 const LANGUAGES = [
     { name: 'French', dispName: 'Français', value: 'fr' },
@@ -84,6 +85,14 @@ const FLUTTER_FILES = {
             ]
         }
     ],
+    test: [
+        {
+            path: MAIN_TEST_DIR,
+            templates: [
+                'widget_test.dart'
+            ]
+        }
+    ],
     image: [
         {
             path: MAIN_DIR,
@@ -122,7 +131,8 @@ const constants = {
     ANDROID_SRC_DIR,
     IOS_SRC_DIR,
     MAIN_DIR,
-    FLUTTER_FILES
+    FLUTTER_FILES,
+    MAIN_TEST_DIR
 };
 
 module.exports = constants;

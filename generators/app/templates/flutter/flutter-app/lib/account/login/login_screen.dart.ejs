@@ -10,7 +10,7 @@ import '../../routes.dart';
 import 'login_bloc.dart';
 
 class LoginScreen extends StatelessWidget {
-  LoginScreen({Key key}) : super(key: <%= baseName %>Keys.mainScreen);
+  LoginScreen({Key key}) : super(key: <%= camelizedUpperFirstBaseName %>Keys.mainScreen);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: <%_ if (enableTranslation) { _%>Text(S.of(context).pageLoginTitle) <%_ } else { _%> Text('Welcome to <%= baseName %>') <%_ } _%>,
+          title: <%_ if (enableTranslation) { _%> Text(S.of(context).pageLoginTitle) <%_ } else { _%> Text('Welcome to <%= baseName %>') <%_ } _%>,
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(15.0),
@@ -90,12 +90,11 @@ class LoginScreen extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           height: 50,
           child: Center(
-            child: Text(
-              <%_ if (enableTranslation) { _%> S.of(context).pageRegisterTitle.toUpperCase() <%_ } else { _%> 'Register'.toUpperCase() <%_ } _%>,
+            child: Text(<%_ if (enableTranslation) { _%> S.of(context).pageRegisterTitle.toUpperCase() <%_ } else { _%> 'Register'.toUpperCase() <%_ } _%>,
               style: TextStyle(fontSize: 15),
             ),
           )),
-      onPressed: () => Navigator.pushNamed(context, <%= baseName %>Routes.register),
+      onPressed: () => Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.register),
     );
   }
 
@@ -131,8 +130,7 @@ class LoginScreen extends StatelessWidget {
                           replacement: CircularProgressIndicator(value: null),
                           visible:
                               snapshotLoading.hasData && !snapshotLoading.data,
-                          child: Text(
-                                <%_ if (enableTranslation) { _%>S.of(context).pageLoginLoginButton.toUpperCase()<%_ } else { _%>'Sign in'.toUpperCase()<%_ } _%>,
+                          child: Text(<%_ if (enableTranslation) { _%>S.of(context).pageLoginLoginButton.toUpperCase()<%_ } else { _%>'Sign in'.toUpperCase()<%_ } _%>,
                                 style: TextStyle(fontSize: 15),
                           ),
                         ),
@@ -148,7 +146,7 @@ class LoginScreen extends StatelessWidget {
   onAuthenticate(LoginBloc loginBloc, BuildContext context) async {
     bool authenticateSuccess = await loginBloc.authenticate();
     if (authenticateSuccess) {
-      Navigator.pushNamed(context, <%= baseName %>Routes.main);
+      Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.main);
     }
   }
 

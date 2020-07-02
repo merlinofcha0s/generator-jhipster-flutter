@@ -10,14 +10,14 @@ import 'package:flutter/widgets.dart';
 
 
 class RegisterScreen extends StatelessWidget {
-  RegisterScreen() : super(key: <%= baseName %>Keys.registerScreen);
+  RegisterScreen() : super(key: <%= camelizedUpperFirstBaseName %>Keys.registerScreen);
 
   @override
   Widget build(BuildContext context) {
     final registerBloc = BlocProvider.of<RegisterBloc>(context);
     return Scaffold(
         appBar: AppBar(
-          title: Text(<%_ if (enableTranslation) { _%> Text(S.of(context).pageRegisterTitle) <%_ } else { _%> 'Register' <%_ } _%>),
+          title: Text(<%_ if (enableTranslation) { _%> S.of(context).pageRegisterTitle <%_ } else { _%> 'Register' <%_ } _%>),
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(15.0),
@@ -249,7 +249,7 @@ class RegisterScreen extends StatelessWidget {
                         child: Center(
                             child: Text(<%_ if (enableTranslation) { _%> S.of(context).pageRegisterFormLogin <%_ } else { _%> 'Login' <%_ } _%>))),
                     onPressed: () =>
-                        Navigator.pushNamed(context, <%= baseName %>Routes.login),
+                        Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.login),
                   )
                 ],
               ),
