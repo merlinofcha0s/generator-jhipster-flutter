@@ -6,12 +6,12 @@ import 'package:<%= baseName %>/shared/bloc/bloc_provider.dart';
 import 'package:<%= baseName %>/shared/widgets/drawer/drawer_bloc.dart';
 import 'package:flutter/material.dart';
 
-class <%= baseName %>Drawer extends StatelessWidget {
-  <%= baseName %>Drawer({Key key}) : super(key: key);
+class <%= camelizedUpperFirstBaseName %>Drawer extends StatelessWidget {
+   <%= camelizedUpperFirstBaseName %>Drawer({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final drawerBloc = BlocProvider.of<<%= baseName %>DrawerBloc>(context);
+    final drawerBloc = BlocProvider.of<<%= camelizedUpperFirstBaseName %>DrawerBloc>(context);
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -31,10 +31,10 @@ class <%= baseName %>Drawer extends StatelessWidget {
     );
   }
 
-  onSignOut(<%= baseName %>DrawerBloc drawerBloc, BuildContext context) {
+  onSignOut(<%= camelizedUpperFirstBaseName %>DrawerBloc drawerBloc, BuildContext context) {
     drawerBloc.changeSignOut(true);
     Navigator.pop(context);
-    Navigator.pushNamed(context, <%= baseName %>Routes.login);
+    Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.login);
   }
 
   Widget header(BuildContext context) {

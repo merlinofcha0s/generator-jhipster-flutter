@@ -11,7 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 
 class MainScreen extends StatelessWidget {
-  MainScreen({Key key}) : super(key: <%= baseName %>Keys.mainScreen);
+  MainScreen({Key key}) : super(key: <%= camelizedUpperFirstBaseName %>Keys.mainScreen);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class MainScreen extends StatelessWidget {
         title: Text(<%_ if (enableTranslation) { _%> S.of(context).pageMainTitle <%_ } else { _%> 'Main page' <%_ } _%>),
       ),
       body: body(context),
-      drawer: BlocProvider<<%= baseName %>DrawerBloc>(bloc: <%= baseName %>DrawerBloc() ,child: <%= baseName %>Drawer())
+      drawer: BlocProvider<<%= camelizedUpperFirstBaseName %>DrawerBloc>(bloc: <%= camelizedUpperFirstBaseName %>DrawerBloc() ,child: <%= camelizedUpperFirstBaseName %>Drawer())
     );
   }
 

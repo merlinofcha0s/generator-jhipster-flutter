@@ -1,23 +1,13 @@
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 
 void configMapper() {
+// CODE HERE AS AN EXAMPLE YOU HAVE TO DECLARE YOUR DTOs HERE FOR CORRECT SERIALIZATION / DESERIALIZATION
 //  JsonMapper().useAdapter(JsonMapperAdapter(valueDecorators: {
 //    typeOf<List<Question>>(): (value) => value.cast<Question>(),
-//    typeOf<Set<Question>>(): (value) => value.cast<Question>(),
-//    typeOf<List<Answer>>(): (value) => value.cast<Answer>(),
-//    typeOf<Set<Answer>>(): (value) => value.cast<Answer>(),
-//    typeOf<List<UserPack>>(): (value) => value.cast<UserPack>(),
-//    typeOf<Set<UserPack>>(): (value) => value.cast<UserPack>(),
-//    typeOf<List<CardDTO>>(): (value) => value.cast<CardDTO>(),
-//    typeOf<Set<CardDTO>>(): (value) => value.cast<CardDTO>(),
-//    typeOf<List<Pack>>(): (value) => value.cast<Pack>(),
-//    typeOf<Set<Pack>>(): (value) => value.cast<Pack>()
+//    typeOf<Set<Question>>(): (value) => value.cast<Question>()
 //  }, converters: {
-//    PackState: EnumConverter(PackState.values),
-//    PackType: EnumConverter(PackType.values),
-//    ValueType: EnumConverter(ValueType.values),
-//    SortingType: EnumConverter(SortingType.values),
-//    ResultStep : EnumConverter(ResultStep.values),
+        // CODE HERE AS AN EXAMPLE YOU HAVE TO DECLARE YOUR ENUMS HERE FOR CORRECT SERIALIZATION / DESERIALIZATION
+//    PackState: EnumConverter(PackState.values)
 //  }));
 }
 
