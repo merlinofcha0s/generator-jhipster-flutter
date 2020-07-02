@@ -5,6 +5,7 @@ const flutterConstants = require('../generators/flutter-generator-constants');
 
 const MAIN_SRC_DIR = flutterConstants.MAIN_SRC_DIR;
 const ANDROID_SRC_DIR = flutterConstants.ANDROID_SRC_DIR;
+const IOS_SRC_DIR = flutterConstants.IOS_SRC_DIR;
 const MAIN_DIR = flutterConstants.MAIN_DIR;
 
 const expectedFiles = {
@@ -93,12 +94,49 @@ describe('Flutter JHipster module', () => {
             assert.file(expectedFiles.i18n);
         });
 
+        it('contains kotlin and swift files', () => {
+            assert.file([`${ANDROID_SRC_DIR}app/src/main/kotlin/com/mycompany/myapp/sample_default_flutter/MainActivity.kt`]);
+            assert.file([`${IOS_SRC_DIR}Runner/AppDelegate.swift`]);
+        });
+
         it('contains the specific change added by the module', () => {
             assert.fileContent(`${MAIN_DIR}pubspec.yaml`, 'name: sampleDefaultFlutter');
             assert.fileContent(`${MAIN_DIR}pubspec.yaml`, 'description: sampleDefaultFlutter flutter project.');
             assert.fileContent(`${MAIN_DIR}pubspec.yaml`, 'description: sampleDefaultFlutter flutter project.');
             assert.fileContent(`${MAIN_DIR}pubspec.yaml`, 'flutter_intl');
             assert.fileContent(`${MAIN_DIR}pubspec.yaml`, 'flutter_localizations');
+        });
+    });
+
+    describe('Generation with Java and Objective C', () => {
+        before((done) => {
+            helpers
+                .run(path.join(__dirname, '../generators/app/index.js'))
+                .withPrompts({
+                    baseName: 'sampleDefaultFlutter',
+                    packageName: 'com.mycompany.myapp',
+                    directoryPath: path.join(__dirname, '../test/templates/flutter-default/'),
+                    android: 'java',
+                    ios: 'objc',
+                    stateManageType: 'bloc',
+                    enableTranslation: false,
+                })
+                .on('end', done);
+        });
+
+        it('creates expected files with java and objective C languages', () => {
+            assert.file(expectedFiles.common);
+            assert.file(expectedFiles.app);
+            assert.file(expectedFiles.android);
+            assert.noFile(expectedFiles.i18n);
+            // Android file
+            assert.noFile([`${ANDROID_SRC_DIR}app/src/main/kotlin/com/mycompany/myapp/sample_default_flutter/MainActivity.kt`]);
+            assert.file([`${ANDROID_SRC_DIR}app/src/main/java/com/mycompany/myapp/sample_default_flutter/MainActivity.java`]);
+            // iOS File
+            assert.noFile([`${IOS_SRC_DIR}Runner/AppDelegate.swift`]);
+            assert.file([`${IOS_SRC_DIR}Runner/AppDelegate.h`]);
+            assert.file([`${IOS_SRC_DIR}Runner/AppDelegate.m`]);
+            assert.file([`${IOS_SRC_DIR}Runner/main.m`]);
         });
     });
 });

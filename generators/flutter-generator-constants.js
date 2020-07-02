@@ -3,6 +3,7 @@ const TARGET_SDK_VERSION = '28';
 const MAIN_DIR = 'flutter-app/';
 const MAIN_SRC_DIR = `${MAIN_DIR}lib/`;
 const ANDROID_SRC_DIR = `${MAIN_DIR}android/`;
+const IOS_SRC_DIR = `${MAIN_DIR}ios/`;
 
 const LANGUAGES = [
     { name: 'French', dispName: 'Français', value: 'fr' },
@@ -119,6 +120,7 @@ const constants = {
     LANGUAGES,
     MAIN_SRC_DIR,
     ANDROID_SRC_DIR,
+    IOS_SRC_DIR,
     MAIN_DIR,
     FLUTTER_FILES
 };

@@ -24,8 +24,8 @@ jhipster
 - Login
 - I18n supported (EN, FR for now)
 - BLoC Architecture
-- Android / iOS files by default (WIP : need to add options to generate only desired OS)
-- Kotlin / Swift by default
+- Android / iOS files
+- Language choice : Java / Kotlin - Objective C / Swift
 
 # Installation
 

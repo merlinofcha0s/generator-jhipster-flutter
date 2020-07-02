@@ -81,6 +81,10 @@ module.exports = class extends BaseGenerator {
                         value: 'kotlin',
                         name: 'Kotlin'
                     },
+                    {
+                        value: 'java',
+                        name: 'Java'
+                    },
                 ],
                 default: 'kotlin'
             },
@@ -93,6 +97,10 @@ module.exports = class extends BaseGenerator {
                     {
                         value: 'swift',
                         name: 'Swift'
+                    },
+                    {
+                        value: 'objc',
+                        name: 'Objective C'
                     },
                 ],
                 default: 'swift'
@@ -153,9 +161,12 @@ module.exports = class extends BaseGenerator {
         this.humanizedBaseName = _.startCase(this.props.baseName);
         this.minSdkVersion = flutterConstants.MIN_SDK_VERSION;
         this.targetSdkVersion = flutterConstants.TARGET_SDK_VERSION;
+        this.iosLanguage = this.props.ios;
+        this.androidLanguage = this.props.android;
         this.enableTranslation = this.props.enableTranslation;
         this.nativeLanguage = this.props.nativeLanguage;
         this.languages = this.props.languages || [];
+
         mkdirp(MAIN_SRC_DIR);
         this.writeFilesToDisk(FLUTTER_FILES, this, false, `${CLIENT_FLUTTER_TEMPLATES_DIR}`);
         if (this.enableTranslation) {
@@ -169,7 +180,8 @@ module.exports = class extends BaseGenerator {
     install() {
         // Install Android And IOS Dependencies
         this.log(chalk.green('Adding Android and iOS dependencies...'));
-        this.spawnCommandSync('flutter', ['create', '--org', `${this.packageName}`, '--project-name', `${this.snakedBaseName}`, MAIN_DIR]);
+        this.spawnCommandSync('flutter', ['create', '--org', `${this.packageName}`,
+            '--project-name', `${this.snakedBaseName}`, '--ios-language', `${this.iosLanguage}`, '--android-language', `${this.androidLanguage}`, MAIN_DIR]);
 
         // Generate Reflection
         this.log(chalk.green('Generate reflection for the first time...'));
