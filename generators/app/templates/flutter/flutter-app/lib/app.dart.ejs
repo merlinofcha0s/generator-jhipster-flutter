@@ -4,16 +4,18 @@ import 'package:<%= baseName %>/main/main_bloc.dart';
 import 'package:<%= baseName %>/main/main_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+<%_ if (enableTranslation) { _%>
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'generated/l10n.dart';
+<%_ } _%>
 
 import 'account/login/login_bloc.dart';
 import 'account/login/login_screen.dart';
 import 'account/register/register_bloc.dart';
 import 'account/register/register_screen.dart';
-import 'generated/l10n.dart';
 
-class <%= baseName %>App extends StatelessWidget {
-  const <%= baseName %>App({Key key}) : super(key: key);
+class <%= camelizedUpperFirstBaseName %>App extends StatelessWidget {
+  const <%= camelizedUpperFirstBaseName %>App({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +37,7 @@ class <%= baseName %>App extends StatelessWidget {
               bloc: MainBloc(), child: MainScreen());
         },
       },
+      <%_ if (enableTranslation) { _%>
         localizationsDelegates: [
           S.delegate,
           GlobalMaterialLocalizations.delegate,
@@ -42,8 +45,9 @@ class <%= baseName %>App extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: S.delegate.supportedLocales
+      <%_ } _%>
     );
   }
 
-  
+
 }
