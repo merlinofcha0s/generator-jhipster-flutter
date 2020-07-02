@@ -23,7 +23,7 @@ jobs:
                   architecture: x64
             - uses: subosito/flutter-action@v1.3.2
               with:
-                  flutter-version: '1.17.0'
-                  channel: 'stable'                 
+                  flutter-version: '1.17.5'
+                  channel: 'stable'
             - run: npm ci
             - run: npm test
