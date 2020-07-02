@@ -1,4 +1,6 @@
+<%_ if (enableTranslation) { _%>
 import 'package:<%= baseName %>/generated/l10n.dart';
+<%_ } _%>
 import 'package:<%= baseName %>/routes.dart';
 import 'package:<%= baseName %>/shared/bloc/bloc_provider.dart';
 import 'package:<%= baseName %>/shared/widgets/drawer/drawer_bloc.dart';
@@ -17,11 +19,11 @@ class <%= baseName %>Drawer extends StatelessWidget {
           header(context),
           ListTile(
             leading: Icon(Icons.settings),
-            title: Text(S.of(context).drawerSettingsTitle),
+            title: Text(<%_ if (enableTranslation) { _%> S.of(context).drawerSettingsTitle <%_ } else { _%> 'Settings' <%_ } _%>),
           ),
           ListTile(
             leading: Icon(Icons.exit_to_app),
-            title: Text(S.of(context).drawerLogoutTitle),
+            title: Text(<%_ if (enableTranslation) { _%> S.of(context).drawerLogoutTitle <%_ } else { _%> 'Sign out' <%_ } _%>),
             onTap: () => onSignOut(drawerBloc, context),
           )
         ],
@@ -40,8 +42,7 @@ class <%= baseName %>Drawer extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.teal,
       ),
-      child: Text(
-        S.of(context).drawerMenuTitle,
+      child: Text(<%_ if (enableTranslation) { _%> S.of(context).drawerMenuTitle <%_ } else { _%> 'Menu' <%_ } _%>,
         style: TextStyle(
           color: Colors.white,
           fontSize: 24,

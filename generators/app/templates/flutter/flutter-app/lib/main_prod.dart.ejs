@@ -8,5 +8,5 @@ void main() {
   initializeReflectable();
   configMapper();
   Constants.setEnvironment(Environment.PROD);
-  runApp(<%= baseName %>App());
+  runApp(<%= camelizedUpperFirstBaseName %>App());
 }
