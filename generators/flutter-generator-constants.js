@@ -5,6 +5,7 @@ const MAIN_SRC_DIR = `${MAIN_DIR}lib/`;
 const ANDROID_SRC_DIR = `${MAIN_DIR}android/`;
 const IOS_SRC_DIR = `${MAIN_DIR}ios/`;
 const MAIN_TEST_DIR = `${MAIN_DIR}test/`;
+const INTELLIJ_CONFIG_DIR = `${MAIN_DIR}.idea/runConfigurations/`;
 
 const LANGUAGES = [
     { name: 'French', dispName: 'Français', value: 'fr' },
@@ -120,7 +121,16 @@ const FLUTTER_FILES = {
                 { file: 'assets/images/logo-jhipster.png', method: 'copy' }
             ]
         }
-    ]
+    ],
+    intellij: [
+        {
+            path: INTELLIJ_CONFIG_DIR,
+            templates: [
+                'main_dart_dev.xml',
+                'main_dart_prod.xml'
+            ]
+        }
+    ],
 };
 
 const constants = {
@@ -132,7 +142,8 @@ const constants = {
     IOS_SRC_DIR,
     MAIN_DIR,
     FLUTTER_FILES,
-    MAIN_TEST_DIR
+    MAIN_TEST_DIR,
+    INTELLIJ_CONFIG_DIR
 };
 
 module.exports = constants;
