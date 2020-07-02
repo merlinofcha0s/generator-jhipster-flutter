@@ -7,20 +7,19 @@ const MAIN_SRC_DIR = flutterConstants.MAIN_SRC_DIR;
 const ANDROID_SRC_DIR = flutterConstants.ANDROID_SRC_DIR;
 const IOS_SRC_DIR = flutterConstants.IOS_SRC_DIR;
 const MAIN_DIR = flutterConstants.MAIN_DIR;
+const INTELLIJ_CONFIG_DIR = flutterConstants.INTELLIJ_CONFIG_DIR;
 
 const expectedFiles = {
     i18n: [
         `${MAIN_SRC_DIR}l10n/intl_en.arb`,
         `${MAIN_SRC_DIR}l10n/intl_fr.arb`
     ],
-
     common: [
         `${MAIN_DIR}pubspec.yaml`,
         `${MAIN_DIR}.gitignore`,
         `${MAIN_DIR}build.yaml`,
         `${MAIN_DIR}README.md`
     ],
-
     app: [
         `${MAIN_SRC_DIR}app.dart`,
         `${MAIN_SRC_DIR}environement.dart`,
@@ -30,9 +29,12 @@ const expectedFiles = {
         `${MAIN_SRC_DIR}mapper.dart`,
         `${MAIN_SRC_DIR}routes.dart`
     ],
-
     android: [
         `${ANDROID_SRC_DIR}app/build.gradle`
+    ],
+    intellij: [
+        `${INTELLIJ_CONFIG_DIR}main_dart_dev.xml`,
+        `${INTELLIJ_CONFIG_DIR}main_dart_prod.xml`
     ]
 };
 
@@ -57,6 +59,7 @@ describe('Flutter JHipster module', () => {
             assert.file(expectedFiles.common);
             assert.file(expectedFiles.app);
             assert.file(expectedFiles.android);
+            assert.file(expectedFiles.intellij);
             assert.noFile(expectedFiles.i18n);
         });
 
@@ -92,6 +95,7 @@ describe('Flutter JHipster module', () => {
             assert.file(expectedFiles.app);
             assert.file(expectedFiles.android);
             assert.file(expectedFiles.i18n);
+            assert.file(expectedFiles.intellij);
         });
 
         it('contains kotlin and swift files', () => {
@@ -128,7 +132,9 @@ describe('Flutter JHipster module', () => {
             assert.file(expectedFiles.common);
             assert.file(expectedFiles.app);
             assert.file(expectedFiles.android);
+            assert.file(expectedFiles.intellij);
             assert.noFile(expectedFiles.i18n);
+
             // Android file
             assert.noFile([`${ANDROID_SRC_DIR}app/src/main/kotlin/com/mycompany/myapp/sample_default_flutter/MainActivity.kt`]);
             assert.file([`${ANDROID_SRC_DIR}app/src/main/java/com/mycompany/myapp/sample_default_flutter/MainActivity.java`]);
