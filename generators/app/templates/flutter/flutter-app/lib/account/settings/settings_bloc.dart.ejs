@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
+<%_ if (enableTranslation) { _%>
 import 'package:<%= baseName %>/environement.dart';
+<%_} _%>
 import 'package:<%= baseName %>/shared/bloc/bloc.dart';
 import 'package:<%= baseName %>/shared/mixins/validators_mixin.dart';
 import 'package:<%= baseName %>/shared/models/user.dart';
@@ -47,8 +49,13 @@ class SettingsBloc extends Bloc with ValidatorMixin {
 
   Function(String) get changeEmail => _email.sink.add;
 
+  <%_ if (enableTranslation) { _%>
   Stream<bool> get submitValid => Rx.combineLatest4(firstNameStream,
       lastNameStream, emailStream, languageChooseStream, (f, l, e, lc) => true);
+ <%_ } else { _%>
+  Stream<bool> get submitValid => Rx.combineLatest3(firstNameStream,
+      lastNameStream, emailStream, (f, l, e) => true);
+ <%_ } _%>
 
   User currentUser;
 
@@ -106,8 +113,8 @@ class SettingsBloc extends Bloc with ValidatorMixin {
         _firstName.close();
         _lastName.close();
         _email.close();
+       <%_ if (enableTranslation) { _%>
         _languageChoose.close();
-         <%_ if (enableTranslation) { _%>
         _languages.close();
          <%_ } _%>
         _isLoading.close();

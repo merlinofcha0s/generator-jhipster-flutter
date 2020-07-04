@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:<%= baseName %>/account/settings/settings_bloc.dart';
+<%_ if (enableTranslation) { _%>
 import 'package:<%= baseName %>/generated/l10n.dart';
+<%_ } _%>
 import 'package:<%= baseName %>/keys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -17,7 +19,7 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(S.of(context).pageSettingsTitle),
+          title: Text(<%_ if (enableTranslation) { _%> S.of(context).pageSettingsTitle <%_ } else { _%> 'Settings' <%_ } _%>),
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(15.0),
@@ -29,11 +31,11 @@ class SettingsScreen extends StatelessWidget {
           return Form(
             child: Wrap(runSpacing: 15, children: <Widget>[
               formField<String>(settingsBloc.firstNameStream, settingsBloc.changeFirstname,
-                  TextInputType.text, S.of(context).pageSettingsFormFirstname, settingsBloc.firstNameController),
+                  TextInputType.text, <%_ if (enableTranslation) { _%> S.of(context).pageSettingsFormFirstname <%_ } else { _%> 'Firstname' <%_ } _%>, settingsBloc.firstNameController),
               formField<String>(settingsBloc.lastNameStream, settingsBloc.changeLastname,
-                  TextInputType.text, S.of(context).pageSettingsFormLastname, settingsBloc.lastNameController),
+                  TextInputType.text, <%_ if (enableTranslation) { _%> S.of(context).pageSettingsFormLastname <%_ } else { _%> 'Lastname' <%_ } _%>, settingsBloc.lastNameController),
               formField<String>(settingsBloc.emailStream, settingsBloc.changeEmail,
-                  TextInputType.emailAddress, S.of(context).pageSettingsFormEmail, settingsBloc.emailController),
+                  TextInputType.emailAddress, <%_ if (enableTranslation) { _%> S.of(context).pageSettingsFormEmail <%_ } else { _%> 'Email' <%_ } _%>, settingsBloc.emailController),
               <%_ if (enableTranslation) { _%>
               languageField(settingsBloc),
               <%_ } _%>
@@ -72,7 +74,7 @@ class SettingsScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(S.of(context).pageSettingsFormLanguages, style: TextStyle(fontSize: 16)),
+                    Text(<%_ if (enableTranslation) { _%> S.of(context).pageSettingsFormLanguages <%_ } else { _%> 'Languages' <%_ } _%>, style: TextStyle(fontSize: 16)),
                     DropdownButton<String>(
                         value: snapshot.data,
                         onChanged: (key) => settingsBloc.changeLanguage(key),
@@ -110,7 +112,7 @@ class SettingsScreen extends StatelessWidget {
                       child: Visibility(
                         replacement: CircularProgressIndicator(value: null),
                         visible: snapshotLoading.hasData && !snapshotLoading.data,
-                        child: Text(S.of(context).pageSettingsFormSave.toUpperCase(),
+                        child: Text(<%_ if (enableTranslation) { _%> S.of(context).pageSettingsFormSave.toUpperCase() <%_ } else { _%> 'SAVE' <%_ } _%>,
                           style: TextStyle(fontSize: 15, color: Colors.white),
                         ),
                       ),
@@ -138,13 +140,13 @@ class SettingsScreen extends StatelessWidget {
         String notificationTranslated = '';
         MaterialColor notificationColors;
         if(snapshot.hasData && snapshot.data.compareTo(SettingsBloc.successKey) == 0) {
-           notificationTranslated = S.of(context).pageSettingsSuccessSave;
+           notificationTranslated = <%_ if (enableTranslation) { _%> S.of(context).pageSettingsSuccessSave <%_ } else { _%> 'Settings saved !' <%_ } _%>;
            notificationColors = Colors.green;
         } else if(snapshot.error.toString().compareTo(SettingsBloc.badrequestKey) == 0) {
-           notificationTranslated = S.of(context).pageSettingsSuccessErrorBadRequest;
+           notificationTranslated = <%_ if (enableTranslation) { _%> S.of(context).pageSettingsSuccessErrorBadRequest <%_ } else { _%> 'Something wrong happended with the data' <%_ } _%>;
            notificationColors = Colors.red;
         } else if (snapshot.error.toString().compareTo(HttpUtils.errorServerKey) == 0) {
-           notificationTranslated = S.of(context).pageSettingsSuccessErrorServer;
+           notificationTranslated = <%_ if (enableTranslation) { _%> S.of(context).pageSettingsSuccessErrorServer <%_ } else { _%> 'Something wrong when calling the server, please try again' <%_ } _%>;
            notificationColors = Colors.red;
         }
 
