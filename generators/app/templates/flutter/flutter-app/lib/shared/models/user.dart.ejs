@@ -3,6 +3,12 @@ import 'package:dart_json_mapper/dart_json_mapper.dart';
 @jsonSerializable
 class User {
 
+  @JsonProperty(name: 'firstName')
+  String firstName;
+
+  @JsonProperty(name: 'lastName')
+  String lastName;
+
   @JsonProperty(name: 'login')
   String login;
 
@@ -15,8 +21,9 @@ class User {
   @JsonProperty(name: 'langKey')
   String langKey;
 
-  User(this.login, this.email, this.password, this.langKey);
+  User();
 
+  User.forRegister(this.login, this.email, this.password, this.langKey);
 
   User.forLogin(this.login, this.password);
 

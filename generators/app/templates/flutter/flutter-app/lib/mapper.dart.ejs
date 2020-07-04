@@ -1,14 +1,14 @@
 import 'package:dart_json_mapper/dart_json_mapper.dart';
+import 'package:<%= baseName %>/shared/models/user.dart';
 
 void configMapper() {
-// CODE HERE AS AN EXAMPLE YOU HAVE TO DECLARE YOUR DTOs HERE FOR CORRECT SERIALIZATION / DESERIALIZATION
-//  JsonMapper().useAdapter(JsonMapperAdapter(valueDecorators: {
-//    typeOf<List<Question>>(): (value) => value.cast<Question>(),
-//    typeOf<Set<Question>>(): (value) => value.cast<Question>()
-//  }, converters: {
-        // CODE HERE AS AN EXAMPLE YOU HAVE TO DECLARE YOUR ENUMS HERE FOR CORRECT SERIALIZATION / DESERIALIZATION
-//    PackState: EnumConverter(PackState.values)
-//  }));
+// YOU HAVE TO DECLARE YOUR DTOs LIST HERE FOR CORRECT SERIALIZATION / DESERIALIZATION
+  JsonMapper().useAdapter(JsonMapperAdapter(valueDecorators: {
+         typeOf<List<User>>(): (value) => value.cast<User>(),
+//  ,converters: {
+// CODE HERE AS AN EXAMPLE YOU HAVE TO DECLARE YOUR ENUMS HERE FOR CORRECT SERIALIZATION / DESERIALIZATION
+//  PackState: EnumConverter(PackState.values)
+  }));
 }
 
 class EnumConverter implements ICustomConverter<dynamic> {

@@ -29,6 +29,15 @@ const expectedFiles = {
         `${MAIN_SRC_DIR}mapper.dart`,
         `${MAIN_SRC_DIR}routes.dart`
     ],
+    account: [
+        `${MAIN_SRC_DIR}account/login/login_bloc.dart`,
+        `${MAIN_SRC_DIR}account/login/login_repository.dart`,
+        `${MAIN_SRC_DIR}account/login/login_screen.dart`,
+        `${MAIN_SRC_DIR}account/register/register_bloc.dart`,
+        `${MAIN_SRC_DIR}account/register/register_screen.dart`,
+        `${MAIN_SRC_DIR}account/settings/settings_bloc.dart`,
+        `${MAIN_SRC_DIR}account/settings/settings_screen.dart`
+    ],
     android: [
         `${ANDROID_SRC_DIR}app/build.gradle`
     ],
