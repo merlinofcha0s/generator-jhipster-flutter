@@ -3,7 +3,37 @@
 ![Generator](https://github.com/merlinofcha0s/generator-jhipster-flutter/workflows/Generator/badge.svg?branch=master&event=push)
 ![npm version](https://img.shields.io/npm/v/generator-jhipster-flutter-merlin)
 
-This is a [JHipster](https://www.jhipster.tech/) flutter module.
+Generate your Flutter mobile App (Android / iOS) for JHipster
+
+This is a [JHipster](https://www.jhipster.tech/) module.
+
+# What's inside
+
+- Screen
+  - Main
+  - Register
+  - Login
+  - User preferences
+- Full I18n support
+  - EN, FR for now
+  - Automatic generation with [flutter_intl plugin](https://plugins.jetbrains.com/plugin/13666-flutter-intl)
+  - Detecting device locale
+  - Change language in user preferences UI
+  - Apply the preferred locale instead of the device one
+- BLoC Architecture [More informations](https://medium.com/flutterpub/architecting-your-flutter-project-bd04e144a8f1)
+- Language choice
+  - Java / Kotlin for Android 
+  - Objective C / Swift for iOS
+- Profiles / Environments
+  - Dev
+  - Prod
+- IntelliJ Config file for dev and prod profile
+
+## Main Libraries
+
+- [dart_json_mapper](https://pub.dev/packages/dart_json_mapper)
+- [flutter_intl](https://plugins.jetbrains.com/plugin/13666-flutter-intl)
+- RxDart
 
 # Prerequisites
 
@@ -16,18 +46,6 @@ As this is a [JHipster](https://www.jhipster.tech/) module, we expect you have J
 ```bash
 jhipster
 ```
-
-# What's inside
-
-- Main Screen
-- Register
-- Login
-- I18n supported (EN, FR for now)
-- BLoC Architecture
-- Android / iOS files
-- Language choice : Java / Kotlin - Objective C / Swift
-- Dev and Prod Profiles
-- IntelliJ Config file for dev and prod profile
 
 # Installation
 
@@ -66,15 +84,6 @@ To use this blueprint, run
 ```bash
 yo jhipster-flutter-merlin
 ```
-
-# Architecture
-
-For now the app is using BLoC pattern [More informations](https://medium.com/flutterpub/architecting-your-flutter-project-bd04e144a8f1)
-
-## Main Libraries
-
-- [dart_json_mapper](https://pub.dev/packages/dart_json_mapper)
-- [flutter_intl](https://plugins.jetbrains.com/plugin/13666-flutter-intl)
 
 ## Running local module version for development
 

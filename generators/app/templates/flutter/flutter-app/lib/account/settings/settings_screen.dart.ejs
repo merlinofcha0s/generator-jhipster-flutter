@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:<%= baseName %>/account/settings/settings_bloc.dart';
 <%_ if (enableTranslation) { _%>
 import 'package:<%= baseName %>/generated/l10n.dart';
+import 'package:<%= baseName %>/routes.dart';
 <%_ } _%>
 import 'package:<%= baseName %>/keys.dart';
 import 'package:flutter/material.dart';
@@ -118,11 +119,20 @@ class SettingsScreen extends StatelessWidget {
                       ),
                     );
                   })),
-          onPressed: snapshotSubmit.hasData ? settingsBloc.submit : null,
+          onPressed: snapshotSubmit.hasData ? <%_ if (enableTranslation) { _%> () => saveSettings(snapshotSubmit, settingsBloc, context) <%_ } else { _%> settingsBloc.submit <%_ } _%>  : null,
         );
       }
     );
   }
+
+  <%_ if (enableTranslation) { _%>
+  saveSettings(AsyncSnapshot<bool> snapshotSubmit, SettingsBloc settingsBloc, BuildContext context) async {
+    var reloadForLanguage = await settingsBloc.submit();
+    if(reloadForLanguage) {
+      Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.main);
+    }
+  }
+  <%_ } _%>
 
   Widget notificationZone(SettingsBloc settingsBloc) {
     return StreamBuilder<String>(

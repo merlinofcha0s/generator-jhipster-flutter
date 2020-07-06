@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 <%_ if (enableTranslation) { _%>
 import 'package:<%= baseName %>/environement.dart';
+import 'package:<%= baseName %>/generated/l10n.dart';
 <%_} _%>
 import 'package:<%= baseName %>/shared/bloc/bloc.dart';
 import 'package:<%= baseName %>/shared/mixins/validators_mixin.dart';
@@ -75,7 +76,6 @@ class SettingsBloc extends Bloc with ValidatorMixin {
    <%_ } _%>
 
   void getIdentity() async {
-    _isLoading.sink.add(true);
     currentUser = await accountRepository.getIdentity();
     _firstName.sink.add(currentUser.firstName);
     _lastName.sink.add(currentUser.lastName);
@@ -86,16 +86,21 @@ class SettingsBloc extends Bloc with ValidatorMixin {
     emailController.text = currentUser.email;
     lastNameController.text = currentUser.lastName;
     firstNameController.text = currentUser.firstName;
-    _isLoading.sink.add(false);
   }
 
-  submit() async {
+  <%_ if (enableTranslation) { _%>Future<bool><%_ } else { _%> void <%_ } _%>  submit() async {
     _isLoading.sink.add(true);
     currentUser.firstName = _firstName.value;
     currentUser.lastName = _lastName.value;
     currentUser.email = _email.value;
+
     <%_ if (enableTranslation) { _%>
-    currentUser.langKey = _languageChoose.value;
+    bool reload = false;
+    if(_languageChoose.value.compareTo(currentUser.langKey) != 0) {
+      currentUser.langKey = _languageChoose.value;
+      S.load(Locale(_languageChoose.value));
+      reload = true;
+    }
     <%_ } _%>
     String result = await accountRepository.saveAccount(currentUser);
 
@@ -106,6 +111,9 @@ class SettingsBloc extends Bloc with ValidatorMixin {
     }
 
     _isLoading.sink.add(false);
+    <%_ if (enableTranslation) { _%>
+    return reload;
+    <%_ } _%>
   }
 
   @override
