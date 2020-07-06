@@ -88,7 +88,7 @@ class SettingsBloc extends Bloc with ValidatorMixin {
     firstNameController.text = currentUser.firstName;
   }
 
-  <%_ if (enableTranslation) { _%>Future<bool><%_ } else { _%> void <%_ } _%>  submit() async {
+  <%_ if (enableTranslation) { _%> Future<bool> <%_ } else { _%> void <%_ } %> <%=  %> submit() async {
     _isLoading.sink.add(true);
     currentUser.firstName = _firstName.value;
     currentUser.lastName = _lastName.value;

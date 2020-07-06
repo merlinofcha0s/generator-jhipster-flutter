@@ -1,9 +1,11 @@
 import 'dart:async';
 
+<%_ if (enableTranslation) { _%>
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:<%= baseName %>/environement.dart';
 import 'package:<%= baseName %>/generated/l10n.dart';
+<%_ } _%>
 import 'package:<%= baseName %>/shared/bloc/bloc.dart';
 import 'package:<%= baseName %>/shared/models/user.dart';
 import 'package:<%= baseName %>/shared/repository/account_repository.dart';
