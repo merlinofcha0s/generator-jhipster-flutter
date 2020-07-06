@@ -20,6 +20,7 @@ class <%= camelizedUpperFirstBaseName %>Drawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.settings),
             title: Text(<%_ if (enableTranslation) { _%> S.of(context).drawerSettingsTitle <%_ } else { _%> 'Settings' <%_ } _%>),
+             onTap: () => Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.settings),
           ),
           ListTile(
             leading: Icon(Icons.exit_to_app),
@@ -43,6 +44,7 @@ class <%= camelizedUpperFirstBaseName %>Drawer extends StatelessWidget {
         color: Colors.teal,
       ),
       child: Text(<%_ if (enableTranslation) { _%> S.of(context).drawerMenuTitle <%_ } else { _%> 'Menu' <%_ } _%>,
+        textAlign: TextAlign.center,
         style: TextStyle(
           color: Colors.white,
           fontSize: 24,

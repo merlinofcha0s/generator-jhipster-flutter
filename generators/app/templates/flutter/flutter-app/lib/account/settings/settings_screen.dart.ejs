@@ -1,0 +1,168 @@
+import 'package:flutter/cupertino.dart';
+import 'package:<%= baseName %>/account/settings/settings_bloc.dart';
+<%_ if (enableTranslation) { _%>
+import 'package:<%= baseName %>/generated/l10n.dart';
+import 'package:<%= baseName %>/routes.dart';
+<%_ } _%>
+import 'package:<%= baseName %>/keys.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:<%= baseName %>/shared/bloc/bloc_provider.dart';
+import 'package:<%= baseName %>/shared/repository/http_utils.dart';
+
+class SettingsScreen extends StatelessWidget {
+  SettingsScreen() : super(key: <%= camelizedUpperFirstBaseName %>Keys.settingsScreen);
+
+  @override
+  Widget build(BuildContext context) {
+    final settingsBloc = BlocProvider.of<SettingsBloc>(context);
+    settingsBloc.getIdentity();
+    return Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(<%_ if (enableTranslation) { _%> S.of(context).pageSettingsTitle <%_ } else { _%> 'Settings' <%_ } _%>),
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(children: <Widget>[settingsForm(settingsBloc, context)]),
+        ));
+  }
+
+  Widget settingsForm(SettingsBloc settingsBloc, BuildContext context) {
+          return Form(
+            child: Wrap(runSpacing: 15, children: <Widget>[
+              formField<String>(settingsBloc.firstNameStream, settingsBloc.changeFirstname,
+                  TextInputType.text, <%_ if (enableTranslation) { _%> S.of(context).pageSettingsFormFirstname <%_ } else { _%> 'Firstname' <%_ } _%>, settingsBloc.firstNameController),
+              formField<String>(settingsBloc.lastNameStream, settingsBloc.changeLastname,
+                  TextInputType.text, <%_ if (enableTranslation) { _%> S.of(context).pageSettingsFormLastname <%_ } else { _%> 'Lastname' <%_ } _%>, settingsBloc.lastNameController),
+              formField<String>(settingsBloc.emailStream, settingsBloc.changeEmail,
+                  TextInputType.emailAddress, <%_ if (enableTranslation) { _%> S.of(context).pageSettingsFormEmail <%_ } else { _%> 'Email' <%_ } _%>, settingsBloc.emailController),
+              <%_ if (enableTranslation) { _%>
+              languageField(settingsBloc),
+              <%_ } _%>
+              notificationZone(settingsBloc),
+              submit(context, settingsBloc)
+            ]),
+          );
+  }
+
+  Widget formField<T>(Stream<T> stream, Function(String) onChange, TextInputType type,
+      String labelText, TextEditingController controller) {
+    return StreamBuilder<T>(
+        stream: stream,
+        builder: (context, AsyncSnapshot<T> snapshot) {
+            return TextFormField(
+                controller:  controller,
+                onChanged: onChange,
+                keyboardType: type,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: labelText,
+                    errorText: snapshot.error));
+        }
+    );
+  }
+  <%_ if (enableTranslation) { _%>
+  Widget languageField(SettingsBloc settingsBloc) {
+    return StreamBuilder<Map<String, String>>(
+        stream: settingsBloc.languagesStream,
+        builder: (context, snapshotLanguages) {
+          return StreamBuilder<String>(
+            stream: settingsBloc.languageChooseStream,
+            builder: (context, snapshot) {
+              return Padding(
+                padding: const EdgeInsets.only(left: 3.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(<%_ if (enableTranslation) { _%> S.of(context).pageSettingsFormLanguages <%_ } else { _%> 'Languages' <%_ } _%>, style: TextStyle(fontSize: 16)),
+                    DropdownButton<String>(
+                        value: snapshot.data,
+                        onChanged: (key) => settingsBloc.changeLanguage(key),
+                        items: snapshotLanguages.hasData ? createDropdownLanguageItems(snapshotLanguages.data) : []),
+                  ],
+                ),
+              );
+            }
+          );
+
+        });
+  }
+
+
+  List<DropdownMenuItem<String>> createDropdownLanguageItems(Map<String, String> languages) {
+    return languages.keys.map<DropdownMenuItem<String>>((String key) =>
+            DropdownMenuItem<String>(value: key, child: Text(languages[key])))
+        .toList();
+  }
+ <%_ } _%>
+
+  submit(BuildContext context, SettingsBloc settingsBloc){
+    return StreamBuilder<bool>(
+      stream: settingsBloc.submitValid,
+      builder: (context, snapshotSubmit) {
+        return RaisedButton(
+          color: Colors.teal,
+          child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: 50,
+              child: StreamBuilder<bool>(
+                  stream: settingsBloc.isLoadingStream,
+                  builder: (context, snapshotLoading) {
+                    return Center(
+                      child: Visibility(
+                        replacement: CircularProgressIndicator(value: null),
+                        visible: snapshotLoading.hasData && !snapshotLoading.data,
+                        child: Text(<%_ if (enableTranslation) { _%> S.of(context).pageSettingsFormSave.toUpperCase() <%_ } else { _%> 'SAVE' <%_ } _%>,
+                          style: TextStyle(fontSize: 15, color: Colors.white),
+                        ),
+                      ),
+                    );
+                  })),
+          onPressed: snapshotSubmit.hasData ? <%_ if (enableTranslation) { _%> () => saveSettings(snapshotSubmit, settingsBloc, context) <%_ } else { _%> settingsBloc.submit <%_ } _%>  : null,
+        );
+      }
+    );
+  }
+
+  <%_ if (enableTranslation) { _%>
+  saveSettings(AsyncSnapshot<bool> snapshotSubmit, SettingsBloc settingsBloc, BuildContext context) async {
+    var reloadForLanguage = await settingsBloc.submit();
+    if(reloadForLanguage) {
+      Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.main);
+    }
+  }
+  <%_ } _%>
+
+  Widget notificationZone(SettingsBloc settingsBloc) {
+    return StreamBuilder<String>(
+        stream: settingsBloc.notificationSaveSettings,
+        builder: (context, snapshot) {
+          return Visibility(
+              visible: snapshot.hasData || snapshot.hasError,
+              child: Center(
+                child: generateNotificationText(snapshot, context),
+              ));
+        });
+  }
+
+    Widget generateNotificationText(AsyncSnapshot<String> snapshot, BuildContext context) {
+        String notificationTranslated = '';
+        MaterialColor notificationColors;
+        if(snapshot.hasData && snapshot.data.compareTo(SettingsBloc.successKey) == 0) {
+           notificationTranslated = <%_ if (enableTranslation) { _%> S.of(context).pageSettingsSuccessSave <%_ } else { _%> 'Settings saved !' <%_ } _%>;
+           notificationColors = Colors.green;
+        } else if(snapshot.error.toString().compareTo(SettingsBloc.badrequestKey) == 0) {
+           notificationTranslated = <%_ if (enableTranslation) { _%> S.of(context).pageSettingsSuccessErrorBadRequest <%_ } else { _%> 'Something wrong happended with the data' <%_ } _%>;
+           notificationColors = Colors.red;
+        } else if (snapshot.error.toString().compareTo(HttpUtils.errorServerKey) == 0) {
+           notificationTranslated = <%_ if (enableTranslation) { _%> S.of(context).pageSettingsSuccessErrorServer <%_ } else { _%> 'Something wrong when calling the server, please try again' <%_ } _%>;
+           notificationColors = Colors.red;
+        }
+
+        return Text(
+           notificationTranslated,
+           style: TextStyle(color: notificationColors),
+        );
+   }
+}

@@ -2,6 +2,8 @@ import 'package:<%= baseName %>/routes.dart';
 import 'package:<%= baseName %>/shared/bloc/bloc_provider.dart';
 import 'package:<%= baseName %>/main/main_bloc.dart';
 import 'package:<%= baseName %>/main/main_screen.dart';
+import 'package:<%= baseName %>/account/settings/settings_bloc.dart';
+import 'package:<%= baseName %>/account/settings/settings_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 <%_ if (enableTranslation) { _%>
@@ -35,6 +37,10 @@ class <%= camelizedUpperFirstBaseName %>App extends StatelessWidget {
         <%= camelizedUpperFirstBaseName %>Routes.main: (context) {
           return BlocProvider<MainBloc>(
               bloc: MainBloc(), child: MainScreen());
+        },
+      <%= camelizedUpperFirstBaseName %>Routes.settings: (context) {
+      return BlocProvider<SettingsBloc>(
+        bloc: SettingsBloc(), child: SettingsScreen());
         },
       },
       <%_ if (enableTranslation) { _%>

@@ -11,6 +11,7 @@ class HttpUtils {
   static String errorHeader = 'x-<%= dasherizedBaseName %>app-error';
   static String successResult = 'success';
   static String keyForJWTToken = 'jwt-token';
+  static String errorServerKey = 'error.500';
 
   static String encodeUTF8(String toEncode) {
     return utf8.decode(toEncode.runes.toList());

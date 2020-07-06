@@ -53,6 +53,7 @@ const FLUTTER_FILES = {
                 'shared/models/user_jwt.dart',
                 'shared/models/user.dart',
                 'shared/repository/http_utils.dart',
+                'shared/repository/account_repository.dart',
             ]
         }
     ],
@@ -74,7 +75,8 @@ const FLUTTER_FILES = {
                 'account/login/login_screen.dart',
                 'account/register/register_bloc.dart',
                 'account/register/register_screen.dart',
-                'account/register/account_repository.dart',
+                'account/settings/settings_bloc.dart',
+                'account/settings/settings_screen.dart'
             ]
         }
     ],

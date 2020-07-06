@@ -2,6 +2,10 @@ enum Environment { DEV, PROD }
 
 class Constants {
   static Map<String, dynamic> _config;
+  <%_ if (enableTranslation) { _%>
+  static final Map<String, String> languages = {'en':'English','fr':'Francais'};
+  static final String langStorageKey = 'locale';
+  <%_ } _%>
 
   static void setEnvironment(Environment env) {
     switch (env) {

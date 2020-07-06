@@ -1,0 +1,134 @@
+import 'dart:async';
+
+import 'package:flutter/widgets.dart';
+<%_ if (enableTranslation) { _%>
+import 'package:<%= baseName %>/environement.dart';
+import 'package:<%= baseName %>/generated/l10n.dart';
+<%_} _%>
+import 'package:<%= baseName %>/shared/bloc/bloc.dart';
+import 'package:<%= baseName %>/shared/mixins/validators_mixin.dart';
+import 'package:<%= baseName %>/shared/models/user.dart';
+import 'package:<%= baseName %>/shared/repository/account_repository.dart';
+import 'package:<%= baseName %>/shared/repository/http_utils.dart';
+import 'package:rxdart/rxdart.dart';
+
+class SettingsBloc extends Bloc with ValidatorMixin {
+  final _firstName = BehaviorSubject<String>();
+  final _lastName = BehaviorSubject<String>();
+  final _email = BehaviorSubject<String>();
+  <%_ if (enableTranslation) { _%>
+  final _languageChoose = BehaviorSubject<String>();
+  final _languages = BehaviorSubject<Map<String, String>>();
+  <%_ } _%>
+  final _isLoading = BehaviorSubject<bool>();
+  final _notificationSaveSettings = BehaviorSubject<String>();
+
+  final emailController = TextEditingController();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+
+  final accountRepository = AccountRepository();
+
+  Stream<String> get firstNameStream => _firstName.stream.transform(validateName);
+
+  Stream<String> get lastNameStream => _lastName.stream.transform(validateName);
+
+  Stream<String> get emailStream => _email.stream.transform(validateEmail);
+  <%_ if (enableTranslation) { _%>
+  Stream<Map<String, String>> get languagesStream => _languages.stream;
+
+  Stream<String> get languageChooseStream => _languageChoose.stream;
+  <%_ } _%>
+
+  Stream<bool> get isLoadingStream => _isLoading.stream;
+
+  Stream<String> get notificationSaveSettings => _notificationSaveSettings.stream;
+
+  Function(String) get changeFirstname => _firstName.sink.add;
+
+  Function(String) get changeLastname => _lastName.sink.add;
+
+  Function(String) get changeEmail => _email.sink.add;
+
+  <%_ if (enableTranslation) { _%>
+  Stream<bool> get submitValid => Rx.combineLatest4(firstNameStream,
+      lastNameStream, emailStream, languageChooseStream, (f, l, e, lc) => true);
+ <%_ } else { _%>
+  Stream<bool> get submitValid => Rx.combineLatest3(firstNameStream,
+      lastNameStream, emailStream, (f, l, e) => true);
+ <%_ } _%>
+
+  User currentUser;
+
+  static final String successKey = 'success.settings';
+  static final String badrequestKey = 'error.400';
+
+  SettingsBloc() {
+    _isLoading.sink.add(false);
+    <%_ if (enableTranslation) { _%>
+    _languages.sink.add(Constants.languages);
+    <%_ } _%>
+  }
+   <%_ if (enableTranslation) { _%>
+  void changeLanguage(String value) {
+    _languageChoose.sink.add(value);
+  }
+   <%_ } _%>
+
+  void getIdentity() async {
+    currentUser = await accountRepository.getIdentity();
+    _firstName.sink.add(currentUser.firstName);
+    _lastName.sink.add(currentUser.lastName);
+    _email.sink.add(currentUser.email);
+   <%_ if (enableTranslation) { _%>
+    _languageChoose.sink.add(currentUser.langKey);
+   <%_ } _%>
+    emailController.text = currentUser.email;
+    lastNameController.text = currentUser.lastName;
+    firstNameController.text = currentUser.firstName;
+  }
+
+  <%_ if (enableTranslation) { _%> Future<bool> <%_ } else { _%> void <%_ } %> <%=  %> submit() async {
+    _isLoading.sink.add(true);
+    currentUser.firstName = _firstName.value;
+    currentUser.lastName = _lastName.value;
+    currentUser.email = _email.value;
+
+    <%_ if (enableTranslation) { _%>
+    bool reload = false;
+    if(_languageChoose.value.compareTo(currentUser.langKey) != 0) {
+      currentUser.langKey = _languageChoose.value;
+      S.load(Locale(_languageChoose.value));
+      reload = true;
+    }
+    <%_ } _%>
+    String result = await accountRepository.saveAccount(currentUser);
+
+    if (result.compareTo(HttpUtils.successResult) != 0) {
+      _notificationSaveSettings.sink.addError(result);
+    } else {
+      _notificationSaveSettings.sink.add(successKey);
+    }
+
+    _isLoading.sink.add(false);
+    <%_ if (enableTranslation) { _%>
+    return reload;
+    <%_ } _%>
+  }
+
+  @override
+  void dispose() => () {
+        _firstName.close();
+        _lastName.close();
+        _email.close();
+       <%_ if (enableTranslation) { _%>
+        _languageChoose.close();
+        _languages.close();
+         <%_ } _%>
+        _isLoading.close();
+        emailController.dispose();
+        firstNameController.dispose();
+        lastNameController.dispose();
+        _notificationSaveSettings.close();
+      };
+}
