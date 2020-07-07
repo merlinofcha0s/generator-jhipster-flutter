@@ -34,7 +34,7 @@ class <%= camelizedUpperFirstBaseName %>Drawer extends StatelessWidget {
 
   onSignOut(<%= camelizedUpperFirstBaseName %>DrawerBloc drawerBloc, BuildContext context) {
     drawerBloc.changeSignOut(true);
-    Navigator.pop(context);
+    Navigator.popUntil(context, ModalRoute.withName(<%= camelizedUpperFirstBaseName %>Routes.login));
     Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.login);
   }
 

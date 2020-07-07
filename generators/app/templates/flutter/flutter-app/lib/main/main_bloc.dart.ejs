@@ -2,8 +2,6 @@ import 'dart:async';
 
 <%_ if (enableTranslation) { _%>
 import 'package:flutter/widgets.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:<%= baseName %>/environement.dart';
 import 'package:<%= baseName %>/generated/l10n.dart';
 <%_ } _%>
 import 'package:<%= baseName %>/shared/bloc/bloc.dart';
@@ -15,13 +13,13 @@ class MainBloc extends Bloc {
   final _user = BehaviorSubject<User>();
 
   Stream<User> get userStream => _user.stream;
-  
+
   final accountRepository = AccountRepository();
-  
+
   User currentUser;
-  
+
   MainBloc();
-  
+
   Future<User> fetchConnectedUser() async {
     if(currentUser == null) {
       currentUser = await accountRepository.getIdentity();
@@ -31,33 +29,24 @@ class MainBloc extends Bloc {
   }
 
   <%_ if (enableTranslation) { _%>
-  Future<bool> init(String languageCode) async {
+  Future<bool> init() async {
     await fetchConnectedUser();
-    return await changeLanguage(languageCode);
+    return await detectLanguage();
   }
   <%_ } else { _%>
   void init() async {
     await fetchConnectedUser();
   }
   <%_ } _%>
-  
+
   <%_ if (enableTranslation) { _%>
-  Future<bool> changeLanguage(String languageCode) async {
-    bool reload = false;
-    FlutterSecureStorage storage = new FlutterSecureStorage();
-    var locale = await storage.read(key: Constants.langStorageKey);
-    if(locale != null) {
-      if(currentUser.langKey.compareTo(locale) != 0) {
+  Future<bool> detectLanguage() async {
+     bool reload = false;
+     if(currentUser.langKey.compareTo(S.current.locale) != 0) {
         S.load(Locale(currentUser.langKey));
-        await storage.write(key: Constants.langStorageKey, value: currentUser.langKey);
         reload = true;
-      }
-    } else {
-      await storage.write(key: Constants.langStorageKey, value: languageCode);
-      S.load(Locale(currentUser.langKey));
-      reload = true;
-    }
-    return reload;
+     }
+     return reload;
   }
   <%_ } _%>
 
