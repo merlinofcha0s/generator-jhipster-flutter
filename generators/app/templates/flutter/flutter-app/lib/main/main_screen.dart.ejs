@@ -84,17 +84,14 @@ class MainScreen extends StatelessWidget {
     }
   }
 
-  <%_ if (enableTranslation) { _%>
+
   init(BuildContext context, MainBloc bloc) async {
-    String languageCode = Localizations.localeOf(context).languageCode;
-    bool reload = await bloc.init(languageCode);
+    bool reload = await bloc.init();
+    <%_ if (enableTranslation) { _%>
     if(reload) {
-      Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.main);
+      Navigator.popAndPushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.main);
     }
+    <%_ } _%>
   }
-  <%_ } else { _%>
-  init(BuildContext context, MainBloc bloc) async {
-    await bloc.init();
-  }
-  <%_ } _%>
+
 }
