@@ -1,6 +1,6 @@
 {
   "name": "generator-jhipster-flutter-merlin",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "A Flutter module for JHipster. It will use Flutter as the frontend",
   "keywords": [
     "yeoman-generator",
