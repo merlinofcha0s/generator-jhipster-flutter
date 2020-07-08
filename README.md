@@ -7,8 +7,6 @@ Generate your Flutter mobile App (Android / iOS) for JHipster
 
 This is a [JHipster](https://www.jhipster.tech/) module.
 
-![](UI-1.3.0.gif)
-
 # What's inside
 
 - Screen
