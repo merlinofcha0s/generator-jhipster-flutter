@@ -90,11 +90,13 @@ class MainScreen extends StatelessWidget {
 
 
   init(BuildContext context, MainBloc bloc) async {
-    bool reload = await bloc.init();
     <%_ if (enableTranslation) { _%>
+    bool reload = await bloc.init();
     if(reload) {
       Navigator.popAndPushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.main);
     }
+    <%_ } else { _%>
+    bloc.init();
     <%_ } _%>
   }
 
