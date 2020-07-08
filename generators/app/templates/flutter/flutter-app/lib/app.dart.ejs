@@ -4,8 +4,10 @@ import 'package:<%= baseName %>/main/main_bloc.dart';
 import 'package:<%= baseName %>/main/main_screen.dart';
 import 'package:<%= baseName %>/account/settings/settings_bloc.dart';
 import 'package:<%= baseName %>/account/settings/settings_screen.dart';
+import 'package:<%= baseName %>/themes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 <%_ if (enableTranslation) { _%>
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'generated/l10n.dart';
@@ -23,9 +25,7 @@ class <%= camelizedUpperFirstBaseName %>App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Jhipster flutter app',
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-      ),
+      theme: Themes.jhLight,
       routes: {
         <%= camelizedUpperFirstBaseName %>Routes.login: (context) {
           return BlocProvider<LoginBloc>(bloc: LoginBloc(), child: LoginScreen());

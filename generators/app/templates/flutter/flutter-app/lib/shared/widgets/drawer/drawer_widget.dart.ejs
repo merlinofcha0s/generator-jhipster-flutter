@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 class <%= camelizedUpperFirstBaseName %>Drawer extends StatelessWidget {
    <%= camelizedUpperFirstBaseName %>Drawer({Key key}) : super(key: key);
 
+  static final double iconSize = 30;
+
   @override
   Widget build(BuildContext context) {
     final drawerBloc = BlocProvider.of<<%= camelizedUpperFirstBaseName %>DrawerBloc>(context);
@@ -18,12 +20,17 @@ class <%= camelizedUpperFirstBaseName %>Drawer extends StatelessWidget {
         children: <Widget>[
           header(context),
           ListTile(
-            leading: Icon(Icons.settings),
+             leading: Icon(Icons.home, size: iconSize,),
+             title: Text(<%_ if (enableTranslation) { _%>S.of(context).drawerMenuMain <%_ } else { _%>'Home'<%_ } _%>),
+             onTap: () => Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.main),
+          ),
+          ListTile(
+            leading: Icon(Icons.settings, size: iconSize,),
             title: Text(<%_ if (enableTranslation) { _%> S.of(context).drawerSettingsTitle <%_ } else { _%> 'Settings' <%_ } _%>),
              onTap: () => Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.settings),
           ),
           ListTile(
-            leading: Icon(Icons.exit_to_app),
+            leading: Icon(Icons.exit_to_app, size: iconSize,),
             title: Text(<%_ if (enableTranslation) { _%> S.of(context).drawerLogoutTitle <%_ } else { _%> 'Sign out' <%_ } _%>),
             onTap: () => onSignOut(drawerBloc, context),
           )
@@ -41,15 +48,11 @@ class <%= camelizedUpperFirstBaseName %>Drawer extends StatelessWidget {
   Widget header(BuildContext context) {
     return DrawerHeader(
       decoration: BoxDecoration(
-        color: Colors.teal,
+        color: Theme.of(context).primaryColor,
       ),
       child: Text(<%_ if (enableTranslation) { _%> S.of(context).drawerMenuTitle <%_ } else { _%> 'Menu' <%_ } _%>,
         textAlign: TextAlign.center,
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 24,
-        ),
-      ),
+        style: Theme.of(context).textTheme.headline2),
     );
   }
 }
