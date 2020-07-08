@@ -72,7 +72,6 @@ class RegisterScreen extends StatelessWidget {
               onChanged: registerBloc.changeLogin,
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
-                  border: OutlineInputBorder(),
                   labelText: <%_ if (enableTranslation) { _%> S.of(context).pageRegisterFormLogin <%_ } else { _%> 'Login' <%_ } _%>,
                   errorText: snapshot.error));
         });
@@ -86,7 +85,6 @@ class RegisterScreen extends StatelessWidget {
             onChanged: registerBloc.changeEmail,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
-                border: OutlineInputBorder(),
                 labelText: <%_ if (enableTranslation) { _%> S.of(context).pageRegisterFormEmail <%_ } else { _%> 'Email' <%_ } _%>,
                 hintText: <%_ if (enableTranslation) { _%> S.of(context).pageRegisterFormEmailHint <%_ } else { _%> 'you@example.com' <%_ } _%>,
                 errorText: snapshot.error),
@@ -102,7 +100,6 @@ class RegisterScreen extends StatelessWidget {
               onChanged: registerBloc.changePassword,
               obscureText: true,
               decoration: InputDecoration(
-                  border: OutlineInputBorder(),
                   labelText: <%_ if (enableTranslation) { _%> S.of(context).pageRegisterFormPassword <%_ } else { _%> 'Password' <%_ } _%>,
                   errorText: snapshot.error));
         });
@@ -116,7 +113,6 @@ class RegisterScreen extends StatelessWidget {
               onChanged: registerBloc.changeConfirmPassword,
               obscureText: true,
               decoration: InputDecoration(
-                  border: OutlineInputBorder(),
                   labelText: <%_ if (enableTranslation) { _%> S.of(context).pageRegisterFormConfirmPassword <%_ } else { _%> 'Confirm password' <%_ } _%>,
                   errorText: snapshot.error));
         });
@@ -142,7 +138,7 @@ class RegisterScreen extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(right: 5),
                   ),
-                  Text(<%_ if (enableTranslation) { _%> S.of(context).pageRegisterFormTermsConditions <%_ } else { _%> 'I accept the terms of use' <%_ } _%>),
+                  Text(<%_ if (enableTranslation) { _%> S.of(context).pageRegisterFormTermsConditions <%_ } else { _%> 'I accept the terms of use' <%_ } _%>, style: Theme.of(context).textTheme.bodyText1,),
                 ],
               ),
               Visibility(
@@ -150,7 +146,7 @@ class RegisterScreen extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: Text(<%_ if (enableTranslation) { _%> S.of(context).pageRegisterFormTermsConditionsNotChecked <%_ } else { _%> 'Please accept the terms and conditions' <%_ } _%>,
-                    style: TextStyle(color: Colors.red),
+                    style: TextStyle(color: Theme.of(context).errorColor),
                   ),
                 ),
               )
@@ -168,7 +164,7 @@ class RegisterScreen extends StatelessWidget {
               child: Center(
                 child: Text(
                   generateError(snapshot, context),
-                  style: TextStyle(color: Colors.red),
+                  style: TextStyle(color: Theme.of(context).errorColor),
                 ),
               ));
         });
@@ -192,7 +188,6 @@ class RegisterScreen extends StatelessWidget {
         stream: registerBloc.submitValid,
         builder: (context, snapshotSubmit) {
           return RaisedButton(
-            color: Colors.blue,
             child: Container(
                 width: MediaQuery.of(context).size.width,
                 height: 50,
@@ -204,7 +199,6 @@ class RegisterScreen extends StatelessWidget {
                           replacement: CircularProgressIndicator(value: null),
                           visible: snapshotLoading.hasData && !snapshotLoading.data,
                           child: Text(<%_ if (enableTranslation) { _%> S.of(context).pageRegisterFormSubmit.toUpperCase() <%_ } else { _%> 'Sign up' <%_ } _%>,
-                            style: TextStyle(fontSize: 15),
                           ),
                         ),
                       );
@@ -226,7 +220,7 @@ class RegisterScreen extends StatelessWidget {
                 children: <Widget>[
                   Icon(
                     Icons.check_circle,
-                    color: Colors.indigoAccent,
+                    color: Theme.of(context).primaryColor,
                     size: 125.0,
                     semanticLabel: <%_ if (enableTranslation) { _%> S.of(context).pageRegisterSuccessAltImg <%_ } else { _%> 'Register success' <%_ } _%>,
                   ),
@@ -234,7 +228,7 @@ class RegisterScreen extends StatelessWidget {
                     padding: EdgeInsets.only(top: 10),
                   ),
                   Text(<%_ if (enableTranslation) { _%> S.of(context).pageRegisterSuccess.toUpperCase() <%_ } else { _%> 'Congratulation'.toUpperCase() <%_ } _%>,
-                      style: TextStyle(fontSize: 30, color: Colors.indigoAccent)),
+                      style: Theme.of(context).textTheme.headline1),
                   Padding(
                     padding: EdgeInsets.only(top: 10),
                   ),
@@ -243,9 +237,7 @@ class RegisterScreen extends StatelessWidget {
                     padding: EdgeInsets.only(top: 30),
                   ),
                   RaisedButton(
-                    color: Colors.blue,
                     child: Container(
-                        width: MediaQuery.of(context).size.width * 0.3,
                         child: Center(
                             child: Text(<%_ if (enableTranslation) { _%> S.of(context).pageRegisterFormLogin <%_ } else { _%> 'Login' <%_ } _%>))),
                     onPressed: () =>

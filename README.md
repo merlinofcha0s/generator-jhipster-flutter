@@ -14,6 +14,9 @@ This is a [JHipster](https://www.jhipster.tech/) module.
   - Register
   - Login
   - User preferences
+- Theming
+  - All styles in one place
+  - Light theme for now
 - Full I18n support
   - EN, FR for now
   - Automatic generation with [flutter_intl plugin](https://plugins.jetbrains.com/plugin/13666-flutter-intl)
@@ -33,7 +36,7 @@ This is a [JHipster](https://www.jhipster.tech/) module.
 
 - [dart_json_mapper](https://pub.dev/packages/dart_json_mapper)
 - [flutter_intl](https://plugins.jetbrains.com/plugin/13666-flutter-intl)
-- RxDart
+- [RxDart](https://pub.dev/packages/rxdart)
 
 # Prerequisites
 
