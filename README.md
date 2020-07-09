@@ -2,6 +2,7 @@
 
 ![Generator](https://github.com/merlinofcha0s/generator-jhipster-flutter/workflows/Generator/badge.svg?branch=master&event=push)
 ![npm version](https://img.shields.io/npm/v/generator-jhipster-flutter-merlin)
+![npm](https://img.shields.io/npm/dm/generator-jhipster-flutter-merlin?label=npm)
 
 Generate your Flutter mobile App (Android / iOS) for JHipster
 
