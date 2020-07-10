@@ -8,6 +8,8 @@ Generate your Flutter mobile App (Android / iOS) for JHipster
 
 This is a [JHipster](https://www.jhipster.tech/) module.
 
+Get started and more [here](https://blog.herofactory.dev/get-started-with-flutter-jhipster-generator/)
+
 # What's inside
 
 - Screen
