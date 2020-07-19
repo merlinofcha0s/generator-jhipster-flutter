@@ -10,20 +10,20 @@ This application was generated using JHipster Flutter generator, you can find do
 
 Building the project:
 
-1. Getting dependencies (You will only need to run this command when dependencies change in [pubspec.yaml](pubspec.yaml)) : 
+1. Getting dependencies (You will only need to run this command when dependencies change in [pubspec.yaml](pubspec.yaml)) :
 
         flutter pub get
-        
-2. Running reflection (You will only need to run this command when you change DTOs or models) : 
 
-        flutter pub run build_runner build
-        
+2. Running reflection (You will only need to run this command when you change DTOs or models) :
+
+        flutter pub run build_runner build --delete-conflicting-outputs
+
 3. Start the project (You can also start it with your IDE) :
 
         flutter run
-        
+
 4. Generate I18n in case you're **NOT** using Android studio or IntelliJ (Run it everytime you change something in the [lib/l10n](lib/l10n) folder):
-        
+
         flutter pub global run intl_utils:generate
 
 ## Resources

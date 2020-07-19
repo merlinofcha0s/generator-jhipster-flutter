@@ -29,7 +29,7 @@ const FLUTTER_FILES = {
             path: MAIN_SRC_DIR,
             templates: [
                 'app.dart',
-                'environement.dart',
+                'environment.dart',
                 'keys.dart',
                 'main_prod.dart',
                 'main.dart',
@@ -43,11 +43,11 @@ const FLUTTER_FILES = {
         {
             path: MAIN_SRC_DIR,
             templates: [
-                'shared/bloc/bloc_provider.dart',
-                'shared/bloc/bloc.dart',
                 'shared/widgets/loading_indicator_widget.dart',
                 'shared/widgets/drawer/drawer_widget.dart',
-                'shared/widgets/drawer/drawer_bloc.dart',
+                'shared/widgets/drawer/bloc/drawer_bloc.dart',
+                'shared/widgets/drawer/bloc/drawer_events.dart',
+                'shared/widgets/drawer/bloc/drawer_state.dart',
                 'shared/widgets/loading_indicator_widget.dart',
                 'shared/mixins/validators_mixin.dart',
                 'shared/models/jwt_token.dart',
@@ -55,6 +55,7 @@ const FLUTTER_FILES = {
                 'shared/models/user.dart',
                 'shared/repository/http_utils.dart',
                 'shared/repository/account_repository.dart',
+                'shared/exceptions/app_exception.dart',
             ]
         }
     ],
@@ -62,7 +63,9 @@ const FLUTTER_FILES = {
         {
             path: MAIN_SRC_DIR,
             templates: [
-                'main/main_bloc.dart',
+                'main/bloc/main_bloc.dart',
+                'main/bloc/main_events.dart',
+                'main/bloc/main_state.dart',
                 'main/main_screen.dart',
             ]
         }
@@ -71,12 +74,21 @@ const FLUTTER_FILES = {
         {
             path: MAIN_SRC_DIR,
             templates: [
-                'account/login/login_bloc.dart',
+                'account/login/bloc/login_bloc.dart',
+                'account/login/bloc/login_events.dart',
+                'account/login/bloc/login_models.dart',
+                'account/login/bloc/login_state.dart',
                 'account/login/login_repository.dart',
                 'account/login/login_screen.dart',
-                'account/register/register_bloc.dart',
+                'account/register/bloc/register_bloc.dart',
+                'account/register/bloc/register_events.dart',
+                'account/register/bloc/register_models.dart',
+                'account/register/bloc/register_state.dart',
                 'account/register/register_screen.dart',
-                'account/settings/settings_bloc.dart',
+                'account/settings/bloc/settings_bloc.dart',
+                'account/settings/bloc/settings_events.dart',
+                'account/settings/bloc/settings_models.dart',
+                'account/settings/bloc/settings_state.dart',
                 'account/settings/settings_screen.dart'
             ]
         }
