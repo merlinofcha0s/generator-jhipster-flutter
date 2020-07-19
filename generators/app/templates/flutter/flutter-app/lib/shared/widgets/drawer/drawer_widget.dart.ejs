@@ -1,48 +1,47 @@
-<%_ if (enableTranslation) { _%>
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:<%= baseName %>/generated/l10n.dart';
-<%_ } _%>
 import 'package:<%= baseName %>/routes.dart';
-import 'package:<%= baseName %>/shared/bloc/bloc_provider.dart';
-import 'package:<%= baseName %>/shared/widgets/drawer/drawer_bloc.dart';
+import 'package:<%= baseName %>/shared/widgets/drawer/bloc/drawer_bloc.dart';
 import 'package:flutter/material.dart';
 
 class <%= camelizedUpperFirstBaseName %>Drawer extends StatelessWidget {
    <%= camelizedUpperFirstBaseName %>Drawer({Key key}) : super(key: key);
 
-  static final double iconSize = 30;
+   static final double iconSize = 30;
 
   @override
   Widget build(BuildContext context) {
-    final drawerBloc = BlocProvider.of<<%= camelizedUpperFirstBaseName %>DrawerBloc>(context);
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          header(context),
-          ListTile(
-             leading: Icon(Icons.home, size: iconSize,),
-             title: Text(<%_ if (enableTranslation) { _%>S.of(context).drawerMenuMain <%_ } else { _%>'Home'<%_ } _%>),
-             onTap: () => Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.main),
-          ),
-          ListTile(
-            leading: Icon(Icons.settings, size: iconSize,),
-            title: Text(<%_ if (enableTranslation) { _%> S.of(context).drawerSettingsTitle <%_ } else { _%> 'Settings' <%_ } _%>),
-             onTap: () => Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.settings),
-          ),
-          ListTile(
-            leading: Icon(Icons.exit_to_app, size: iconSize,),
-            title: Text(<%_ if (enableTranslation) { _%> S.of(context).drawerLogoutTitle <%_ } else { _%> 'Sign out' <%_ } _%>),
-            onTap: () => onSignOut(drawerBloc, context),
-          )
-        ],
+    return BlocListener<DrawerBloc, DrawerState>(
+      listener: (context, state) {
+        if(state.isLogout) {
+          Navigator.popUntil(context, ModalRoute.withName(<%= camelizedUpperFirstBaseName %>Routes.login));
+          Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.login);
+        }
+      },
+      child: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            header(context),
+            ListTile(
+              leading: Icon(Icons.home, size: iconSize,),
+              title: Text(<%_ if (enableTranslation) { _%>S.of(context).drawerMenuMain <%_ } else { _%>'Home'<%_ } _%>),
+              onTap: () => Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.main),
+            ),
+            ListTile(
+              leading: Icon(Icons.settings, size: iconSize,),
+              title: Text(<%_ if (enableTranslation) { _%> S.of(context).drawerSettingsTitle <%_ } else { _%> 'Settings' <%_ } _%>),
+              onTap: () => Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.settings),
+            ),
+            ListTile(
+              leading: Icon(Icons.exit_to_app, size: iconSize,),
+              title: Text(S.of(context).drawerLogoutTitle),
+              onTap: () => context.bloc<DrawerBloc>().add(Logout())
+            )
+          ],
+        ),
       ),
     );
-  }
-
-  onSignOut(<%= camelizedUpperFirstBaseName %>DrawerBloc drawerBloc, BuildContext context) {
-    drawerBloc.changeSignOut(true);
-    Navigator.popUntil(context, ModalRoute.withName(<%= camelizedUpperFirstBaseName %>Routes.login));
-    Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.login);
   }
 
   Widget header(BuildContext context) {
@@ -52,7 +51,8 @@ class <%= camelizedUpperFirstBaseName %>Drawer extends StatelessWidget {
       ),
       child: Text(<%_ if (enableTranslation) { _%> S.of(context).drawerMenuTitle <%_ } else { _%> 'Menu' <%_ } _%>,
         textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.headline2),
+        style: Theme.of(context).textTheme.headline2,
+      ),
     );
   }
 }

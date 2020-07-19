@@ -4,28 +4,25 @@ import 'package:dart_json_mapper/dart_json_mapper.dart';
 class User {
 
   @JsonProperty(name: 'firstName')
-  String firstName;
+  final String firstName;
 
   @JsonProperty(name: 'lastName')
-  String lastName;
+  final String lastName;
 
   @JsonProperty(name: 'login')
-  String login;
+  final String login;
 
   @JsonProperty(name: 'email')
-  String email;
+  final String email;
 
   @JsonProperty(name: 'password')
-  String password;
+  final String password;
 
   @JsonProperty(name: 'langKey')
-  String langKey;
+  final String langKey;
 
-  User();
-
-  User.forRegister(this.login, this.email, this.password, this.langKey);
-
-  User.forLogin(this.login, this.password);
+  const User(this.login, this.email, this.password, this.langKey,
+      this.firstName, this.lastName);
 
   @override
   String toString() {
