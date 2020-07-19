@@ -201,8 +201,12 @@ module.exports = class extends BaseGenerator {
         const logMsg = `Start your favorite IDE for flutter (Visual Studio code, IntelliJ or Android Studio) or \n do ${chalk.yellow.bold('flutter run')}\n`;
         this.log(chalk.green(logMsg));
         if (this.enableTranslation) {
-            const logMsgI18n = 'Don\'t forget to install flutter-intl for the i18n (https://plugins.jetbrains.com/plugin/13666-flutter-intl) \n';
+            const logMsgI18n = 'Don\'t forget to install flutter-intl for the i18n';
+            const logMsgI18nIntelliJPlugins = 'i18n for IntelliJ : (https://plugins.jetbrains.com/plugin/13666-flutter-intl)';
+            const logMsgI18nVsCodePlugins = 'i18n for VS code (https://marketplace.visualstudio.com/items?itemName=localizely.flutter-intl) \n';
             this.log(chalk.blue(logMsgI18n));
+            this.log(chalk.blue(logMsgI18nIntelliJPlugins));
+            this.log(chalk.blue(logMsgI18nVsCodePlugins));
         }
     }
 };
