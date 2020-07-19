@@ -22,11 +22,11 @@ Get started and (Full not yet) documentation on my blog [here](https://blog.hero
   - Light theme for now
 - Full I18n support
   - EN, FR for now
-  - Automatic generation with [flutter_intl plugin](https://plugins.jetbrains.com/plugin/13666-flutter-intl)
+  - Automatic generation with [IntelliJ plugin](https://plugins.jetbrains.com/plugin/13666-flutter-intl) or [VS code plugin](https://marketplace.visualstudio.com/items?itemName=localizely.flutter-intl)
   - Detecting device locale
   - Change language in user preferences UI
   - Apply the preferred locale instead of the device one
-- BLoC Architecture [More informations](https://medium.com/flutterpub/architecting-your-flutter-project-bd04e144a8f1)
+- BLoC Architecture [More informations](https://pub.dev/packages/flutter_bloc)
 - Language choice
   - Java / Kotlin for Android 
   - Objective C / Swift for iOS
@@ -39,7 +39,7 @@ Get started and (Full not yet) documentation on my blog [here](https://blog.hero
 
 - [dart_json_mapper](https://pub.dev/packages/dart_json_mapper)
 - [flutter_intl](https://plugins.jetbrains.com/plugin/13666-flutter-intl)
-- [RxDart](https://pub.dev/packages/rxdart)
+- [flutter_bloc](https://pub.dev/packages/flutter_bloc)
 
 # Prerequisites
 
