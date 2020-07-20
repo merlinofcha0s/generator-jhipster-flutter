@@ -1,10 +1,9 @@
-# Introduction
+![logo](https://raw.githubusercontent.com/merlinofcha0s/herofactory-ghost-assets/master/2020/07/flutter_jhipster-1.png)
 
 ![Generator](https://github.com/merlinofcha0s/generator-jhipster-flutter/workflows/Generator/badge.svg?branch=master&event=push)
 ![npm version](https://img.shields.io/npm/v/generator-jhipster-flutter-merlin)
 ![npm](https://img.shields.io/npm/dm/generator-jhipster-flutter-merlin?label=npm)
 
-![logo](https://raw.githubusercontent.com/merlinofcha0s/herofactory-ghost-assets/master/2020/07/flutter_jhipster-1.png)
 
 Generate your Flutter mobile App (Android / iOS) for JHipster
 
