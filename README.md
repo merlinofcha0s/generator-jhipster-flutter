@@ -1,4 +1,5 @@
-# Introduction
+<img width="400" src="https://raw.githubusercontent.com/merlinofcha0s/herofactory-ghost-assets/master/2020/07/flutter_jhipster-1.png">
+<br/>
 
 ![Generator](https://github.com/merlinofcha0s/generator-jhipster-flutter/workflows/Generator/badge.svg?branch=master&event=push)
 ![npm version](https://img.shields.io/npm/v/generator-jhipster-flutter-merlin)
