@@ -22,7 +22,7 @@ const expectedFiles = {
     ],
     app: [
         `${MAIN_SRC_DIR}app.dart`,
-        `${MAIN_SRC_DIR}environement.dart`,
+        `${MAIN_SRC_DIR}environment.dart`,
         `${MAIN_SRC_DIR}keys.dart`,
         `${MAIN_SRC_DIR}main_prod.dart`,
         `${MAIN_SRC_DIR}main.dart`,
@@ -30,12 +30,21 @@ const expectedFiles = {
         `${MAIN_SRC_DIR}routes.dart`
     ],
     account: [
-        `${MAIN_SRC_DIR}account/login/login_bloc.dart`,
+        `${MAIN_SRC_DIR}account/login/bloc/login_bloc.dart`,
+        `${MAIN_SRC_DIR}account/login/bloc/login_events.dart`,
+        `${MAIN_SRC_DIR}account/login/bloc/login_models.dart`,
+        `${MAIN_SRC_DIR}account/login/bloc/login_state.dart`,
         `${MAIN_SRC_DIR}account/login/login_repository.dart`,
         `${MAIN_SRC_DIR}account/login/login_screen.dart`,
-        `${MAIN_SRC_DIR}account/register/register_bloc.dart`,
+        `${MAIN_SRC_DIR}account/register/bloc/register_bloc.dart`,
+        `${MAIN_SRC_DIR}account/register/bloc/register_events.dart`,
+        `${MAIN_SRC_DIR}account/register/bloc/register_models.dart`,
+        `${MAIN_SRC_DIR}account/register/bloc/register_state.dart`,
         `${MAIN_SRC_DIR}account/register/register_screen.dart`,
-        `${MAIN_SRC_DIR}account/settings/settings_bloc.dart`,
+        `${MAIN_SRC_DIR}account/settings/bloc/settings_bloc.dart`,
+        `${MAIN_SRC_DIR}account/settings/bloc/settings_events.dart`,
+        `${MAIN_SRC_DIR}account/settings/bloc/settings_models.dart`,
+        `${MAIN_SRC_DIR}account/settings/bloc/settings_state.dart`,
         `${MAIN_SRC_DIR}account/settings/settings_screen.dart`
     ],
     android: [

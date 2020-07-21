@@ -1,13 +1,11 @@
-<%_ if (enableTranslation) { _%>
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:<%= baseName %>/account/login/login_repository.dart';
 import 'package:<%= baseName %>/generated/l10n.dart';
-import 'package:<%= baseName %>/routes.dart';
-<%_ } _%>
 import 'package:<%= baseName %>/keys.dart';
-import 'package:<%= baseName %>/main/main_bloc.dart';
-import 'package:<%= baseName %>/shared/bloc/bloc_provider.dart';
-import 'package:<%= baseName %>/shared/widgets/drawer/drawer_bloc.dart';
+import 'package:<%= baseName %>/main/bloc/main_bloc.dart';
+import 'package:<%= baseName %>/shared/widgets/drawer/bloc/drawer_bloc.dart';
 import 'package:<%= baseName %>/shared/widgets/drawer/drawer_widget.dart';
-import 'package:<%= baseName %>/shared/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -17,27 +15,31 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mainBloc = BlocProvider.of<MainBloc>(context);
-    init(context, mainBloc);
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(<%_ if (enableTranslation) { _%> S.of(context).pageMainTitle <%_ } else { _%> 'Main page' <%_ } _%>),
-      ),
-      body: body(context, mainBloc),
-      drawer: BlocProvider<<%= camelizedUpperFirstBaseName %>DrawerBloc>(bloc: <%= camelizedUpperFirstBaseName %>DrawerBloc(),
-           child: <%= camelizedUpperFirstBaseName %>Drawer())
+    return BlocBuilder<MainBloc, MainState>(
+      buildWhen: (previous, current) => previous.currentUser != current.currentUser,
+      builder: (context, state) {
+        return Scaffold(
+            appBar: AppBar(
+              centerTitle: true,
+              title: Text(<%_ if (enableTranslation) { _%> S.of(context).pageMainTitle <%_ } else { _%> 'Main page' <%_ } _%>),
+            ),
+            body: body(context),
+            drawer: BlocProvider<DrawerBloc>(
+                create: (context) => DrawerBloc(loginRepository: LoginRepository()),
+                child: <%= camelizedUpperFirstBaseName %>Drawer())
+        );
+      },
     );
   }
 
-  Widget body(BuildContext context, MainBloc mainBloc){
+  Widget body(BuildContext context){
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            currentUserWidget(context, mainBloc),
+            currentUserWidget(context),
             Padding(padding: EdgeInsets.symmetric(vertical: 10),),
             linkWidget(context, 'Jhipster Docs', 'https://www.jhipster.tech/'),
             linkWidget(context, 'Stackoverflow', 'http://stackoverflow.com/tags/jhipster/info'),
@@ -50,18 +52,19 @@ class MainScreen extends StatelessWidget {
     );
   }
 
-  Widget currentUserWidget(BuildContext context, MainBloc bloc) {
-    return StreamBuilder<User>(
-      stream: bloc.userStream,
-      builder: (context, snapshot) {
-        String login = snapshot.data?.login != null ? snapshot.data?.login : '';
+  Widget currentUserWidget(BuildContext context) {
+    return BlocBuilder<MainBloc, MainState>(
+        buildWhen: (previous, current) => previous.currentUser != current.currentUser,
+        builder: (context, state) {
+        String login = state.currentUser.login;
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(<%_ if (enableTranslation) { _%> S.of(context).pageMainCurrentUser(login) <%_ } else { _%> 'Current user: ' + login <%_ } _%>, style: Theme.of(context).textTheme.headline3),
             Padding(padding: EdgeInsets.symmetric(vertical: 5),),
             SizedBox(width: MediaQuery.of(context).size.width * 0.80,
-                child: Text(<%_ if (enableTranslation) { _%> S.of(context).pageMainWelcome <%_ } else { _%> 'Welcome to your Jhipster flutter app' <%_ } _%>, textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline3)),
+                child: Text(<%_ if (enableTranslation) { _%> S.of(context).pageMainWelcome <%_ } else { _%> 'Welcome to your Jhipster flutter app' <%_ } _%>, textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headline3)),
           ],
         );
       }
@@ -69,15 +72,15 @@ class MainScreen extends StatelessWidget {
   }
 
   Widget linkWidget(BuildContext context, String text, String url){
-      return Padding(
-            padding: const EdgeInsets.only(bottom: 15),
-            child: RaisedButton(
-               onPressed: () => _launchURL(url),
-               child: Container(
-                  child: Text(text, textAlign: TextAlign.center,),
-                  width: MediaQuery.of(context).size.width * 0.5,)
-            ),
-     );
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: RaisedButton(
+          onPressed: () => _launchURL(url),
+          child: Container(
+            child: Text(text, textAlign: TextAlign.center,),
+            width: MediaQuery.of(context).size.width * 0.5,)
+      ),
+    );
   }
 
   _launchURL(String url) async {
@@ -87,17 +90,4 @@ class MainScreen extends StatelessWidget {
       throw 'Could not launch $url';
     }
   }
-
-
-  init(BuildContext context, MainBloc bloc) async {
-    <%_ if (enableTranslation) { _%>
-    bool reload = await bloc.init();
-    if(reload) {
-      Navigator.popAndPushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.main);
-    }
-    <%_ } else { _%>
-    bloc.init();
-    <%_ } _%>
-  }
-
 }

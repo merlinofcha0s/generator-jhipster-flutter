@@ -4,7 +4,7 @@
       "packageName": "com.sample",
       "nativeLanguage": "en"
     },
-    "jhipsterVersion": "6.8.0",
+    "jhipsterVersion": "6.10.0",
     "applicationType": "monolith"
   }
 }

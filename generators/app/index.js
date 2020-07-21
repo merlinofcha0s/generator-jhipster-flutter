@@ -32,14 +32,13 @@ module.exports = class extends BaseGenerator {
             displayLogo() {
                 /* eslint-disable no-useless-escape */
                 this.log(`${chalk.bold.cyan('      _ _    _ _____ _____   _____ _______ ______ _____    ______ _     _    _ _______ _______ ______ _____   ')}`);
-                this.log(`${chalk.bold.cyan('     | | |  | |_   _|  __ \ / ____|__   __|  ____|  __ \  |  ____| |   | |  | |__   __|__   __|  ____|  __ \  ')}`);
-                this.log(`${chalk.bold.cyan('     | | |__| | | | | |__) | (___    | |  | |__  | |__) | | |__  | |   | |  | |  | |     | |  | |__  | |__) | ')}`);
-                this.log(`${chalk.bold.cyan(' _   | |  __  | | | |  ___/ \___ \   | |  |  __| |  _  /  |  __| | |   | |  | |  | |     | |  |  __| |  _  /  ')}`);
-                this.log(`${chalk.bold.cyan('| |__| | |  | |_| |_| |     ____) |  | |  | |____| | \ \  | |    | |___| |__| |  | |     | |  | |____| | \ \  ')}`);
-                this.log(`${chalk.bold.cyan(' \____/|_|  |_|_____|_|    |_____/   |_|  |______|_|  \_\ |_|    |______\____/   |_|     |_|  |______|_|  \_\ ')}`);
-                this.log(`${chalk.bold.cyan('                                                                                                               ')}`);
+                this.log(`${chalk.bold.cyan('     | | |  | |_   _|  __ \\ / ____|__   __|  ____|  __ \\  |  ____| |   | |  | |__   __|__   __|  ____|  __ \\')}`);
+                this.log(`${chalk.bold.cyan('     | | |__| | | | | |__) | (___    | |  | |__  | |__) | | |__  | |   | |  | |  | |     | |  | |__  | |__) |')}`);
+                this.log(`${chalk.bold.cyan(' _   | |  __  | | | |  ___/ \\___ \\   | |  |  __| |  _  /  |  __| | |   | |  | |  | |     | |  |  __| |  _  /')}`);
+                this.log(`${chalk.bold.cyan('| |__| | |  | |_| |_| |     ____) |  | |  | |____| | \\ \\  | |    | |___| |__| |  | |     | |  | |____| | \\ \\')}`);
+                this.log(`${chalk.bold.cyan(' \\____/|_|  |_|_____|_|    |_____/   |_|  |______|_|  \\_\\ |_|    |______\\____/   |_|     |_|  |______|_|  \\_\\')}`);
 
-                this.log(`\nWelcome to the ${chalk.bold.yellow('JHipster-Flutter')} generator!`);
+                this.log(`\nWelcome to JHipster-Flutter ${chalk.bold.yellowBright(`v${packagejs.version}`)} !`);
                 /* eslint-enable no-useless-escape */
             },
             checkJhipster() {
@@ -201,8 +200,12 @@ module.exports = class extends BaseGenerator {
         const logMsg = `Start your favorite IDE for flutter (Visual Studio code, IntelliJ or Android Studio) or \n do ${chalk.yellow.bold('flutter run')}\n`;
         this.log(chalk.green(logMsg));
         if (this.enableTranslation) {
-            const logMsgI18n = 'Don\'t forget to install flutter-intl for the i18n (https://plugins.jetbrains.com/plugin/13666-flutter-intl) \n';
+            const logMsgI18n = 'Don\'t forget to install flutter-intl for the i18n';
+            const logMsgI18nIntelliJPlugins = 'i18n for IntelliJ : (https://plugins.jetbrains.com/plugin/13666-flutter-intl)';
+            const logMsgI18nVsCodePlugins = 'i18n for VS code (https://marketplace.visualstudio.com/items?itemName=localizely.flutter-intl) \n';
             this.log(chalk.blue(logMsgI18n));
+            this.log(chalk.blue(logMsgI18nIntelliJPlugins));
+            this.log(chalk.blue(logMsgI18nVsCodePlugins));
         }
     }
 };
