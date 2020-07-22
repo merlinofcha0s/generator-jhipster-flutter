@@ -44,23 +44,5 @@ const flutterFiles = {
 };
 
 module.exports = {
-    writeFiles,
     flutterFiles
 };
-
-function writeFiles() {
-    return {
-        writeClientFiles() {
-            this.writeFilesToDisk(flutterFiles, this, false, CLIENT_FLUTTER_TEMPLATES_DIR);
-            //this.addEntityToModule(this.entityInstance, this.entityClass, this.entityAngularName, this.entityFolderName, this.entityFileName, this.enableTranslation);
-
-            // Copy for each
-           /* if (this.enableTranslation) {
-                const languages = this.languages || this.getAllInstalledLanguages();
-                languages.forEach((language) => {
-                    // this.copyI18n(language, CLIENT_I18N_TEMPLATES_DIR);
-                });
-            }*/
-        }
-    };
-}

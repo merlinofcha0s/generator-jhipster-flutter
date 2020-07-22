@@ -12,6 +12,7 @@ const shelljs = require('shelljs');
 const path = require('path');
 const fs = require('fs');
 const pluralize = require('pluralize');
+const utils = require('generator-jhipster/generators/utils');
 
 const CLIENT_FLUTTER_TEMPLATES_DIR = 'flutter';
 
@@ -596,6 +597,10 @@ module.exports = class extends BaseGenerator {
     writing() {
         this.log(chalk.green(`Writing.....`));
         this.writeFilesToDisk(files.flutterFiles, this, false, `${CLIENT_FLUTTER_TEMPLATES_DIR}`);
+        this.addEntityToRoute(this.context.baseName, this.context.entityInstance, 
+            this.context.entityClass, this.context.entityAngularName,
+             this.context.entityFolderName, this.context.entityFileName,
+              this.context.enableTranslation);
     }
 
     install() {
@@ -613,4 +618,55 @@ module.exports = class extends BaseGenerator {
     end() {
         this.log(chalk.green.bold('Entities generation done !!\n'));
     }
+    
+    
+    /**
+     * Add a new entity in the TS modules file.
+     *
+     * @param {string} entityInstance - Entity Instance
+     * @param {string} entityClass - Entity Class
+     * @param {string} entityClass - Entity Angular Name
+     * @param {string} entityFolderName - Entity Folder Name
+     * @param {string} entityFileName - Entity File Name
+     * @param {boolean} enableTranslation - If translations are enabled or not
+     */
+    addEntityToRoute(baseName, entityInstance, entityClass, entityFolderName, entityFileName, enableTranslation) {
+        // workaround method being called on initialization
+        if (!entityClass) {
+            return;
+        }
+
+        entityFileName = _.snakeCase(_.lowerCase(this.context.entityFileName));
+        const appPath = 'lib/app.dart';
+        try {
+            const newRoute = `${this.context.camelizedUpperFirstBaseName}Routes.entities${entityClass}List: (context) {
+          return BlocProvider<${entityClass}Bloc>(
+            create: (context) => ${entityClass}Bloc(${entityFileName}Repository: ${entityClass}Repository())
+            ..add(InitList()),
+            child: ${entityClass}ListScreen());
+          },`;
+            utils.rewriteFile({
+                file: appPath,
+                needle: 'jhipster-merlin-needle-route-add',
+                splicable: [
+                    this.stripMargin(newRoute)
+                ]
+            }, this);
+
+            const newImports = `import 'package:${baseName}/entities/${entityFileName}/bloc/${entityFileName}_bloc.dart';
+            import 'package:${baseName}/entities/${entityFileName}/${entityFileName}_list_screen.dart';
+            import 'package:${baseName}/entities/${entityFileName}/${entityFileName}_repository.dart';`;
+            utils.rewriteFile({
+                file: appPath,
+                needle: 'jhipster-merlin-needle-import-add',
+                splicable: [
+                    this.stripMargin(newImports)
+                ]
+            }, this);
+        } catch (e) {
+            this.log(`${chalk.yellow('\nUnable to find ') + appPath + chalk.yellow(' or missing required jhipster-needle. Reference to ') + entityClass} ${chalk.yellow(`not added to ${entityPagePath}.\n`)}`);
+            this.debug('Error:', e);
+        }
+    }
+
 };

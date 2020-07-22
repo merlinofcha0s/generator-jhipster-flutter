@@ -19,6 +19,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'generated/l10n.dart';
 <%_ } _%>
 
+// jhipster-merlin-needle-import-add - JHipster will add new imports here
+
 class <%= camelizedUpperFirstBaseName %>App extends StatelessWidget {
   const <%= camelizedUpperFirstBaseName %>App({Key key}) : super(key: key);
 
@@ -50,6 +52,7 @@ class <%= camelizedUpperFirstBaseName %>App extends StatelessWidget {
             ..add(LoadCurrentUser()),
           child: SettingsScreen());
         },
+        // jhipster-merlin-needle-route-add - JHipster will add new routes here
       },
       <%_ if (enableTranslation) { _%>
         localizationsDelegates: [
