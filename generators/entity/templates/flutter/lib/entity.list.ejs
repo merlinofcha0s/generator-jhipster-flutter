@@ -1,0 +1,89 @@
+<%_
+const baseName = context.baseName;
+const entityInstance = context.entityInstance;
+const entityFileName = context.entityFileName;
+const entityClassPlural = context.entityClassPlural;
+const entityClassHumanized = context.entityClassHumanized;
+const entityClassPluralHumanizedLowered = context.entityClassPluralHumanizedLowered;
+const camelizedUpperFirstBaseName = context.camelizedUpperFirstBaseName;
+_%>
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:<%= baseName %>/account/login/login_repository.dart';
+import 'package:<%= baseName %>/entities/<%= entityFileName %>/bloc/<%= entityFileName %>_bloc.dart';
+import 'package:<%= baseName %>/entities/<%= entityFileName %>/<%= entityFileName %>_model.dart';
+import 'package:<%= baseName %>/generated/l10n.dart';
+import 'package:<%= baseName %>/keys.dart';
+import 'package:flutter/material.dart';
+import 'package:<%= baseName %>/shared/widgets/drawer/bloc/drawer_bloc.dart';
+import 'package:<%= baseName %>/shared/widgets/drawer/drawer_widget.dart';
+import 'package:<%= baseName %>/shared/widgets/loading_indicator_widget.dart';
+
+class <%= entityClassHumanized %>ListScreen extends StatelessWidget {
+    <%= entityClassHumanized %>ListScreen({Key key}) : super(key: <%= camelizedUpperFirstBaseName %>Keys.<%= entityFileName %>ListScreen);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title:Text(S.of(context).pageEntities<%= entityClassHumanized %>ListTitle),
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(15.0),
+          child: BlocBuilder<<%= entityClassHumanized %>Bloc, <%= entityClassHumanized %>State>(
+            buildWhen: (previous, current) => previous.<%= entityClassPluralHumanizedLowered %> != current.<%= entityClassPluralHumanizedLowered %>,
+            builder: (context, state) {
+              return Visibility(
+                visible: state.<%= entityFileName %>StatusUI == <%= entityClassHumanized %>StatusUI.done,
+                replacement: LoadingIndicator(),
+                child: Column(children: <Widget>[
+                  for (<%= entityClassHumanized %> <%= entityFileName %> in state.<%= entityClassPluralHumanizedLowered %>) <%= entityFileName %>Card(<%= entityFileName %>, context)
+                ]),
+              );
+            }
+          ),
+        ),
+      drawer: BlocProvider<DrawerBloc>(
+          create: (context) => DrawerBloc(loginRepository: LoginRepository()),
+          child: <%= camelizedUpperFirstBaseName %>Drawer()),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => null,
+        child: Icon(Icons.add, color: Theme.of(context).iconTheme.color,),
+        backgroundColor: Theme.of(context).primaryColor,
+      )
+    );
+  }
+
+  Widget <%= entityFileName %>Card(<%= entityClassHumanized %> <%= entityFileName %>, BuildContext context) {
+    return Card(
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.90,
+        child: Column(
+          children: <Widget>[
+            ListTile(
+              leading: Icon(Icons.turned_in),
+              title: Text(<%= entityFileName %>.lastName),
+              subtitle: Text(<%= entityFileName %>.firstName),
+            ),
+            ButtonBar(
+              children: <Widget>[
+                FlatButton(
+                  child: Text(S.of(context).entityActionView),
+                  onPressed: () {/* ... */},
+                ),
+                FlatButton(
+                  child: Text(S.of(context).entityActionEdit),
+                  onPressed: () {/* ... */},
+                ),
+                FlatButton(
+                  child: Text(S.of(context).entityActionDelete),
+                  onPressed: () {/* ... */},
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}

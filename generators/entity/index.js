@@ -99,6 +99,17 @@ module.exports = class extends BaseGenerator {
                 this.configRootPath = props.backendPath;
                 this.jhipsterAppConfig = this.getAllJhipsterConfig();
                 this.log(chalk.green(`Detected existing project : ${this.jhipsterAppConfig.packageName}`));
+
+                let rawdata = fs.readFileSync(props.backendPath + '/.yo-rc.json');
+                let rc = JSON.parse(rawdata);
+                this.context.baseName = rc['generator-jhipster-flutter-merlin']['promptValues']['baseName'];
+                this.context.camelizedBaseName = _.camelCase(this.context.baseName);
+                this.context.camelizedUpperFirstBaseName = _.upperFirst(this.context.camelizedBaseName);
+                this.context.packageName = rc['generator-jhipster-flutter-merlin']['promptValues']['packageName'];
+                this.context.nativeLanguage = rc['generator-jhipster-flutter-merlin']['promptValues']['nativeLanguage'];
+
+                this.log(chalk.green(`${rc['generator-jhipster-flutter-merlin']['promptValues']['baseName']}`));
+
                 if (props.backendPath) {
                     this.log(chalk.green(`\nFound the entities folder configuration file, entities can be automatically generated!\n`));
                     if (path.isAbsolute(props.backendPath)) {
@@ -150,15 +161,16 @@ module.exports = class extends BaseGenerator {
 
         const fileData = this.data || this.context.fileData;
         // Used for i18n
-        context.entityClassHumanized = fileData.entityClassHumanized || _.startCase(context.entityNameCapitalized);
+        context.entityClassHumanized = fileData.entityClassHumanized || _.startCase(context.entityClass);
         context.entityClassPluralHumanized = fileData.entityClassPluralHumanized || _.startCase(context.entityClassPlural);
+        context.entityClassPluralHumanizedLowered = _.lowerCase(context.entityClassPluralHumanized);
         // Implement i18n variant ex: 'male', 'female' when applied
         context.entityI18nVariant = fileData.entityI18nVariant || 'default';
 
         context.entityInstance = _.lowerFirst(entityName);
         context.entityInstancePlural = pluralize(context.entityInstance);
         context.entityApiUrl = entityNamePluralizedAndSpinalCased;
-        context.entityFileName = _.snakeCase(_.lowerCase(entityName)) + '_model';
+        context.entityFileName = _.snakeCase(_.lowerCase(entityName));
         context.entityFolderName = 'entities/' + _.kebabCase(_.lowerCase(entityName));
        
         context.entityModelFileName = context.entityFolderName;
