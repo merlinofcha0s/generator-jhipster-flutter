@@ -33,12 +33,12 @@ fields.forEach(field => {
     let dartType;
     let desc;
     if (field.fieldIsEnum) {
-        dartType = 'enum';
-    } else if ( fieldType === 'UUID') {
+        dartType = field.fieldType;
+    } else if (fieldType === 'UUID') {
         dartType = 'String';
-    } else if ( fieldType === 'Integer' || fieldType === 'Long') {
+    } else if (fieldType === 'Integer' || fieldType === 'Long') {
         dartType = 'int';
-    }else if ( fieldType === 'Instant') {
+    } else if (fieldType === 'Instant') {
         dartType = 'DateTime';
         desc = '.toIso8601String()' + 'Z';
     } else {
@@ -55,7 +55,7 @@ fields.forEach(field => {
 relationships.forEach(rela => { 
     if(rela.relationshipType == 'many-to-one' || rela.relationshipType == 'one-to-one' && rela.ownerSide == true
     || rela.relationshipType == 'many-to-many'  && rela.ownerSide == true ){
-        
+        i++;
         const varValue = {};
         varValue['type'] = capitalize(rela.otherEntityName);
         varValue['name'] = rela.relationshipName;
@@ -66,7 +66,6 @@ relationships.forEach(rela => {
     }
 });
 _%>
-
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 
 <% for (idx in dartFields) { if (dartFields[idx]['desc'] == 'relationship') {%>
@@ -74,24 +73,52 @@ import '../<%- idx %>/<%- idx %>_model.dart';<%}} %>
 
 @jsonSerializable
 class <%= entityClass %> {
-    <%_ for (idx in dartFields) { %>
+<%_ for (idx in dartFields) { %>
   @JsonProperty(name: '<%- dartFields[idx]['name'] _%>')
-         <%_ if (dartFields[idx]['type'] == 'enum') { _%>
-  final String <%- dartFields[idx]['name'] %>;
-        <%_ } else if (dartFields[idx]['desc'] == 'relationship') { _%>
-        <%_ if(dartFields[idx]['isList']) { %>
+    <%_ if(dartFields[idx]['isList']) { _%>
   final List<<%- dartFields[idx]['type'] %>> <%- dartFields[idx]['name'] _%>;
-           <%_ } else { _%>
-  final <%= dartFields[idx]['type'] %> <%= dartFields[idx]['name'] %>;<%_ } _%>
-        <%_ } else { _%>
-  final <%- dartFields[idx]['type'] %> <%- dartFields[idx]['name'] %>;
-        <%_ }} _%>
- 
+    <%_ } else { _%>
+  final <%= dartFields[idx]['type'] %> <%= dartFields[idx]['name'] %>;
+    <%_ } _%>
+<%_ } _%>
         
- const <%= entityClass %> ({ <%_ for (idx in dartFields) { _%>
+ const <%= entityClass %> ({ 
+     <%_ for (idx in dartFields) { _%>
         this.<%- dartFields[idx]['name'] -%>,
         <%_ } _%> 
     });
+
+@override
+String toString() {
+    return '<%= entityClass %>{'+
+    <% for (idx in dartFields) { _%>
+        '<%= dartFields[idx]['name'] _%>: $<%= dartFields[idx]['name'] _%>,' +
+    <% } _%> 
+    '}';
+   }
+
+@override
+bool operator == (Object other) => 
+    identical(this, other) ||
+    other is <%= entityClass %> &&
+    <% var iEqual = 0; for (idx in dartFields) { _%>
+    <% if(iEqual != i) {_%>
+    <%- dartFields[idx]['name'] + ' == other.' + dartFields[idx]['name'] + ' '-%> &&
+    <% } else {_%>
+    <%- dartFields[idx]['name'] _%> == other.<%- dartFields[idx]['name'] %>;
+    <% } _%> 
+    <%  iEqual++; } _%>
+
+
+@override
+int get hashCode => 
+    <% var iEqual = 0; for (idx in dartFields) { _%>
+    <% if(iEqual != i) {_%>
+    <%- dartFields[idx]['name'] + '.hashCode ' -%> ^
+    <% } else {_%>
+    <%- dartFields[idx]['name'] + '.hashCode' _%>;
+    <% } _%> 
+    <%  iEqual++; } _%>
 }
 
 
@@ -99,9 +126,11 @@ class <%= entityClass %> {
 fields.forEach(field => {
     if (field.fieldIsEnum && enumsAlreadyDeclared.indexOf(field.fieldType) === -1) {
         enumsAlreadyDeclared.push(field.fieldType); _%>
-const <%= field.fieldType.toLowerCase() %> = {<%
+@jsonSerializable
+@Json(enumValues: <%= field.fieldType %>.values)
+enum <%= field.fieldType %> {<%
         const enums = field.fieldValues.split(',');
         for (let i = 0; i < enums.length; i++) { %>
-    '<%= enums[i] %>'<%if (i < enums.length - 1) { %>,<% }
+    <%= enums[i] %> <%if (i < enums.length - 1) { %>,<% }
         } %>
-}; <%_ }}); _%>
+} <%_ }}); _%>

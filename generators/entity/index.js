@@ -158,8 +158,8 @@ module.exports = class extends BaseGenerator {
         context.entityInstance = _.lowerFirst(entityName);
         context.entityInstancePlural = pluralize(context.entityInstance);
         context.entityApiUrl = entityNamePluralizedAndSpinalCased;
-        context.entityFileName = _.lowerCase(context.entityClass) + '_model';
-        context.entityFolderName = 'entities/' + _.lowerCase(context.entityClass);
+        context.entityFileName = _.snakeCase(_.lowerCase(entityName)) + '_model';
+        context.entityFolderName = 'entities/' + _.kebabCase(_.lowerCase(entityName));
        
         context.entityModelFileName = context.entityFolderName;
         context.entityParentPathAddition = this.getEntityParentPathAddition(context.clientRootFolder);
