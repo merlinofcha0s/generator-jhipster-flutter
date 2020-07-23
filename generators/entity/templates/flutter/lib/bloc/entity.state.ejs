@@ -3,34 +3,35 @@ const baseName = context.baseName;
 const entityInstance = context.entityInstance;
 const entityFileName = context.entityFileName;
 const entityClassPlural = context.entityClassPlural;
-const entityClassHumanized = context.entityClassHumanized;
-const entityClassPluralHumanizedLowered = context.entityClassPluralHumanizedLowered;
+const entityClassPluralLowered = context.entityClassPluralLowered;
+const entityClass = context.entityClass;
+const entityClassCamelCase = context.entityClassCamelCase;
 _%>
 part of '<%= entityFileName %>_bloc.dart';
 
-enum <%= entityClassHumanized %>StatusUI {init, loading, done}
+enum <%= entityClass %>StatusUI {init, loading, done}
 
-class <%= entityClassHumanized %>State extends Equatable {
-  final List<<%= entityClassHumanized %>> <%= entityClassPluralHumanizedLowered %>;
-  final <%= entityClassHumanized %>StatusUI <%= entityFileName %>StatusUI;
+class <%= entityClass %>State extends Equatable {
+  final List<<%= entityClass %>> <%= entityClassPluralLowered %>;
+  final <%= entityClass %>StatusUI <%= entityClassCamelCase %>StatusUI;
   
-  const <%= entityClassHumanized %>State({
-    this.<%= entityClassPluralHumanizedLowered %> = const [],
-    this.<%= entityFileName %>StatusUI = <%= entityClassHumanized %>StatusUI.init
+  const <%= entityClass %>State({
+    this.<%= entityClassPluralLowered %> = const [],
+    this.<%= entityClassCamelCase %>StatusUI = <%= entityClass %>StatusUI.init
   });
 
-  <%= entityClassHumanized %>State copyWith({
-    List<Employee> <%= entityClassPluralHumanizedLowered %>,
-    <%= entityClassHumanized %>StatusUI <%= entityFileName %>StatusUI
+  <%= entityClass %>State copyWith({
+    List<<%= entityClass %>> <%= entityClassPluralLowered %>,
+    <%= entityClass %>StatusUI <%= entityClassCamelCase %>StatusUI
   }) {
-    return <%= entityClassHumanized %>State(
-        <%= entityClassPluralHumanizedLowered %>: <%= entityClassPluralHumanizedLowered %> ?? this.<%= entityClassPluralHumanizedLowered %>,
-      <%= entityFileName %>StatusUI: <%= entityFileName %>StatusUI ?? this.<%= entityFileName %>StatusUI
+    return <%= entityClass %>State(
+        <%= entityClassPluralLowered %>: <%= entityClassPluralLowered %> ?? this.<%= entityClassPluralLowered %>,
+      <%= entityClassCamelCase %>StatusUI: <%= entityClassCamelCase %>StatusUI ?? this.<%= entityClassCamelCase %>StatusUI
     );
   }
 
   @override
-  List<Object> get props => [<%= entityClassPluralHumanizedLowered %>, <%= entityFileName %>StatusUI];
+  List<Object> get props => [<%= entityClassPluralLowered %>, <%= entityClassCamelCase %>StatusUI];
 
   @override
   bool get stringify => true;

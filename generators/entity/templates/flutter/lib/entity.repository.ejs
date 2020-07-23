@@ -3,25 +3,26 @@ const baseName = context.baseName;
 const entityInstance = context.entityInstance;
 const entityFileName = context.entityFileName;
 const entityClassPlural = context.entityClassPlural;
-const entityClassHumanized = context.entityClassHumanized;
-const entityClassPluralHumanizedLowered = context.entityClassPluralHumanizedLowered;
+const entityClassPluralLowered = context.entityClassPluralLowered;
+const entityClass = context.entityClass;
+const entityClassCamelCase = context.entityClassCamelCase;
 _%>
 import 'package:<%= baseName %>/entities/<%= entityFileName %>/<%= entityFileName %>_model.dart';
 import 'package:<%= baseName %>/shared/repository/http_utils.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 
-class <%= entityClassHumanized %>Repository {
-    <%= entityClassHumanized %>Repository();
+class <%= entityClass %>Repository {
+    <%= entityClass %>Repository();
   
-  static final String uriEndpoint = '/<%= entityClassPluralHumanizedLowered %>';
+  static final String uriEndpoint = '/<%= entityClassPluralLowered %>';
 
-  Future<List<<%= entityClassHumanized %>>> getAll<%= entityClassPlural %>() async {
+  Future<List<<%= entityClass %>>> getAll<%= entityClassPlural %>() async {
     final all<%= entityClassPlural %>Request = await HttpUtils.getRequest(uriEndpoint);
-    return JsonMapper.deserialize<List<<%= entityClassHumanized %>>>(all<%= entityClassPlural %>Request.body);
+    return JsonMapper.deserialize<List<<%= entityClass %>>>(all<%= entityClassPlural %>Request.body);
   }
 
-  Future<<%= entityClassHumanized %>> get<%= entityClassHumanized %>(int id) async {
+  Future<<%= entityClass %>> get<%= entityClass %>(int id) async {
     final <%= entityFileName %>Request = await HttpUtils.getRequest('$uriEndpoint/$id');
-    return JsonMapper.deserialize<<%= entityClassHumanized %>>(<%= entityFileName %>Request.body);
+    return JsonMapper.deserialize<<%= entityClass %>>(<%= entityFileName %>Request.body);
   }
 }

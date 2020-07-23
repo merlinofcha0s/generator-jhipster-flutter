@@ -3,9 +3,11 @@ const baseName = context.baseName;
 const entityInstance = context.entityInstance;
 const entityFileName = context.entityFileName;
 const entityClassPlural = context.entityClassPlural;
-const entityClassHumanized = context.entityClassHumanized;
-const entityClassPluralHumanizedLowered = context.entityClassPluralHumanizedLowered;
+const entityClassPluralLowered = context.entityClassPluralLowered;
+const entityClass = context.entityClass;
 const camelizedUpperFirstBaseName = context.camelizedUpperFirstBaseName;
+const entityClassCamelCase = context.entityClassCamelCase;
+const fields = context.fields;
 _%>
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:<%= baseName %>/account/login/login_repository.dart';
@@ -18,26 +20,26 @@ import 'package:<%= baseName %>/shared/widgets/drawer/bloc/drawer_bloc.dart';
 import 'package:<%= baseName %>/shared/widgets/drawer/drawer_widget.dart';
 import 'package:<%= baseName %>/shared/widgets/loading_indicator_widget.dart';
 
-class <%= entityClassHumanized %>ListScreen extends StatelessWidget {
-    <%= entityClassHumanized %>ListScreen({Key key}) : super(key: <%= camelizedUpperFirstBaseName %>Keys.<%= entityFileName %>ListScreen);
+class <%= entityClass %>ListScreen extends StatelessWidget {
+    <%= entityClass %>ListScreen({Key key}) : super(key: <%= camelizedUpperFirstBaseName %>Keys.<%= entityClassCamelCase %>ListScreen);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title:Text(S.of(context).pageEntities<%= entityClassHumanized %>ListTitle),
+          title:Text(S.of(context).pageEntities<%= entityClass %>ListTitle),
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(15.0),
-          child: BlocBuilder<<%= entityClassHumanized %>Bloc, <%= entityClassHumanized %>State>(
-            buildWhen: (previous, current) => previous.<%= entityClassPluralHumanizedLowered %> != current.<%= entityClassPluralHumanizedLowered %>,
+          child: BlocBuilder<<%= entityClass %>Bloc, <%= entityClass %>State>(
+            buildWhen: (previous, current) => previous.<%= entityClassPluralLowered %> != current.<%= entityClassPluralLowered %>,
             builder: (context, state) {
               return Visibility(
-                visible: state.<%= entityFileName %>StatusUI == <%= entityClassHumanized %>StatusUI.done,
+                visible: state.<%= entityClassCamelCase %>StatusUI == <%= entityClass %>StatusUI.done,
                 replacement: LoadingIndicator(),
                 child: Column(children: <Widget>[
-                  for (<%= entityClassHumanized %> <%= entityFileName %> in state.<%= entityClassPluralHumanizedLowered %>) <%= entityFileName %>Card(<%= entityFileName %>, context)
+                  for (<%= entityClass %> <%= entityClassCamelCase %> in state.<%= entityClassPluralLowered %>) <%= entityClassCamelCase %>Card(<%= entityClassCamelCase %>, context)
                 ]),
               );
             }
@@ -54,7 +56,7 @@ class <%= entityClassHumanized %>ListScreen extends StatelessWidget {
     );
   }
 
-  Widget <%= entityFileName %>Card(<%= entityClassHumanized %> <%= entityFileName %>, BuildContext context) {
+  Widget <%= entityClassCamelCase %>Card(<%= entityClass %> <%= entityClassCamelCase %>, BuildContext context) {
     return Card(
       child: Container(
         width: MediaQuery.of(context).size.width * 0.90,
@@ -62,8 +64,11 @@ class <%= entityClassHumanized %>ListScreen extends StatelessWidget {
           children: <Widget>[
             ListTile(
               leading: Icon(Icons.turned_in),
-              title: Text(<%= entityFileName %>.lastName),
-              subtitle: Text(<%= entityFileName %>.firstName),
+              title: Text(<%= entityClassCamelCase %>.<%= fields[0].fieldName %>.toString()),
+              subtitle: Text(<%= entityClassCamelCase %>.<%= fields[1].fieldName %>.toString()),
+              <%# for (field in fields) { let i = 0; %>
+              <%# subtitle: Text(entityClassCamelCase.fields[field].fieldName), %>
+              <%# i++; } %>
             ),
             ButtonBar(
               children: <Widget>[

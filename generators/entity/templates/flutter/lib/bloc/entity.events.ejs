@@ -3,13 +3,14 @@ const baseName = context.baseName;
 const entityInstance = context.entityInstance;
 const entityFileName = context.entityFileName;
 const entityClassPlural = context.entityClassPlural;
-const entityClassHumanized = context.entityClassHumanized;
-const entityClassPluralHumanizedLowered = context.entityClassPluralHumanizedLowered;
+const entityClassPluralLowered = context.entityClassPluralLowered;
+const entityClass = context.entityClass;
+
 _%>
 part of '<%= entityFileName %>_bloc.dart';
 
-abstract class <%= entityClassHumanized %>Event extends Equatable {
-  const <%= entityClassHumanized %>Event();
+abstract class <%= entityClass %>Event extends Equatable {
+  const <%= entityClass %>Event();
 
   @override
   List<Object> get props => [];
@@ -18,4 +19,4 @@ abstract class <%= entityClassHumanized %>Event extends Equatable {
   bool get stringify => true;
 }
 
-class InitList extends <%= entityClassHumanized %>Event {}
+class Init<%= entityClass %>List extends <%= entityClass %>Event {}
