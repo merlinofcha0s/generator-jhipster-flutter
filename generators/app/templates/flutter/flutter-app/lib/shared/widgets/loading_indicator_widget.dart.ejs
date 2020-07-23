@@ -1,6 +1,7 @@
-
-
 import 'package:flutter/material.dart';
+<%_ if (enableTranslation) { _%>
+import 'package:jhipsterfluttersample/generated/l10n.dart';
+<%_ } _%>
 
 class LoadingIndicator extends StatelessWidget {
   LoadingIndicator({Key key}) : super(key: key);
@@ -10,7 +11,18 @@ class LoadingIndicator extends StatelessWidget {
     return Center(
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 40),
-        child: CircularProgressIndicator(value: null),
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.75,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  CircularProgressIndicator(value: null),
+                  Padding(padding: EdgeInsets.only(top: 15),),
+                Text(<%_ if (enableTranslation) { _%>S.of(context).loadingLabel<%_ } else { _%>'Loading...'<%_ } _%>, style: Theme.of(context).textTheme.bodyText1,)
+            ]),
+          ),
+        ),
       ),
     );
   }

@@ -602,7 +602,7 @@ module.exports = class extends BaseGenerator {
 
         this.log(chalk.green(`Adding route for ${this.context.entityClass}`));
         this.addEntityToRoute(this.context.baseName, this.context.entityClass,
-             this.context.entityFileName, this.context.camelizedUpperFirstBaseName, this.context.entityClassCamelCase);
+             this.context.entityFileName, this.context.camelizedUpperFirstBaseName, this.context.entityClassCamelCase, this.context.entityClassPlural);
 
         this.log(chalk.green(`Adding mapper for ${this.context.entityClass}`));
         this.addEntityToMapper(this.context.baseName, this.context.entityClass, this.context.entityFileName);
@@ -640,7 +640,7 @@ module.exports = class extends BaseGenerator {
      * @param {string} entityFileName - Entity File Name
      * @param {string} camelizedUpperFirstBaseName - Formatted base name (ex: MonApplication)
      */
-    addEntityToRoute(baseName, entityClass, entityFileName, camelizedUpperFirstBaseName, entityClassCamelCase) {
+    addEntityToRoute(baseName, entityClass, entityFileName, camelizedUpperFirstBaseName, entityClassCamelCase, entityClassPlural) {
         // workaround method being called on initialization
         if (!entityClass) {
             return;
@@ -684,13 +684,18 @@ module.exports = class extends BaseGenerator {
                 ]}, this);
 
 
-                const newKeyScreenList = `  static final entities${entityClass}List = '/entities/${entityFileName}-list';`;
-                utils.rewriteFile({
-                    file: routesClassPath,
-                    needle: 'jhipster-merlin-needle-key-add',
-                    splicable: [
-                        this.stripMargin(newRouteURL)
-                    ]}, this);
+            const drawerClassPath = 'lib/shared/widgets/drawer/drawer_widget.dart';
+            const newMenuEntry = `ListTile(
+                leading: Icon(Icons.label, size: iconSize,),
+                title: Text('${entityClassPlural}'),
+                onTap: () => Navigator.pushNamed(context, ${camelizedUpperFirstBaseName}Routes.entities${entityClass}List),
+            )`;
+            utils.rewriteFile({
+                file: drawerClassPath,
+                needle: 'jhipster-merlin-needle-menu-entry-add',
+                splicable: [
+                    this.stripMargin(newMenuEntry)
+                ]}, this);
         } catch (e) {
             this.log(`${chalk.yellow('\nUnable to find ') + appClassPath + chalk.yellow(' or missing required jhipster-needle. Reference to ') + entityClass})}`);
             this.debug('Error:', e);

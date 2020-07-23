@@ -37,7 +37,9 @@ class <%= camelizedUpperFirstBaseName %>Drawer extends StatelessWidget {
               leading: Icon(Icons.exit_to_app, size: iconSize,),
               title: Text(S.of(context).drawerLogoutTitle),
               onTap: () => context.bloc<DrawerBloc>().add(Logout())
-            )
+            ),
+            Divider(thickness: 2),
+            // jhipster-merlin-needle-menu-entry-add
           ],
         ),
       ),

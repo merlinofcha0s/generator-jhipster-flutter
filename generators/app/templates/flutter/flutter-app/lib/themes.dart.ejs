@@ -35,7 +35,8 @@ class Themes {
         secondaryVariant: jhSecondaryColorAccent,
         error: Colors.red),
     cardTheme: CardTheme(
-      color: jhPrimaryColor,
+      color: Colors.white,
+      elevation: 4,
     ),
     buttonTheme: ButtonThemeData(
       buttonColor: jhPrimaryColor,
@@ -44,7 +45,7 @@ class Themes {
       height: 50,
     ),
     iconTheme: IconThemeData(
-      color: Colors.white54,
+      color: Colors.white,
     ),
     textTheme: TextTheme(
       headline1: TextStyle(
