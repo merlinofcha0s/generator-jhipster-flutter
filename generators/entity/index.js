@@ -20,29 +20,49 @@ module.exports = class extends BaseGenerator {
     get initializing() {
         return {
             initContext() {
+                this.argument('name', {
+                    type: String,
+                    required: true,
+                    description: 'Entity name'
+                });
+
+                this.argument('backendPath', {
+                    type: String,
+                    required: false,
+                    description: 'Backend path'
+                });
+
+                this.option('fromCLI', {
+                    desc: 'Invocation from the CLI',
+                    type: Boolean,
+                    defaults: false
+                });
+                
                 this.context = {};
                 this.context.jhipsterConfigDirectory = '.jhipster';
                 this.setupEntityOptions(this, this, this.context);
             },
             readConfig() {
-                try{
+                this.context.fromCLI = this.options.fromCLI;
+                if(this.options.backendPath) {
+                    this.configRootPath = this.options.backendPath;
+                    this.context.backendPath = this.options.backendPath;
                     this.jhipsterAppConfig = this.getAllJhipsterConfig();
-                    if (!this.jhipsterAppConfig.packageName) {
+                } else {
+                    try {
+                        this.jhipsterAppConfig = this.getAllJhipsterConfig();
+                        if (!this.jhipsterAppConfig.packageName) {
+                            this.context.searchAutoBackendFolder = false;
+                            this.warning('No JHipster project detected !');
+                        } else {
+                            this.log(chalk.green(`Detected existing project : ${this.jhipsterAppConfig.packageName}`));
+                            this.context.searchAutoBackendFolder = true;
+                        }
+                    } catch(e) {
+                        this.warning('Can\'t detect the JHipster project automatically !\n');
                         this.context.searchAutoBackendFolder = false;
-                        this.warning('No JHipster project detected !');
-                    } else {
-                        this.log(chalk.green(`Detected existing project : ${this.jhipsterAppConfig.packageName}`));
-                        this.context.searchAutoBackendFolder = true;
                     }
-                } catch(e) {
-                    this.warning('No correct .yo-rc.json detected for automatic generation\n');
-                    this.context.searchAutoBackendFolder = false;
-                   /* this.context.backendFolder = '.jhipster';
-                    let rawdata = fs.readFileSync('.yo-rc.json');
-                    let rc = JSON.parse(rawdata);
-                    this.log(chalk.green(`${rc['generator-jhipster-flutter-merlin']['promptValues']['backendPath']}`));*/
                 }
-                
             },
             checkJhipster() {
                 if(this.context.searchAutoBackendFolder){
@@ -62,16 +82,10 @@ module.exports = class extends BaseGenerator {
         const done = this.async();
         const context = this.context;
         const autodetection = context.searchAutoBackendFolder;
+        const backendPath = context.backendPath;
         const prompts = [
             {
-                when: () => autodetection === false,
-                type: 'confirm',
-                name: 'useBackendJson',
-                message: 'Do you want to generate entities from an existing app?',
-                default: true
-            },
-            {
-                when: response => response.useBackendJson === true,
+                when:  backendPath == null,
                 type: 'input',
                 name: 'backendPath',
                 message: 'Enter the path to your JHipster app\'s root directory:',
@@ -97,33 +111,34 @@ module.exports = class extends BaseGenerator {
         this.prompt(prompts)
             .then((props) => {
                 this.props = props;
-                this.configRootPath = props.backendPath;
-                this.jhipsterAppConfig = this.getAllJhipsterConfig();
-                this.log(chalk.green(`Detected existing project : ${this.jhipsterAppConfig.packageName}`));
 
-                let rawdata = fs.readFileSync(props.backendPath + '/.yo-rc.json');
-                let rc = JSON.parse(rawdata);
-                this.context.baseName = rc['generator-jhipster-flutter-merlin']['promptValues']['baseName'];
+                if(props.backendPath) {
+                    this.configRootPath = props.backendPath;
+                    this.context.backendPath = props.backendPath;
+                } else {
+                    this.configRootPath = this.context.backendPath;
+                }
+
+                const backendPath = this.context.backendPath;
+                if (!path.isAbsolute(backendPath)) {
+                    context.backendPath = path.resolve(backendPath);
+                }
+
+                this.jhipsterAppConfig = this.getAllJhipsterConfig();
+
+                let rawdata = fs.readFileSync(backendPath + '/.yo-rc.json');
+                let yoRC = JSON.parse(rawdata);
+
+                this.context.baseName = yoRC['generator-jhipster-flutter-merlin']['promptValues']['baseName'];
                 this.context.camelizedBaseName = _.camelCase(this.context.baseName);
                 this.context.camelizedUpperFirstBaseName = _.upperFirst(this.context.camelizedBaseName);
-                this.context.packageName = rc['generator-jhipster-flutter-merlin']['promptValues']['packageName'];
-                this.context.nativeLanguage = rc['generator-jhipster-flutter-merlin']['promptValues']['nativeLanguage'];
+                this.context.packageName = yoRC['generator-jhipster-flutter-merlin']['promptValues']['packageName'];
+                this.context.nativeLanguage = yoRC['generator-jhipster-flutter-merlin']['promptValues']['nativeLanguage'];
 
-                this.log(chalk.green(`${rc['generator-jhipster-flutter-merlin']['promptValues']['baseName']}`));
-
-                if (props.backendPath) {
-                    this.log(chalk.green(`\nFound the entities folder configuration file, entities can be automatically generated!\n`));
-                    if (path.isAbsolute(props.backendPath)) {
-                        context.backendPath = props.backendPath;
-                    } else {
-                        context.backendPath = path.resolve(props.backendPath);
-                    }
-
-                    context.fromPath = `${context.backendPath}/${context.jhipsterConfigDirectory}/`;
-                    context.useConfigurationFile = true;
-                    context.useBackendJson = true;
+                if (backendPath) {
+                    this.log(chalk.green(`\nFound the entity folder configuration file, entity can be automatically generated!\n`));
                     
-                    this.context.name = 'JobHistory';
+                    context.useConfigurationFile = true;
                     context.fromPath = `${context.backendPath}/${context.jhipsterConfigDirectory}/${context.name}.json`;
                     this.context.prodDatabaseType = this.jhipsterAppConfig.prodDatabaseType;
                     this.context.jhiPrefix = this.jhipsterAppConfig.jhiPrefix;
@@ -131,7 +146,7 @@ module.exports = class extends BaseGenerator {
                     this.context.fieldNameChoices = [];
                     this.context.relNameChoices = [];
                     this.loadEntityJson();
-                    //this.setupEntityOptions(this, this.context);
+
 
                    /* fs.readdirSync(context.fromPath).forEach(file => {
                         context.fromPath = `${context.backendPath}/${context.jhipsterConfigDirectory}/`;
@@ -597,33 +612,27 @@ module.exports = class extends BaseGenerator {
     }
 
     writing() {
-        this.log(chalk.green(`Writing ${this.context.entityClass}`));
+        this.log(chalk.green(`Writing ${this.context.entityClass} entity...`));
         this.writeFilesToDisk(files.flutterFiles, this, false, `${CLIENT_FLUTTER_TEMPLATES_DIR}`);
-
-        this.log(chalk.green(`Adding route for ${this.context.entityClass}`));
-        this.addEntityToRoute(this.context.baseName, this.context.entityClass,
+        this._addEntityToRoute(this.context.baseName, this.context.entityClass,
              this.context.entityFileName, this.context.camelizedUpperFirstBaseName, this.context.entityClassCamelCase, this.context.entityClassPlural);
-
-        this.log(chalk.green(`Adding mapper for ${this.context.entityClass}`));
-        this.addEntityToMapper(this.context.baseName, this.context.entityClass, this.context.entityFileName);
-
-        this.log(chalk.green(`Adding keys for ${this.context.entityClass}`));
-        this.addEntityToKey(this.context.entityClass, this.context.entityClassCamelCase);
-
-        this.log(chalk.green(`Adding I18n for ${this.context.entityClass}`));
-        this.addEntityToI18n(this.context.entityClass, this.context.entityFileName, this.context.entityClassPlural);
+        this._addEntityToMapper(this.context.baseName, this.context.entityClass, this.context.entityFileName);
+        this._addEntityToKey(this.context.entityClass, this.context.entityClassCamelCase);
+        this._addEntityToI18n(this.context.entityClass, this.context.entityFileName, this.context.entityClassPlural);
     }
 
     install() {
-        // Generate Reflection
-         //this.log(chalk.green('Generate reflection...'));
-         //this.spawnCommandSync('flutter', ['pub', 'run', 'build_runner', 'build', '--delete-conflicting-outputs'], { cwd: MAIN_DIR });
+       if(!this.context.fromCLI) {
+            // Generate Reflection
+            this.log(chalk.green('Generate reflection...'));
+            this.spawnCommandSync('flutter', ['pub', 'run', 'build_runner', 'build', '--delete-conflicting-outputs']);
 
-        // Generate Translation
-        // if (this.enableTranslation) {
-        //     this.log(chalk.green('Generate I18n files...'));
-        //     this.spawnCommandSync('flutter', ['pub', 'global', 'run', 'intl_utils:generate'], { cwd: MAIN_DIR });
-        // }
+            // Generate Translation
+            if (this.enableTranslation) {
+                this.log(chalk.green('Generate I18n files...'));
+                this.spawnCommandSync('flutter', ['pub', 'global', 'run', 'intl_utils:generate']);
+            }
+        }
     }
 
     end() {
@@ -640,11 +649,7 @@ module.exports = class extends BaseGenerator {
      * @param {string} entityFileName - Entity File Name
      * @param {string} camelizedUpperFirstBaseName - Formatted base name (ex: MonApplication)
      */
-    addEntityToRoute(baseName, entityClass, entityFileName, camelizedUpperFirstBaseName, entityClassCamelCase, entityClassPlural) {
-        // workaround method being called on initialization
-        if (!entityClass) {
-            return;
-        }
+    _addEntityToRoute(baseName, entityClass, entityFileName, camelizedUpperFirstBaseName, entityClassCamelCase, entityClassPlural) {
         const appClassPath = 'lib/app.dart';
         entityFileName = _.snakeCase(_.lowerCase(entityFileName));
         const routesClassPath = 'lib/routes.dart';
@@ -689,7 +694,7 @@ module.exports = class extends BaseGenerator {
                 leading: Icon(Icons.label, size: iconSize,),
                 title: Text('${entityClassPlural}'),
                 onTap: () => Navigator.pushNamed(context, ${camelizedUpperFirstBaseName}Routes.entities${entityClass}List),
-            )`;
+            ),`;
             utils.rewriteFile({
                 file: drawerClassPath,
                 needle: 'jhipster-merlin-needle-menu-entry-add',
@@ -711,11 +716,7 @@ module.exports = class extends BaseGenerator {
      * @param {string} entityFileName - Entity File Name
      * @param {string} camelizedUpperFirstBaseName - Formatted base name (ex: MonApplication)
      */
-    addEntityToMapper(baseName, entityClass, entityFileName) {
-        // workaround method being called on initialization
-        if (!entityClass) {
-            return;
-        }
+    _addEntityToMapper(baseName, entityClass, entityFileName) {
         const mapperClassPath = 'lib/mapper.dart';
         entityFileName = _.snakeCase(_.lowerCase(entityFileName));
         
@@ -764,12 +765,7 @@ module.exports = class extends BaseGenerator {
      * @param {string} entityFileName - Entity File Name
      * @param {string} camelizedUpperFirstBaseName - Formatted base name (ex: MonApplication)
      */
-    addEntityToI18n(entityClass, entityFileName, entityClassPlural) {
-        // workaround method being called on initialization
-        if (!entityClass) {
-            return;
-        }
-
+    _addEntityToI18n(entityClass, entityFileName, entityClassPlural) {
         if(this.context.nativeLanguage) {
             const languages = flutterConstants.LANGUAGES;
             
@@ -788,7 +784,6 @@ module.exports = class extends BaseGenerator {
                         json[listKey] = listValue;
                     }, this);
                 } catch (e) {
-                   // this.log(`${chalk.yellow('\nUnable to find ') + mapperClassPath + chalk.yellow(' or missing required jhipster-needle. Reference to ') + entityClass}}`);
                     this.debug('Error:', e);
                 }
             }
@@ -804,13 +799,8 @@ module.exports = class extends BaseGenerator {
      * @param {string} entityFileName - Entity File Name
      * @param {string} camelizedUpperFirstBaseName - Formatted base name (ex: MonApplication)
      */
-    addEntityToKey(entityClass, entityClassCamelCase) {
-        // workaround method being called on initialization
-        if (!entityClass) {
-            return;
-        }
+    _addEntityToKey(entityClass, entityClassCamelCase) {
         const keysClassPath = 'lib/keys.dart';
-        //entityFileName = _.snakeCase(_.lowerCase(entityFileName));
         
         try {
             const keyList = `static const ${entityClassCamelCase}ListScreen = Key('__${entityClassCamelCase}ListScreen__');`;

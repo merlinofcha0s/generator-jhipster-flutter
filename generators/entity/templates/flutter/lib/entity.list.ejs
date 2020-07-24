@@ -65,7 +65,6 @@ class <%= entityClass %>ListScreen extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.turned_in),
               title: Text(<%= entityClassCamelCase %>.<%= fields[0].fieldName %>.toString()),
-              subtitle: Text(<%= entityClassCamelCase %>.<%= fields[1].fieldName %>.toString()),
               <%# for (field in fields) { let i = 0; %>
               <%# subtitle: Text(entityClassCamelCase.fields[field].fieldName), %>
               <%# i++; } %>
