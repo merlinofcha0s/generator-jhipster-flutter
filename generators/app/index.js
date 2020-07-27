@@ -122,6 +122,7 @@ module.exports = class extends BaseGenerator {
                 name: 'enableTranslation',
                 message: 'Would you like to enable internationalization support?',
                 default: true,
+                store: true,
             },
             {
                 when: (response) => response.enableTranslation === true,

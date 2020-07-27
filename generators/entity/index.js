@@ -4,7 +4,6 @@ const _ = require('lodash');
 const BaseGenerator = require('generator-jhipster/generators/generator-base');
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
 const semver = require('semver');
-const mkdirp = require('mkdirp');
 const flutterConstants = require('../flutter-generator-constants');
 const files = require('./files');
 const packagejs = require('../../package.json');
@@ -37,7 +36,7 @@ module.exports = class extends BaseGenerator {
                     type: Boolean,
                     defaults: false
                 });
-                
+
                 this.context = {};
                 this.context.jhipsterConfigDirectory = '.jhipster';
                 this.setupEntityOptions(this, this, this.context);
@@ -48,24 +47,10 @@ module.exports = class extends BaseGenerator {
                     this.configRootPath = this.options.backendPath;
                     this.context.backendPath = this.options.backendPath;
                     this.jhipsterAppConfig = this.getAllJhipsterConfig();
-                } else {
-                    try {
-                        this.jhipsterAppConfig = this.getAllJhipsterConfig();
-                        if (!this.jhipsterAppConfig.packageName) {
-                            this.context.searchAutoBackendFolder = false;
-                            this.warning('No JHipster project detected !');
-                        } else {
-                            this.log(chalk.green(`Detected existing project : ${this.jhipsterAppConfig.packageName}`));
-                            this.context.searchAutoBackendFolder = true;
-                        }
-                    } catch(e) {
-                        this.warning('Can\'t detect the JHipster project automatically !\n');
-                        this.context.searchAutoBackendFolder = false;
-                    }
                 }
             },
             checkJhipster() {
-                if(this.context.searchAutoBackendFolder){
+                if(this.options.backendPath) {
                     const currentJhipsterVersion = this.jhipsterAppConfig.jhipsterVersion;
                     const minimumJhipsterVersion = packagejs.dependencies['generator-jhipster'];
                     if (!semver.satisfies(currentJhipsterVersion, minimumJhipsterVersion)) {
@@ -81,7 +66,6 @@ module.exports = class extends BaseGenerator {
     prompting() {
         const done = this.async();
         const context = this.context;
-        const autodetection = context.searchAutoBackendFolder;
         const backendPath = context.backendPath;
         const prompts = [
             {
@@ -99,7 +83,7 @@ module.exports = class extends BaseGenerator {
                     } else {
                         fromPath = this.destinationPath(`${input}/${context.jhipsterConfigDirectory}`);
                     }
-    
+
                     if (shelljs.test('-d', fromPath)) {
                         return true;
                     }
@@ -119,27 +103,30 @@ module.exports = class extends BaseGenerator {
                     this.configRootPath = this.context.backendPath;
                 }
 
-                const backendPath = this.context.backendPath;
-                if (!path.isAbsolute(backendPath)) {
-                    context.backendPath = path.resolve(backendPath);
+                if (!path.isAbsolute(this.context.backendPath)) {
+                    context.backendPath = path.resolve(this.context.backendPath);
                 }
+
+                this.destinationPath(this.contextRoot);
+                this.destinationRoot(this.contextRoot);
+                this.context.rootDir = this.contextRoot;
+                this.configRootPath =  context.backendPath;
 
                 this.jhipsterAppConfig = this.getAllJhipsterConfig();
 
-                let rawdata = fs.readFileSync(backendPath + '/.yo-rc.json');
+                let rawdata = fs.readFileSync(context.backendPath + '/.yo-rc.json');
                 let yoRC = JSON.parse(rawdata);
-
                 this.context.baseName = yoRC['generator-jhipster-flutter-merlin']['promptValues']['baseName'];
                 this.context.camelizedBaseName = _.camelCase(this.context.baseName);
                 this.context.camelizedUpperFirstBaseName = _.upperFirst(this.context.camelizedBaseName);
                 this.context.packageName = yoRC['generator-jhipster-flutter-merlin']['promptValues']['packageName'];
-                this.context.nativeLanguage = yoRC['generator-jhipster-flutter-merlin']['promptValues']['nativeLanguage'];
+                this.context.enableTranslation = yoRC['generator-jhipster-flutter-merlin']['promptValues']['enableTranslation'];
 
-                if (backendPath) {
+                if (context.backendPath) {
                     this.log(chalk.green(`\nFound the entity folder configuration file, entity can be automatically generated!\n`));
-                    
+
                     context.useConfigurationFile = true;
-                    context.fromPath = `${context.backendPath}/${context.jhipsterConfigDirectory}/${context.name}.json`;
+                    context.fromPath = `${context.backendPath}\\${context.jhipsterConfigDirectory}\\${context.name}.json`;
                     this.context.prodDatabaseType = this.jhipsterAppConfig.prodDatabaseType;
                     this.context.jhiPrefix = this.jhipsterAppConfig.jhiPrefix;
                     this.context.fieldNamesUnderscored = [];
@@ -152,7 +139,7 @@ module.exports = class extends BaseGenerator {
                         context.fromPath = `${context.backendPath}/${context.jhipsterConfigDirectory}/`;
                         this.loadEntityJson();
                       });*/
-        
+
                     // this.loadEntityJson() has a gateway check, which won't work here, so simplify
                     /*if (context.useMicroserviceJson) {
                        context.microserviceName = context.fileData.microserviceName;
@@ -176,6 +163,8 @@ module.exports = class extends BaseGenerator {
         context.entityClassCamelCase = _.camelCase(context.entityClass);
         context.entityClassPlural = pluralize(context.entityClass);
         context.entityClassPluralLowered = _.camelCase(_.lowerCase(context.entityClassPlural));
+        context.entityClassKebabCase = _.kebabCase(context.entityClass);
+        context.entityClassKebabCasePlural = _.kebabCase(pluralize(context.entityClassKebabCase));
 
         const fileData = this.data || this.context.fileData;
         // Used for i18n
@@ -190,7 +179,7 @@ module.exports = class extends BaseGenerator {
         context.entityApiUrl = entityNamePluralizedAndSpinalCased;
         context.entityFileName = _.snakeCase(_.lowerCase(entityName));
         context.entityFolderName = 'entities/' + _.snakeCase(_.lowerCase(entityName));
-       
+
         context.entityModelFileName = context.entityFolderName;
         context.entityParentPathAddition = this.getEntityParentPathAddition(context.clientRootFolder);
         context.entityPluralFileName = entityNamePluralizedAndSpinalCased + context.entityAngularJSSuffix;
@@ -638,8 +627,8 @@ module.exports = class extends BaseGenerator {
     end() {
         this.log(chalk.green.bold(`Entity ${this.context.entityClass} generation done !!\n`));
     }
-    
-    
+
+
     /**
      * Add a route for new entity with the correct imports
      *
@@ -653,7 +642,7 @@ module.exports = class extends BaseGenerator {
         const appClassPath = 'lib/app.dart';
         entityFileName = _.snakeCase(_.lowerCase(entityFileName));
         const routesClassPath = 'lib/routes.dart';
-        
+
         try {
             const newRoute = `${camelizedUpperFirstBaseName}Routes.entities${entityClass}List: (context) {
           return BlocProvider<${entityClass}Bloc>(
@@ -679,7 +668,7 @@ module.exports = class extends BaseGenerator {
                     this.stripMargin(newImports)
                 ]}, this);
 
-            
+
             const newRouteURL = `  static final entities${entityClass}List = '/entities/${entityFileName}-list';`;
             utils.rewriteFile({
                 file: routesClassPath,
@@ -719,7 +708,7 @@ module.exports = class extends BaseGenerator {
     _addEntityToMapper(baseName, entityClass, entityFileName) {
         const mapperClassPath = 'lib/mapper.dart';
         entityFileName = _.snakeCase(_.lowerCase(entityFileName));
-        
+
         try {
             const importModel = `import 'package:${baseName}/entities/${entityFileName}/${entityFileName}_model.dart';`;
             utils.rewriteFile({
@@ -766,9 +755,9 @@ module.exports = class extends BaseGenerator {
      * @param {string} camelizedUpperFirstBaseName - Formatted base name (ex: MonApplication)
      */
     _addEntityToI18n(entityClass, entityFileName, entityClassPlural) {
-        if(this.context.nativeLanguage) {
+        if(this.context.enableTranslation) {
             const languages = flutterConstants.LANGUAGES;
-            
+
             for(const lang of languages) {
                 const languageFile = `lib/l10n/intl_${lang.value}.arb`;
                 entityFileName = _.snakeCase(_.lowerCase(entityFileName));
@@ -801,7 +790,7 @@ module.exports = class extends BaseGenerator {
      */
     _addEntityToKey(entityClass, entityClassCamelCase) {
         const keysClassPath = 'lib/keys.dart';
-        
+
         try {
             const keyList = `static const ${entityClassCamelCase}ListScreen = Key('__${entityClassCamelCase}ListScreen__');`;
             utils.rewriteFile({
@@ -812,7 +801,7 @@ module.exports = class extends BaseGenerator {
                 ]}, this);
 
         } catch (e) {
-            this.log(`${chalk.yellow('\nUnable to find ') + mapperClassPath + chalk.yellow(' or missing required jhipster-needle. Reference to ') + entityClass}}`);
+            this.log(`${chalk.yellow('\nUnable to find ') + keysClassPath + chalk.yellow(' or missing required jhipster-needle. Reference to ') + entityClass}}`);
             this.debug('Error:', e);
         }
     }

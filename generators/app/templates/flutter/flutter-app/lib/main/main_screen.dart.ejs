@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:<%= baseName %>/account/login/login_repository.dart';
+<%_ if (enableTranslation) { _%>
 import 'package:<%= baseName %>/generated/l10n.dart';
+<%_ } _%>
 import 'package:<%= baseName %>/keys.dart';
 import 'package:<%= baseName %>/main/bloc/main_bloc.dart';
 import 'package:<%= baseName %>/shared/widgets/drawer/bloc/drawer_bloc.dart';

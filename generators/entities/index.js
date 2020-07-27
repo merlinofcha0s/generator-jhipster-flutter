@@ -26,6 +26,7 @@ module.exports = class extends BaseGenerator {
                     } else {
                         this.log(chalk.green(`Detected existing project : ${this.jhipsterAppConfig.packageName}`));
                         this.context.searchAutoBackendFolder = true;
+                        this.setupEntityOptions(this, this, this.context);
                     }
                 } catch(e) {
                     this.warning('Can\'t detect the JHipster project automatically !\n');
@@ -78,24 +79,35 @@ module.exports = class extends BaseGenerator {
         this.prompt(prompts)
             .then((props) => {
                 this.props = props;
-                this.configRootPath = props.backendPath;
+
+                if(this.context.searchAutoBackendFolder) {
+                    this.context.backendPath = this.context.rootDir;
+                } else {
+                    this.configRootPath = props.backendPath;
+                    this.context.backendPath = props.backendPath;
+                }
+
+                if (!path.isAbsolute(this.context.backendPath)) {
+                    context.backendPath = path.resolve(this.context.backendPath);
+                }
+                
+                this.destinationPath(this.contextRoot);
+                this.destinationRoot(this.contextRoot);
+                this.context.rootDir = this.contextRoot;
+                this.configRootPath =  context.backendPath;
+
                 this.jhipsterAppConfig = this.getAllJhipsterConfig();
 
-                let rawdata = fs.readFileSync(props.backendPath + '/.yo-rc.json');
+                let rawdata = fs.readFileSync(this.context.backendPath + '/.yo-rc.json');
                 let yoRc = JSON.parse(rawdata);
                 this.context.baseName = yoRc['generator-jhipster-flutter-merlin']['promptValues']['baseName'];
                 this.context.camelizedBaseName = _.camelCase(this.context.baseName);
                 this.context.packageName = yoRc['generator-jhipster-flutter-merlin']['promptValues']['packageName'];
-                this.context.nativeLanguage = yoRc['generator-jhipster-flutter-merlin']['promptValues']['nativeLanguage'];
+                this.context.enableTranslation = yoRc['generator-jhipster-flutter-merlin']['promptValues']['enableTranslation'];
 
-                if (props.backendPath) {
+                if (this.context.backendPath) {
                     this.log(chalk.green(`\nFound the entity folder configuration file, entity can be automatically generated!\n`));
-                    if (path.isAbsolute(props.backendPath)) {
-                        context.backendPath = props.backendPath;
-                    } else {
-                        context.backendPath = path.resolve(props.backendPath);
-                    }
-
+                    
                     context.fromPath = `${context.backendPath}/${context.jhipsterConfigDirectory}/`;
                     context.useConfigurationFile = true;
                     context.useBackendJson = true;
@@ -125,7 +137,7 @@ module.exports = class extends BaseGenerator {
         this.spawnCommandSync('flutter', ['pub', 'run', 'build_runner', 'build', '--delete-conflicting-outputs']);
 
         // Generate Translation
-       if (this.context.nativeLanguage) {
+       if (this.context.enableTranslation) {
            this.log(chalk.green('Generate I18n code for the new entities...'));
            this.spawnCommandSync('flutter', ['pub', 'global', 'run', 'intl_utils:generate']);
         }

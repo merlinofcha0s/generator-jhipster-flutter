@@ -7,13 +7,16 @@ const entityClassPluralLowered = context.entityClassPluralLowered;
 const entityClass = context.entityClass;
 const camelizedUpperFirstBaseName = context.camelizedUpperFirstBaseName;
 const entityClassCamelCase = context.entityClassCamelCase;
+const enableTranslation = context.enableTranslation;
 const fields = context.fields;
 _%>
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:<%= baseName %>/account/login/login_repository.dart';
 import 'package:<%= baseName %>/entities/<%= entityFileName %>/bloc/<%= entityFileName %>_bloc.dart';
 import 'package:<%= baseName %>/entities/<%= entityFileName %>/<%= entityFileName %>_model.dart';
+<%_ if(enableTranslation) { _%>
 import 'package:<%= baseName %>/generated/l10n.dart';
+<%_ } _%>
 import 'package:<%= baseName %>/keys.dart';
 import 'package:flutter/material.dart';
 import 'package:<%= baseName %>/shared/widgets/drawer/bloc/drawer_bloc.dart';
@@ -28,7 +31,7 @@ class <%= entityClass %>ListScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title:Text(S.of(context).pageEntities<%= entityClass %>ListTitle),
+  title:Text(<%_ if(enableTranslation) { _%>S.of(context).pageEntities<%= entityClass %>ListTitle<%_ } else { _%> '<%= entityClassPlural %> List'  <%_ } _%>),
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(15.0),
@@ -64,23 +67,26 @@ class <%= entityClass %>ListScreen extends StatelessWidget {
           children: <Widget>[
             ListTile(
               leading: Icon(Icons.turned_in),
-              title: Text(<%= entityClassCamelCase %>.<%= fields[0].fieldName %>.toString()),
-              <%# for (field in fields) { let i = 0; %>
-              <%# subtitle: Text(entityClassCamelCase.fields[field].fieldName), %>
-              <%# i++; } %>
+              <%_ for (let i = 0; i < 2 && i < fields.length ; i++) { _%>
+                <%_ if(i == 0) { _%>
+                  title: Text('<%= fields[i].fieldNameHumanized %> : ${<%= entityClassCamelCase %>.<%= fields[i].fieldName %>.toString()}'),
+              <%_ } else { _%>
+                  subtitle: Text('<%= fields[i].fieldNameHumanized %> : ${<%= entityClassCamelCase %>.<%= fields[i].fieldName %>.toString()}'),
+              <%_ } _%>
+            <%_ } _%>
             ),
             ButtonBar(
               children: <Widget>[
                 FlatButton(
-                  child: Text(S.of(context).entityActionView),
+              child: Text(<%_ if(enableTranslation) { _%>S.of(context).entityActionView<%_ } else { _%>'View'<%_ } _%>%>),
                   onPressed: () {/* ... */},
                 ),
                 FlatButton(
-                  child: Text(S.of(context).entityActionEdit),
+                  child: Text(<%_ if(enableTranslation) { _%>S.of(context).entityActionEdit<%_ } else { _%>'Edit'<%_ } _%>),
                   onPressed: () {/* ... */},
                 ),
                 FlatButton(
-                  child: Text(S.of(context).entityActionDelete),
+                  child: Text(<%_ if(enableTranslation) { _%>S.of(context).entityActionDelete<%_ } else { _%>'Delete'<%_ } _%>),
                   onPressed: () {/* ... */},
                 ),
               ],

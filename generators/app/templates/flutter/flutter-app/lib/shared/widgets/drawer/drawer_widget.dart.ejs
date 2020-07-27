@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+<%_ if (enableTranslation) { _%>
 import 'package:<%= baseName %>/generated/l10n.dart';
+<%_ } _%>
 import 'package:<%= baseName %>/routes.dart';
 import 'package:<%= baseName %>/shared/widgets/drawer/bloc/drawer_bloc.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +37,7 @@ class <%= camelizedUpperFirstBaseName %>Drawer extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.exit_to_app, size: iconSize,),
-              title: Text(S.of(context).drawerLogoutTitle),
+          title: Text(<%_ if (enableTranslation) { _%>S.of(context).drawerLogoutTitle<%_ } else { _%>'Sign out'<%_ } _%>),
               onTap: () => context.bloc<DrawerBloc>().add(Logout())
             ),
             Divider(thickness: 2),
