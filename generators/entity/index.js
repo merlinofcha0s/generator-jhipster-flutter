@@ -49,15 +49,12 @@ module.exports = class extends BaseGenerator {
                     this.jhipsterAppConfig = this.getAllJhipsterConfig();
                 }
             },
-            checkJhipster() {
-                if(this.options.backendPath) {
-                    const currentJhipsterVersion = this.jhipsterAppConfig.jhipsterVersion;
-                    const minimumJhipsterVersion = packagejs.dependencies['generator-jhipster'];
-                    if (!semver.satisfies(currentJhipsterVersion, minimumJhipsterVersion)) {
-                        this.warning(
-                            `\nYour generated project used an old JHipster version (${currentJhipsterVersion})... you need at least (${minimumJhipsterVersion})\n`
-                        );
-                    }
+            checkFlutterDirectory() {
+                this.destinationPath(this.contextRoot);
+                this.destinationRoot(this.contextRoot);
+                const exist = fs.existsSync('pubspec.yaml');
+                if(!exist) {
+                    this.error(chalk.red.bold('Not a valid flutter project, check that you are in your root flutter project directory'));
                 }
             }
         };
@@ -107,8 +104,6 @@ module.exports = class extends BaseGenerator {
                     context.backendPath = path.resolve(this.context.backendPath);
                 }
 
-                this.destinationPath(this.contextRoot);
-                this.destinationRoot(this.contextRoot);
                 this.context.rootDir = this.contextRoot;
                 this.configRootPath =  context.backendPath;
 

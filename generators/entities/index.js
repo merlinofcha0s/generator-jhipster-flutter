@@ -43,6 +43,14 @@ module.exports = class extends BaseGenerator {
                         );
                     }
                 }
+            },
+            checkFlutterDirectory() {
+                this.destinationPath(this.contextRoot);
+                this.destinationRoot(this.contextRoot);
+                const exist = fs.existsSync('pubspec.yaml');
+                if(!exist) {
+                    this.error(chalk.red.bold('Not a valid flutter project, check that you are in your root flutter project directory'));
+                }
             }
         };
     }
