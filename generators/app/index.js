@@ -139,6 +139,7 @@ module.exports = class extends BaseGenerator {
                 name: 'languages',
                 message: 'Please choose additional languages to install',
                 choices: (response) => _.filter(SUPPORTED_LANGUAGES, (o) => o.value !== response.nativeLanguage),
+                store: true,
             },
         ];
 

@@ -2,16 +2,13 @@
 const chalk = require('chalk');
 const _ = require('lodash');
 const BaseGenerator = require('generator-jhipster/generators/generator-base');
-const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
-const semver = require('semver');
-const flutterConstants = require('../flutter-generator-constants');
-const files = require('./files');
-const packagejs = require('../../package.json');
 const shelljs = require('shelljs');
 const path = require('path');
 const fs = require('fs');
 const pluralize = require('pluralize');
 const utils = require('generator-jhipster/generators/utils');
+const files = require('./files');
+const flutterConstants = require('../flutter-generator-constants');
 
 const CLIENT_FLUTTER_TEMPLATES_DIR = 'flutter';
 
@@ -43,7 +40,7 @@ module.exports = class extends BaseGenerator {
             },
             readConfig() {
                 this.context.fromCLI = this.options.fromCLI;
-                if(this.options.backendPath) {
+                if (this.options.backendPath) {
                     this.configRootPath = this.options.backendPath;
                     this.context.backendPath = this.options.backendPath;
                     this.jhipsterAppConfig = this.getAllJhipsterConfig();
@@ -53,7 +50,7 @@ module.exports = class extends BaseGenerator {
                 this.destinationPath(this.contextRoot);
                 this.destinationRoot(this.contextRoot);
                 const exist = fs.existsSync('pubspec.yaml');
-                if(!exist) {
+                if (!exist) {
                     this.error(chalk.red.bold('Not a valid flutter project, check that you are in your root flutter project directory'));
                 }
             }
@@ -66,7 +63,7 @@ module.exports = class extends BaseGenerator {
         const backendPath = context.backendPath;
         const prompts = [
             {
-                when:  backendPath == null,
+                when: backendPath == null,
                 type: 'input',
                 name: 'backendPath',
                 message: 'Enter the path to your JHipster app\'s root directory:',
@@ -93,7 +90,7 @@ module.exports = class extends BaseGenerator {
             .then((props) => {
                 this.props = props;
 
-                if(props.backendPath) {
+                if (props.backendPath) {
                     this.configRootPath = props.backendPath;
                     this.context.backendPath = props.backendPath;
                 } else {
@@ -105,20 +102,20 @@ module.exports = class extends BaseGenerator {
                 }
 
                 this.context.rootDir = this.contextRoot;
-                this.configRootPath =  context.backendPath;
+                this.configRootPath = context.backendPath;
 
                 this.jhipsterAppConfig = this.getAllJhipsterConfig();
 
-                let rawdata = fs.readFileSync(context.backendPath + '/.yo-rc.json');
-                let yoRC = JSON.parse(rawdata);
-                this.context.baseName = yoRC['generator-jhipster-flutter-merlin']['promptValues']['baseName'];
+                const rawdata = fs.readFileSync(`${context.backendPath}/.yo-rc.json`);
+                const yoRC = JSON.parse(rawdata);
+                this.context.baseName = yoRC['generator-jhipster-flutter-merlin'].promptValues.baseName;
                 this.context.camelizedBaseName = _.camelCase(this.context.baseName);
                 this.context.camelizedUpperFirstBaseName = _.upperFirst(this.context.camelizedBaseName);
-                this.context.packageName = yoRC['generator-jhipster-flutter-merlin']['promptValues']['packageName'];
-                this.context.enableTranslation = yoRC['generator-jhipster-flutter-merlin']['promptValues']['enableTranslation'];
+                this.context.packageName = yoRC['generator-jhipster-flutter-merlin'].promptValues.packageName;
+                this.context.enableTranslation = yoRC['generator-jhipster-flutter-merlin'].promptValues.enableTranslation;
 
                 if (context.backendPath) {
-                    this.log(chalk.green(`\nFound the entity folder configuration file, entity can be automatically generated!\n`));
+                    this.log(chalk.green('\nFound the entity folder configuration file, entity can be automatically generated!\n'));
 
                     context.useConfigurationFile = true;
                     context.fromPath = `${context.backendPath}\\${context.jhipsterConfigDirectory}\\${context.name}.json`;
@@ -128,22 +125,6 @@ module.exports = class extends BaseGenerator {
                     this.context.fieldNameChoices = [];
                     this.context.relNameChoices = [];
                     this.loadEntityJson();
-
-
-                   /* fs.readdirSync(context.fromPath).forEach(file => {
-                        context.fromPath = `${context.backendPath}/${context.jhipsterConfigDirectory}/`;
-                        this.loadEntityJson();
-                      });*/
-
-                    // this.loadEntityJson() has a gateway check, which won't work here, so simplify
-                    /*if (context.useMicroserviceJson) {
-                       context.microserviceName = context.fileData.microserviceName;
-                        if (!context.microserviceName) {
-                            this.error(chalk.red('Microservice name for the entity is not found. Entity cannot be generated!'));
-                        }
-                        context.microserviceAppName = this.getMicroserviceAppName(context.microserviceName);
-                        context.skipServer = true;
-                    }*/
                 }
                 done();
             });
@@ -173,7 +154,7 @@ module.exports = class extends BaseGenerator {
         context.entityInstancePlural = pluralize(context.entityInstance);
         context.entityApiUrl = entityNamePluralizedAndSpinalCased;
         context.entityFileName = _.snakeCase(_.lowerCase(entityName));
-        context.entityFolderName = 'entities/' + _.snakeCase(_.lowerCase(entityName));
+        context.entityFolderName = `entities/${_.snakeCase(_.lowerCase(entityName))}`;
 
         context.entityModelFileName = context.entityFolderName;
         context.entityParentPathAddition = this.getEntityParentPathAddition(context.clientRootFolder);
@@ -190,8 +171,7 @@ module.exports = class extends BaseGenerator {
             context.clientRootFolder ? `${context.clientRootFolder}-${context.entityStateName}` : context.entityStateName
         );
         context.jhiTablePrefix = this.getTableName(context.jhiPrefix);
-        context.reactiveRepositories =
-            context.reactive && ['mongodb', 'cassandra', 'couchbase', 'neo4j'].includes(context.databaseType);
+        context.reactiveRepositories = context.reactive && ['mongodb', 'cassandra', 'couchbase', 'neo4j'].includes(context.databaseType);
 
         context.fieldsContainDate = false;
         context.fieldsContainInstant = false;
@@ -222,7 +202,7 @@ module.exports = class extends BaseGenerator {
         context.i18nKeyPrefix = `${context.angularAppName}.${context.entityTranslationKey}`;
 
         // Load in-memory data for fields
-        context.fields.forEach(field => {
+        context.fields.forEach((field) => {
             const fieldOptions = field.options || {};
             // Migration from JodaTime to Java Time
             if (field.fieldType === 'DateTime' || field.fieldType === 'Date') {
@@ -302,7 +282,7 @@ module.exports = class extends BaseGenerator {
 
             if (_.isUndefined(field.fieldValidateRulesPatternReact)) {
                 field.fieldValidateRulesPatternReact = field.fieldValidateRulesPattern
-                    ? field.fieldValidateRulesPattern.replace(/'/g, "\\'")
+                    ? field.fieldValidateRulesPattern.replace(/'/g, '\\\'')
                     : field.fieldValidateRulesPattern;
             }
 
@@ -342,7 +322,7 @@ module.exports = class extends BaseGenerator {
         });
         let hasUserField = false;
         // Load in-memory data for relationships
-        context.relationships.forEach(relationship => {
+        context.relationships.forEach((relationship) => {
             const relationshipOptions = relationship.options || {};
             const otherEntityName = relationship.otherEntityName;
             const otherEntityData = this.getEntityJson(otherEntityName);
@@ -356,15 +336,14 @@ module.exports = class extends BaseGenerator {
             }
             const jhiTablePrefix = context.jhiTablePrefix;
 
-            relationship.otherEntityPrimaryKeyType =
-                relationship.otherEntityName === 'user' && context.authenticationType === 'oauth2'
-                    ? 'String'
-                    : this.getPkType(context.databaseType);
+            relationship.otherEntityPrimaryKeyType = relationship.otherEntityName === 'user' && context.authenticationType === 'oauth2'
+                ? 'String'
+                : this.getPkType(context.databaseType);
 
             // Look for fields at the other other side of the relationship
             if (otherEntityData && otherEntityData.relationships) {
                 if (relationship.relationshipType === 'many-to-one' || relationship.relationshipType === 'many-to-many') {
-                    otherEntityData.relationships.forEach(otherRelationship => {
+                    otherEntityData.relationships.forEach((otherRelationship) => {
                         if (_.upperFirst(otherRelationship.otherEntityName) !== entityName) {
                             return;
                         }
@@ -383,18 +362,15 @@ module.exports = class extends BaseGenerator {
                             return;
                         }
                         if (
-                            (relationship.relationshipType === 'many-to-one' &&
-                                otherRelationship.relationshipType === 'one-to-many') ||
-                            (relationship.relationshipType === 'many-to-many' &&
-                                otherRelationship.relationshipType === 'many-to-many')
+                            (relationship.relationshipType === 'many-to-one'
+                                && otherRelationship.relationshipType === 'one-to-many')
+                            || (relationship.relationshipType === 'many-to-many'
+                                && otherRelationship.relationshipType === 'many-to-many')
                         ) {
-                            relationship.otherEntityRelationshipName =
-                                relationship.otherEntityRelationshipName || otherRelationship.relationshipName;
-                            relationship.otherEntityRelationshipNamePlural =
-                                relationship.otherEntityRelationshipNamePlural || pluralize(otherRelationship.relationshipName);
-                            relationship.otherEntityRelationshipNameCapitalized =
-                                relationship.otherEntityRelationshipNameCapitalized ||
-                                _.upperFirst(otherRelationship.relationshipName);
+                            relationship.otherEntityRelationshipName = relationship.otherEntityRelationshipName || otherRelationship.relationshipName;
+                            relationship.otherEntityRelationshipNamePlural = relationship.otherEntityRelationshipNamePlural || pluralize(otherRelationship.relationshipName);
+                            relationship.otherEntityRelationshipNameCapitalized = relationship.otherEntityRelationshipNameCapitalized
+                                || _.upperFirst(otherRelationship.relationshipName);
                             relationship.otherEntityRelationshipNameCapitalizedPlural = relationship.otherEntityRelationshipNameCapitalizedPlural = pluralize(
                                 relationship.otherEntityRelationshipNameCapitalized
                             );
@@ -432,8 +408,7 @@ module.exports = class extends BaseGenerator {
             }
 
             if (_.isUndefined(relationship.relationshipNameHumanized)) {
-                relationship.relationshipNameHumanized =
-                    relationshipOptions.relationshipNameHumanized || _.startCase(relationship.relationshipName);
+                relationship.relationshipNameHumanized = relationshipOptions.relationshipNameHumanized || _.startCase(relationship.relationshipName);
             }
 
             if (_.isUndefined(relationship.relationshipNamePlural)) {
@@ -450,9 +425,9 @@ module.exports = class extends BaseGenerator {
 
             if (context.dto && context.dto === 'mapstruct') {
                 if (
-                    otherEntityData &&
-                    (!otherEntityData.dto || otherEntityData.dto !== 'mapstruct') &&
-                    otherEntityName !== 'user'
+                    otherEntityData
+                    && (!otherEntityData.dto || otherEntityData.dto !== 'mapstruct')
+                    && otherEntityName !== 'user'
                 ) {
                     this.warning(
                         chalk.red(
@@ -483,8 +458,7 @@ module.exports = class extends BaseGenerator {
             if (_.isUndefined(relationship.otherEntityAngularName)) {
                 if (relationship.otherEntityNameCapitalized !== 'User') {
                     const otherEntityAngularSuffix = otherEntityData ? otherEntityData.angularJSSuffix || '' : '';
-                    relationship.otherEntityAngularName =
-                        _.upperFirst(relationship.otherEntityName) + this.upperFirstCamelCase(otherEntityAngularSuffix);
+                    relationship.otherEntityAngularName = _.upperFirst(relationship.otherEntityName) + this.upperFirstCamelCase(otherEntityAngularSuffix);
                 } else {
                     relationship.otherEntityAngularName = 'User';
                 }
@@ -511,10 +485,10 @@ module.exports = class extends BaseGenerator {
                         relationship.otherEntityFolderName = _.kebabCase(relationship.otherEntityAngularName);
                     }
                     if (
-                        context.skipUiGrouping ||
-                        otherEntityData === undefined ||
-                        otherEntityData.clientRootFolder === '' ||
-                        otherEntityData.clientRootFolder === undefined
+                        context.skipUiGrouping
+                        || otherEntityData === undefined
+                        || otherEntityData.clientRootFolder === ''
+                        || otherEntityData.clientRootFolder === undefined
                     ) {
                         relationship.otherEntityClientRootFolder = '';
                     } else {
@@ -542,9 +516,9 @@ module.exports = class extends BaseGenerator {
                     relationship.otherEntityModulePath = 'app/core';
                 }
             }
-            if (otherEntityData) {
+            /* if (otherEntityData) {
                 this.copyFilteringFlag(otherEntityData, relationship, { ...otherEntityData, databaseType: context.databaseType });
-            }
+            } */
             // Load in-memory data for root
             if (relationship.relationshipType === 'many-to-many' && relationship.ownerSide) {
                 context.fieldsContainOwnerManyToMany = true;
@@ -579,11 +553,10 @@ module.exports = class extends BaseGenerator {
             context.differentRelationships[entityType].push(relationship);
         });
 
-        context.saveUserSnapshot =
-            context.applicationType === 'microservice' &&
-            context.authenticationType === 'oauth2' &&
-            hasUserField &&
-            context.dto === 'no';
+        context.saveUserSnapshot = context.applicationType === 'microservice'
+            && context.authenticationType === 'oauth2'
+            && hasUserField
+            && context.dto === 'no';
 
         context.primaryKeyType = this.getPkTypeBasedOnDBAndAssociation(
             context.authenticationType,
@@ -599,14 +572,14 @@ module.exports = class extends BaseGenerator {
         this.log(chalk.green(`Writing ${this.context.entityClass} entity...`));
         this.writeFilesToDisk(files.flutterFiles, this, false, `${CLIENT_FLUTTER_TEMPLATES_DIR}`);
         this._addEntityToRoute(this.context.baseName, this.context.entityClass,
-             this.context.entityFileName, this.context.camelizedUpperFirstBaseName, this.context.entityClassCamelCase, this.context.entityClassPlural);
+            this.context.entityFileName, this.context.camelizedUpperFirstBaseName, this.context.entityClassCamelCase, this.context.entityClassPlural);
         this._addEntityToMapper(this.context.baseName, this.context.entityClass, this.context.entityFileName);
         this._addEntityToKey(this.context.entityClass, this.context.entityClassCamelCase);
         this._addEntityToI18n(this.context.entityClass, this.context.entityFileName, this.context.entityClassPlural);
     }
 
     install() {
-       if(!this.context.fromCLI) {
+        if (!this.context.fromCLI) {
             // Generate Reflection
             this.log(chalk.green('Generate reflection...'));
             this.spawnCommandSync('flutter', ['pub', 'run', 'build_runner', 'build', '--delete-conflicting-outputs']);
@@ -622,7 +595,6 @@ module.exports = class extends BaseGenerator {
     end() {
         this.log(chalk.green.bold(`Entity ${this.context.entityClass} generation done !!\n`));
     }
-
 
     /**
      * Add a route for new entity with the correct imports
@@ -650,7 +622,8 @@ module.exports = class extends BaseGenerator {
                 needle: 'jhipster-merlin-needle-route-add',
                 splicable: [
                     this.stripMargin(newRoute)
-                ]}, this);
+                ]
+            }, this);
 
             const blocImport = `import 'package:${baseName}/entities/${entityFileName}/bloc/${entityFileName}_bloc.dart'; \n`;
             const screenImport = `import 'package:${baseName}/entities/${entityFileName}/${entityFileName}_list_screen.dart'; \n`;
@@ -661,8 +634,8 @@ module.exports = class extends BaseGenerator {
                 needle: 'jhipster-merlin-needle-import-add',
                 splicable: [
                     this.stripMargin(newImports)
-                ]}, this);
-
+                ]
+            }, this);
 
             const newRouteURL = `  static final entities${entityClass}List = '/entities/${entityFileName}-list';`;
             utils.rewriteFile({
@@ -670,8 +643,8 @@ module.exports = class extends BaseGenerator {
                 needle: 'jhipster-merlin-needle-route-url-add',
                 splicable: [
                     this.stripMargin(newRouteURL)
-                ]}, this);
-
+                ]
+            }, this);
 
             const drawerClassPath = 'lib/shared/widgets/drawer/drawer_widget.dart';
             const newMenuEntry = `ListTile(
@@ -684,7 +657,8 @@ module.exports = class extends BaseGenerator {
                 needle: 'jhipster-merlin-needle-menu-entry-add',
                 splicable: [
                     this.stripMargin(newMenuEntry)
-                ]}, this);
+                ]
+            }, this);
         } catch (e) {
             this.log(`${chalk.yellow('\nUnable to find ') + appClassPath + chalk.yellow(' or missing required jhipster-needle. Reference to ') + entityClass})}`);
             this.debug('Error:', e);
@@ -711,8 +685,8 @@ module.exports = class extends BaseGenerator {
                 needle: 'jhipster-merlin-needle-mapper-import-add',
                 splicable: [
                     this.stripMargin(importModel)
-                ]}, this);
-
+                ]
+            }, this);
 
             const mapperDeclaration = `typeOf<List<${entityClass}>>(): (value) => value.cast<${entityClass}>(),`;
             utils.rewriteFile({
@@ -720,9 +694,10 @@ module.exports = class extends BaseGenerator {
                 needle: 'jhipster-merlin-needle-mapper-list-add',
                 splicable: [
                     this.stripMargin(mapperDeclaration)
-                ]}, this);
+                ]
+            }, this);
 
-            this.context.fields.forEach(field => {
+            this.context.fields.forEach((field) => {
                 if (field.fieldIsEnum === true) {
                     const enumDeclaration = `${field.fieldType}: EnumConverter(${field.fieldType}.values),`;
                     utils.rewriteFile({
@@ -730,10 +705,10 @@ module.exports = class extends BaseGenerator {
                         needle: 'jhipster-merlin-needle-mapper-enum-add',
                         splicable: [
                             this.stripMargin(enumDeclaration)
-                        ]}, this);
-                    }
+                        ]
+                    }, this);
+                }
             });
-
         } catch (e) {
             this.log(`${chalk.yellow('\nUnable to find ') + mapperClassPath + chalk.yellow(' or missing required jhipster-needle. Reference to ') + entityClass}}`);
             this.debug('Error:', e);
@@ -750,19 +725,18 @@ module.exports = class extends BaseGenerator {
      * @param {string} camelizedUpperFirstBaseName - Formatted base name (ex: MonApplication)
      */
     _addEntityToI18n(entityClass, entityFileName, entityClassPlural) {
-        if(this.context.enableTranslation) {
+        if (this.context.enableTranslation) {
             const languages = flutterConstants.LANGUAGES;
-
-            for(const lang of languages) {
+            languages.forEach((lang) => {
                 const languageFile = `lib/l10n/intl_${lang.value}.arb`;
                 entityFileName = _.snakeCase(_.lowerCase(entityFileName));
                 try {
                     utils.rewriteJSONFile(languageFile, (json, generator) => {
                         const listKey = `pageEntities${entityClass}ListTitle`;
                         let listValue = '';
-                        if(json['locale'] === 'en') {
+                        if (json.locale === 'en') {
                             listValue = `${entityClassPlural} list`;
-                        } else if (json['locale'] === 'fr') {
+                        } else if (json.locale === 'fr') {
                             listValue = `Liste ${entityClassPlural}`;
                         }
                         json[listKey] = listValue;
@@ -770,7 +744,7 @@ module.exports = class extends BaseGenerator {
                 } catch (e) {
                     this.debug('Error:', e);
                 }
-            }
+            });
         }
     }
 
@@ -793,8 +767,8 @@ module.exports = class extends BaseGenerator {
                 needle: 'jhipster-merlin-needle-key-add',
                 splicable: [
                     this.stripMargin(keyList)
-                ]}, this);
-
+                ]
+            }, this);
         } catch (e) {
             this.log(`${chalk.yellow('\nUnable to find ') + keysClassPath + chalk.yellow(' or missing required jhipster-needle. Reference to ') + entityClass}}`);
             this.debug('Error:', e);
