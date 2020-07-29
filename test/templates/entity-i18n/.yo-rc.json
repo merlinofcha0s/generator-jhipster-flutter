@@ -1,0 +1,58 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.mgt.employee",
+      "nativeLanguage": "en"
+    },
+    "jhipsterVersion": "6.10.1",
+    "applicationType": "monolith",
+    "baseName": "employeemgt",
+    "packageName": "com.mgt.employee",
+    "packageFolder": "com/mgt/employee",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": true,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Disk",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "NzlmZjU1ZTc5ZWI4NTMxMWQwZGI4N2E2YjBmOGU0MDk2NzFmNWVlOTI0Y2Q1Yjg1MWU4ODY1ZTk2MTU1YTA3ZDljYzVhNjk5M2QzODZlMTI1YWY1MjE1OWJjMmMwNDczNzI4NGI3ZGEyNmMwYjUwNTU2ZWRmZDU4Yzg4ODc1YzI=",
+    "embeddableLaunchScript": false,
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "clientFramework": "angularX",
+    "clientTheme": "none",
+    "clientThemeVariant": "",
+    "creationTimestamp": 1595252351664,
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": true,
+    "nativeLanguage": "en",
+    "languages": [
+      "en",
+      "fr"
+    ],
+    "blueprints": []
+  },
+  "generator-jhipster-flutter-merlin": {
+    "promptValues": {
+      "baseName": "employeeMobile",
+      "packageName": "com.employee.app",
+      "android": "kotlin",
+      "ios": "swift",
+      "stateManageType": "bloc",
+      "nativeLanguage": "en",
+      "backendPath": "../employee-mgt",
+      "enableTranslation": true
+    }
+  }
+}

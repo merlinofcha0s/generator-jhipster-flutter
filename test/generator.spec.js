@@ -56,7 +56,7 @@ const expectedFiles = {
     ]
 };
 
-describe('Flutter JHipster module', () => {
+describe('Flutter JHipster generator module', () => {
     describe('Default generation without I18n', () => {
         before((done) => {
             helpers
@@ -97,7 +97,7 @@ describe('Flutter JHipster module', () => {
                 .withPrompts({
                     baseName: 'sampleDefaultFlutter',
                     packageName: 'com.mycompany.myapp',
-                    directoryPath: path.join(__dirname, '../test/templates/flutter-default/'),
+                    directoryPath: path.join(__dirname, '../test/templates/generator/'),
                     android: 'kotlin',
                     ios: 'swift',
                     stateManageType: 'bloc',

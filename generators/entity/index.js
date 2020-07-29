@@ -49,9 +49,14 @@ module.exports = class extends BaseGenerator {
             checkFlutterDirectory() {
                 this.destinationPath(this.contextRoot);
                 this.destinationRoot(this.contextRoot);
-                const exist = fs.existsSync('pubspec.yaml');
-                if (!exist) {
-                    this.error(chalk.red.bold('Not a valid flutter project, check that you are in your root flutter project directory'));
+                const existAtRoot = fs.existsSync('pubspec.yaml');
+                if (!existAtRoot) {
+                    this.destinationPath(this.options.backendPath);
+                    this.destinationRoot(this.options.backendPath);
+                    const existAtBackendPath = fs.existsSync('pubspec.yaml');
+                    if (!existAtBackendPath){
+                        this.error(chalk.red.bold('Not a valid flutter project, check that you are in your root flutter project directory'));
+                    }   
                 }
             }
         };
