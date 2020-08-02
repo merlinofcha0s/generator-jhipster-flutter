@@ -1,0 +1,31 @@
+<%_
+const baseName = context.baseName;
+const entityInstance = context.entityInstance;
+const entityFileName = context.entityFileName;
+const entityClassPlural = context.entityClassPlural;
+const entityClassPluralLowered = context.entityClassPluralLowered;
+const entityClass = context.entityClass;
+const entityClassCamelCase = context.entityClassCamelCase;
+const fields = context.fields;
+const relationships = context.relationships;
+const primaryKeyType = context.primaryKeyType;
+
+console.dir(fields)
+_%>
+import 'package:formz/formz.dart';
+
+
+<%_ fields.forEach(field => { _%>
+enum <%= field.fieldNameCapitalized %>ValidationError { invalid }
+
+class <%= field.fieldNameCapitalized %>Input extends FormzInput<<%= field.fieldType %>, <%= field.fieldNameCapitalized %>ValidationError> {
+  const <%= field.fieldNameCapitalized %>Input.pure() : super.pure(<%- field.defaultValue %>);
+  const <%= field.fieldNameCapitalized %>Input.dirty([<%= field.fieldType %> value = <%- field.defaultValue %>]) : super.dirty(value);
+
+  @override
+  <%= field.fieldNameCapitalized %>ValidationError validator(<%= field.fieldType %> value) {
+    return null;
+  }
+}
+
+<%_ }); _%>

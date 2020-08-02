@@ -6,32 +6,105 @@ const entityClassPlural = context.entityClassPlural;
 const entityClassPluralLowered = context.entityClassPluralLowered;
 const entityClass = context.entityClass;
 const entityClassCamelCase = context.entityClassCamelCase;
+const fields = context.fields;
+const relationships = context.relationships;
+const primaryKeyType = context.primaryKeyType;
+
+let indexForField = 0;
+
+let idField = {
+  fieldName: 'id',
+  fieldType: 'int',
+  fieldIsEnum: false,
+  fieldNameCapitalized: 'Id',
+  fieldNameUnderscored: 'id',
+  fieldNameAsDatabaseColumn: 'id',
+  fieldNameHumanized: 'Id',
+  fieldInJavaBeanMethod: 'Id',
+  fieldValidate: false,
+  defaultValue: 0
+}
+
+fields.forEach(field => {
+  indexForField++;
+    if (field.fieldType === 'UUID') {
+      field.fieldType = 'String';
+      field.defaultValue = '\'\'';
+    } else if (field.fieldType === 'Integer' || field.fieldType === 'Long') {
+      field.fieldType = 'int';
+      field.defaultValue = 0;
+    } else if (field.fieldType === 'Instant') {
+      field.fieldType = 'DateTime';
+      field.defaultValue = 'null';
+    } else {
+      field.defaultValue = '\'\'';
+    }
+});
+
 _%>
 part of '<%= entityFileName %>_bloc.dart';
 
-enum <%= entityClass %>StatusUI {init, loading, done}
+enum <%= entityClass %>StatusUI {init, loading, error, done}
+enum <%= entityClass %>DeleteStatus {ok, ko, none}
 
 class <%= entityClass %>State extends Equatable {
   final List<<%= entityClass %>> <%= entityClassPluralLowered %>;
+  final <%= entityClass %> loaded<%= entityClass %>;
+  final bool editMode;
+  final <%= entityClass %>DeleteStatus deleteStatus;
   final <%= entityClass %>StatusUI <%= entityClassCamelCase %>StatusUI;
+
+  final FormzStatus formStatus;
+  final String generalNotificationKey;
+
+  <%_ fields.forEach(field => { _%>
+  final <%= field.fieldNameCapitalized %>Input <%= field.fieldName %>;
+  <%_ }); _%>
+
   
   const <%= entityClass %>State({
     this.<%= entityClassPluralLowered %> = const [],
-    this.<%= entityClassCamelCase %>StatusUI = <%= entityClass %>StatusUI.init
+    this.<%= entityClassCamelCase %>StatusUI = <%= entityClass %>StatusUI.init,
+    this.loaded<%= entityClass %> = const <%= entityClass %>(<%- idField.defaultValue %>, <%_ fields.forEach(field => { _%> <%- field.defaultValue %>, <%_ }); _%><%_ relationships.forEach(relationship => { _%> null, <%_ }); _%>),
+    this.editMode = false,
+    this.formStatus = FormzStatus.pure,
+    this.generalNotificationKey = '',
+    this.deleteStatus = <%= entityClass %>DeleteStatus.none,
+    <%_ fields.forEach(field => { _%>
+    this.<%= field.fieldName %> = const <%= field.fieldNameCapitalized %>Input.pure(),
+      <%_ }); _%>
   });
 
   <%= entityClass %>State copyWith({
     List<<%= entityClass %>> <%= entityClassPluralLowered %>,
-    <%= entityClass %>StatusUI <%= entityClassCamelCase %>StatusUI
+    <%= entityClass %>StatusUI <%= entityClassCamelCase %>StatusUI,
+    bool editMode,
+    <%= entityClass %>DeleteStatus deleteStatus,
+    <%= entityClass %> loadedEmployee,
+    FormzStatus formStatus,
+    String generalNotificationKey,
+    <%_ fields.forEach(field => { _%>
+    <%= field.fieldNameCapitalized %>Input <%= field.fieldName %>,
+    <%_ }); _%>
   }) {
     return <%= entityClass %>State(
-        <%= entityClassPluralLowered %>: <%= entityClassPluralLowered %> ?? this.<%= entityClassPluralLowered %>,
-      <%= entityClassCamelCase %>StatusUI: <%= entityClassCamelCase %>StatusUI ?? this.<%= entityClassCamelCase %>StatusUI
+      <%= entityClassPluralLowered %>: <%= entityClassPluralLowered %> ?? this.<%= entityClassPluralLowered %>,
+      <%= entityClassCamelCase %>StatusUI: <%= entityClassCamelCase %>StatusUI ?? this.<%= entityClassCamelCase %>StatusUI,
+      loadedEmployee: loaded<%= entityClass %> ?? this.loaded<%= entityClass %>,
+      editMode: editMode ?? this.editMode,
+      formStatus: formStatus ?? this.formStatus,
+      generalNotificationKey: generalNotificationKey ?? this.generalNotificationKey,
+      deleteStatus: deleteStatus ?? this.deleteStatus,
+      <%_ fields.forEach(field => { _%>
+      <%= field.fieldName %>: <%= field.fieldName %> ?? this.<%= field.fieldName %>,
+      <%_ }); _%>
     );
   }
 
   @override
-  List<Object> get props => [<%= entityClassPluralLowered %>, <%= entityClassCamelCase %>StatusUI];
+  List<Object> get props => [<%= entityClassPluralLowered %>, <%= entityClassCamelCase %>StatusUI,
+     loaded<%= entityClass %>, editMode, deleteStatus, formStatus, generalNotificationKey, 
+     <%_ fields.forEach(field => { _%><%= field.fieldName %>%>,<%_ }); _%>];
 
   @override
   bool get stringify => true;

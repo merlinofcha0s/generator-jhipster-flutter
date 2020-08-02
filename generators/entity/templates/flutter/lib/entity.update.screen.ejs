@@ -1,0 +1,172 @@
+<%_
+const baseName = context.baseName;
+const entityInstance = context.entityInstance;
+const entityFileName = context.entityFileName;
+const entityClassPlural = context.entityClassPlural;
+const entityClassPluralLowered = context.entityClassPluralLowered;
+const entityClass = context.entityClass;
+const entityClassCamelCase = context.entityClassCamelCase;
+const entityClassKebabCase = context.entityClassKebabCase;
+const entityClassKebabCasePlural = context.entityClassKebabCasePlural;
+const camelizedUpperFirstBaseName = context.camelizedUpperFirstBaseName;
+const fields = context.fields;
+const relationships = context.relationships;
+const primaryKeyType = context.primaryKeyType;
+
+_%>
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:<%= baseName %>/entities/<%= entityFileName %>/bloc/<%= entityFileName %>_bloc.dart';
+import 'package:<%= baseName %>/generated/l10n.dart';
+import 'package:<%= baseName %>/keys.dart';
+import 'package:flutter/material.dart';
+import 'package:formz/formz.dart';
+import 'package:intl/intl.dart';
+import 'package:<%= baseName %>/routes.dart';
+import 'package:<%= baseName %>/shared/repository/http_utils.dart';
+
+class <%= entityClass %>UpdateScreen extends StatelessWidget {
+  <%= entityClass %>UpdateScreen({Key key}) : super(key: <%= camelizedUpperFirstBaseName %>Keys.<%= entityInstance %>CreateScreen);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<<%= entityClass %>Bloc, <%= entityClass %>State>(
+      listener: (context, state) {
+        if(state.formStatus.isSubmissionSuccess){
+          Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.entities<%= entityClass %>List);
+        }
+      },
+      child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: BlocBuilder<<%= entityClass %>Bloc, <%= entityClass %>State>(
+                buildWhen: (previous, current) => previous.editMode != current.editMode,
+                builder: (context, state) {
+                  String title = state.editMode == true ? S.of(context).pageEntities<%= entityClass %>UpdateTitle :
+                  S.of(context).pageEntities<%= entityClass %>CreateTitle;
+                 return Text(title);
+                }
+            ),
+          ),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(children: <Widget>[settingsForm(context)]),
+          ),
+      ),
+    );
+  }
+
+  Widget settingsForm(BuildContext context) {
+    return Form(
+      child: Wrap(runSpacing: 15, children: <Widget>[
+        <%_ fields.forEach(field => { _%>
+          <%= field.fieldName %>Field(),
+        <%_ }); _%>
+        validationZone(),
+        submit(context)
+      ]),
+    );
+  }
+
+  <%_ fields.forEach(field => { _%>
+    <%_ if(field.fieldType === 'DateTime') { _%>
+      Widget <%= field.fieldName %>Field() {
+        return BlocBuilder<<%= entityClass %>Bloc, <%= entityClass %>State>(
+            buildWhen: (previous, current) => previous.<%= field.fieldName %> != current.<%= field.fieldName %>,
+            builder: (context, state) {
+              return DateTimeField(
+                controller: context.bloc<<%= entityClass %>Bloc>().<%= field.fieldName %>Controller,
+                onChanged: (value) { context.bloc<<%= entityClass %>Bloc>().add(<%= field.fieldNameCapitalized %>Changed(<%= field.fieldName %>: value)); },
+                format: DateFormat.yMMMMd(S.of(context).locale),
+                keyboardType: TextInputType.datetime,
+                decoration: InputDecoration(labelText: S.of(context).pageEntities<%= entityClass %><%= field.fieldNameCapitalized %>Field,),
+                onShowPicker: (context, currentValue) {
+                  return showDatePicker(
+                      locale: Locale(S.of(context).locale),
+                      context: context,
+                      firstDate: DateTime(1950),
+                      initialDate: currentValue ?? DateTime.now(),
+                      lastDate: DateTime(2050));
+                },
+              );
+            }
+        );
+      }
+    <%_ } else {_%>
+      Widget <%= field.fieldName %>Field() {
+        return BlocBuilder<<%= entityClass %>Bloc, <%= entityClass %>State>(
+            buildWhen: (previous, current) => previous.<%= field.fieldName %> != current.<%= field.fieldName %>,
+            builder: (context, state) {
+              return TextFormField(
+                  controller: context.bloc<<%= entityClass %>Bloc>().<%= field.fieldName %>Controller,
+                  onChanged: (value) { context.bloc<<%= entityClass %>Bloc>().add(<%= field.fieldNameCapitalized %>Changed(<%= field.fieldName %>: value)); },
+                  keyboardType:  
+                  <%_ if(field.fieldType === 'int') { _%>
+                    TextInputType.number,
+                  <%_ } else { _%> 
+                    TextInputType.text,
+                  <%_ } _%> 
+                  decoration: InputDecoration(
+                      labelText: S.of(context).pageEntities<%= entityClass %><%= field.fieldNameCapitalized %>Field));
+            }
+        );
+      }
+    <%_ } _%> 
+    
+  <%_ }); _%>
+
+  Widget validationZone() {
+    return BlocBuilder<<%= entityClass %>Bloc, <%= entityClass %>State>(
+        buildWhen:(previous, current) => previous.formStatus != current.formStatus,
+        builder: (context, state) {
+          return Visibility(
+              visible: state.formStatus.isSubmissionFailure ||  state.formStatus.isSubmissionSuccess,
+              child: Center(
+                child: generateNotificationText(state, context),
+              ));
+        });
+  }
+
+  Widget generateNotificationText(<%= entityClass %>State state, BuildContext context) {
+    String notificationTranslated = '';
+    MaterialColor notificationColors;
+
+    if (state.generalNotificationKey.toString().compareTo(HttpUtils.errorServerKey) == 0) {
+      notificationTranslated = S.of(context).genericErrorServer;
+      notificationColors = Theme.of(context).errorColor;
+    } else if (state.generalNotificationKey.toString().compareTo(HttpUtils.badRequestServerKey) == 0) {
+      notificationTranslated = S.of(context).genericErrorBadRequest;
+      notificationColors = Theme.of(context).errorColor;
+    }
+
+    return Text(
+      notificationTranslated,
+      textAlign: TextAlign.center,
+      style: TextStyle(fontSize: Theme.of(context).textTheme.bodyText1.fontSize,
+          color: notificationColors),
+    );
+  }
+
+  submit(BuildContext context) {
+    return BlocBuilder<<%= entityClass %>Bloc, <%= entityClass %>State>(
+        buildWhen: (previous, current) => previous.formStatus != current.formStatus,
+        builder: (context, state) {
+          String buttonLabel = state.editMode == true ?
+          S.of(context).pageEntities<%= entityClass %>SubmitEdit.toUpperCase() :
+          S.of(context).pageEntities<%= entityClass %>SubmitCreate.toUpperCase();
+          return RaisedButton(
+            child: Container(
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                  child: Visibility(
+                    replacement: CircularProgressIndicator(value: null),
+                    visible: !state.formStatus.isSubmissionInProgress,
+                    child: Text(buttonLabel),
+                  ),
+                )),
+            onPressed: state.formStatus.isValidated ? () => context.bloc<<%= entityClass %>Bloc>().add(<%= entityClass %>FormSubmitted()) : null,
+          );
+        }
+    );
+  }
+}

@@ -82,11 +82,11 @@ class <%= entityClass %> {
     <%_ } _%>
 <%_ } _%>
         
- const <%= entityClass %> ({ 
+ const <%= entityClass %> (
      <%_ for (idx in dartFields) { _%>
         this.<%- dartFields[idx]['name'] -%>,
         <%_ } _%> 
-    });
+    );
 
 @override
 String toString() {

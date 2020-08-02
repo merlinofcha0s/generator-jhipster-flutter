@@ -27,4 +27,18 @@ class <%= entityClass %>Repository {
     final <%= entityInstance %>Request = await HttpUtils.getRequest('$uriEndpoint/$id');
     return JsonMapper.deserialize<<%= entityClass %>>(<%= entityInstance %>Request.body);
   }
+
+  Future<<%= entityClass %>> create(<%= entityClass %> <%= entityInstance %>) async {
+    final <%= entityInstance %>Request = await HttpUtils.postRequest('$uriEndpoint', <%= entityInstance %>);
+    return JsonMapper.deserialize<<%= entityClass %>>(<%= entityInstance %>Request.body);
+  }
+
+  Future<<%= entityClass %>> update(<%= entityClass %> <%= entityInstance %>) async {
+    final <%= entityInstance %>Request = await HttpUtils.putRequest('$uriEndpoint', <%= entityInstance %>);
+    return JsonMapper.deserialize<<%= entityClass %>>(<%= entityInstance %>Request.body);
+  }
+
+  Future<void> delete(int id) async {
+    final <%= entityInstance %>Request = await HttpUtils.deleteRequest('$uriEndpoint/$id');
+  }
 }
