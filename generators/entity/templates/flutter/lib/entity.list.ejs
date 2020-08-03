@@ -22,44 +22,59 @@ import 'package:flutter/material.dart';
 import 'package:<%= baseName %>/shared/widgets/drawer/bloc/drawer_bloc.dart';
 import 'package:<%= baseName %>/shared/widgets/drawer/drawer_widget.dart';
 import 'package:<%= baseName %>/shared/widgets/loading_indicator_widget.dart';
+import 'package:<%= baseName %>/routes.dart';
+import 'package:<%= baseName %>/shared/models/entity_arguments.dart';
 
 class <%= entityClass %>ListScreen extends StatelessWidget {
     <%= entityClass %>ListScreen({Key key}) : super(key: <%= camelizedUpperFirstBaseName %>Keys.<%= entityClassCamelCase %>ListScreen);
+    final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-  title:Text(<%_ if(enableTranslation) { _%>S.of(context).pageEntities<%= entityClass %>ListTitle<%_ } else { _%> '<%= entityClassPlural %> List'  <%_ } _%>),
-        ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(15.0),
-          child: BlocBuilder<<%= entityClass %>Bloc, <%= entityClass %>State>(
-            buildWhen: (previous, current) => previous.<%= entityClassPluralLowered %> != current.<%= entityClassPluralLowered %>,
-            builder: (context, state) {
-              return Visibility(
-                visible: state.<%= entityClassCamelCase %>StatusUI == <%= entityClass %>StatusUI.done,
-                replacement: LoadingIndicator(),
-                child: Column(children: <Widget>[
-                  for (<%= entityClass %> <%= entityClassCamelCase %> in state.<%= entityClassPluralLowered %>) <%= entityClassCamelCase %>Card(<%= entityClassCamelCase %>, context)
-                ]),
-              );
-            }
+    return  BlocListener<<%= entityClass %>Bloc, <%= entityClass %>State>(
+      listener: (context, state) {
+        if(state.deleteStatus == <%= entityClass %>DeleteStatus.ok) {
+          Navigator.of(context).pop();
+          scaffoldKey.currentState.showSnackBar(new SnackBar(
+              content: new Text(S.of(context).pageEntities<%= entityClass %>DeleteOk)
+          ));
+        }
+      },
+      child: Scaffold(
+          key: scaffoldKey,
+          appBar: AppBar(
+            centerTitle: true,
+    title:Text(<%_ if(enableTranslation) { _%>S.of(context).pageEntities<%= entityClass %>ListTitle<%_ } else { _%> '<%= entityClassPlural %> List'  <%_ } _%>),
           ),
-        ),
-      drawer: BlocProvider<DrawerBloc>(
-          create: (context) => DrawerBloc(loginRepository: LoginRepository()),
-          child: <%= camelizedUpperFirstBaseName %>Drawer()),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => null,
-        child: Icon(Icons.add, color: Theme.of(context).iconTheme.color,),
-        backgroundColor: Theme.of(context).primaryColor,
-      )
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(15.0),
+            child: BlocBuilder<<%= entityClass %>Bloc, <%= entityClass %>State>(
+              buildWhen: (previous, current) => previous.<%= entityClassPluralLowered %> != current.<%= entityClassPluralLowered %>,
+              builder: (context, state) {
+                return Visibility(
+                  visible: state.<%= entityClassCamelCase %>StatusUI == <%= entityClass %>StatusUI.done,
+                  replacement: LoadingIndicator(),
+                  child: Column(children: <Widget>[
+                    for (<%= entityClass %> <%= entityClassCamelCase %> in state.<%= entityClassPluralLowered %>) <%= entityClassCamelCase %>Card(<%= entityClassCamelCase %>, context)
+                  ]),
+                );
+              }
+            ),
+          ),
+        drawer: BlocProvider<DrawerBloc>(
+            create: (context) => DrawerBloc(loginRepository: LoginRepository()),
+            child: <%= camelizedUpperFirstBaseName %>Drawer()),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.entities<%= entityClass %>Create),
+          child: Icon(Icons.add, color: Theme.of(context).iconTheme.color,),
+          backgroundColor: Theme.of(context).primaryColor,
+        )
+      ),
     );
   }
 
   Widget <%= entityClassCamelCase %>Card(<%= entityClass %> <%= entityClassCamelCase %>, BuildContext context) {
+    <%= entityClass %>Bloc <%= entityInstance %>Bloc = BlocProvider.of<<%= entityClass %>Bloc>(context);
     return Card(
       child: Container(
         width: MediaQuery.of(context).size.width * 0.90,
@@ -79,15 +94,30 @@ class <%= entityClass %>ListScreen extends StatelessWidget {
               children: <Widget>[
                 FlatButton(
               child: Text(<%_ if(enableTranslation) { _%>S.of(context).entityActionView<%_ } else { _%>'View'<%_ } _%>%>),
-                  onPressed: () {/* ... */},
+                  onPressed: () => Navigator.pushNamed(
+                    context,
+                    <%= camelizedUpperFirstBaseName %>Routes.entities<%= entityClass %>View,
+                    arguments: EntityArguments(<%= entityInstance %>.id)
+                ),
                 ),
                 FlatButton(
                   child: Text(<%_ if(enableTranslation) { _%>S.of(context).entityActionEdit<%_ } else { _%>'Edit'<%_ } _%>),
-                  onPressed: () {/* ... */},
+                  onPressed: () => Navigator.pushNamed(
+                    context,
+                    <%= camelizedUpperFirstBaseName %>Routes.entities<%= entityClass %>Edit,
+                    arguments: EntityArguments(<%= entityInstance %>.id)
+                  ),
                 ),
                 FlatButton(
                   child: Text(<%_ if(enableTranslation) { _%>S.of(context).entityActionDelete<%_ } else { _%>'Delete'<%_ } _%>),
-                  onPressed: () {/* ... */},
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return deleteDialog(<%= entityInstance %>Bloc, context, <%= entityInstance %>.id);
+                      },
+                    );
+                  },
                 ),
               ],
             )
@@ -96,4 +126,29 @@ class <%= entityClass %>ListScreen extends StatelessWidget {
       ),
     );
   }
+
+  Widget deleteDialog(<%= entityClass %>Bloc <%= entityInstance %>Bloc, BuildContext context, int id) {
+    return BlocProvider<<%= entityClass %>Bloc>.value(
+      value: <%= entityInstance %>Bloc,
+      child: AlertDialog(
+        title: new Text(S.of(context).pageEntities<%= entityClass %>DeletePopupTitle),
+        content: new Text(S.of(context).entityActionConfirmDelete),
+        actions: <Widget>[
+          new FlatButton(
+            child: new Text(S.of(context).entityActionConfirmDeleteYes),
+            onPressed: () {
+              <%= entityInstance %>Bloc.add(Delete<%= entityClass %>ById(id: id));
+            },
+          ),
+          new FlatButton(
+            child: new Text(S.of(context).entityActionConfirmDeleteNo),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
 }

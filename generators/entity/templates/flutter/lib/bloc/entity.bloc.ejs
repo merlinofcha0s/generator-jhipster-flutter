@@ -31,11 +31,14 @@ class <%= entityClass %>Bloc extends Bloc<<%= entityClass %>Event, <%= entityCla
   final <%= entityClass %>Repository _<%= entityClassCamelCase %>Repository;
 
   <%_ fields.forEach(field => { _%>
+    <%_ if(!field.fieldIsEnum) { _%>
   final <%= field.fieldName %>Controller = TextEditingController();
+    <%_ } _%>
   <%_ }); _%>
 
   <%= entityClass %>Bloc({@required <%= entityClass %>Repository <%= entityClassCamelCase %>Repository}) : assert(<%= entityClassCamelCase %>Repository != null),
-        _<%= entityClassCamelCase %>Repository = <%= entityClassCamelCase %>Repository, super(const <%= entityClass %>State());
+        _<%= entityClassCamelCase %>Repository = <%= entityClassCamelCase %>Repository, 
+  super(<%= entityClass %>State(<%_ fields.forEach(field => { _%> <%_ if(field.fieldType === 'DateTime') { _%> null,<%_ } _%> <%_ }); _%>));
 
   @override
   void onTransition(Transition<<%= entityClass %>Event, <%= entityClass %>State> transition) {
@@ -82,7 +85,7 @@ class <%= entityClass %>Bloc extends Bloc<<%= entityClass %>Event, <%= entityCla
 
           result = await _<%= entityInstance %>Repository.update(new<%= entityClass %>);
         } else {
-          <%= entityClass %> new<%= entityClass %> = <%= entityClass %>(0,
+          <%= entityClass %> new<%= entityClass %> = <%= entityClass %>(null,
           <%_ fields.forEach(field => { _%> 
             state.<%= field.fieldName %>.value,  
             <%_ }); _%>
@@ -127,7 +130,7 @@ class <%= entityClass %>Bloc extends Bloc<<%= entityClass %>Event, <%= entityCla
     <%= field.fieldName %>Controller.text = DateFormat.yMMMMd(S.current.locale).format(loaded<%= entityClass %>?.<%= field.fieldName %>);
         <%_  } else if(field.fieldType === 'int') { _%>
     <%= field.fieldName %>Controller.text = loaded<%= entityClass %>.<%= field.fieldName %>.toString();
-        <%_ } else { _%>
+        <%_ } else if (!field.fieldIsEnum) { _%>
     <%= field.fieldName %>Controller.text = loaded<%= entityClass %>.<%= field.fieldName %>;
         <%_ } _%>
     <%_ }); _%>
@@ -177,7 +180,9 @@ class <%= entityClass %>Bloc extends Bloc<<%= entityClass %>Event, <%= entityCla
   @override
   Future<void> close() {
     <%_ fields.forEach(field => { _%>
+      <%_ if(!field.fieldIsEnum) { _%>
     <%= field.fieldName %>Controller.dispose();
+    <%_ } _%>
     <%_ }); _%>
     return super.close();
   }

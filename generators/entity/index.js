@@ -573,6 +573,7 @@ module.exports = class extends BaseGenerator {
         context.hasUserField = hasUserField;
 
         _.remove(context.relationships, relationship =>  relationship.relationshipType === 'one-to-many');
+        _.remove(context.relationships, relationship =>  relationship.relationshipType === 'many-to-many');
     }
 
     writing() {
@@ -834,6 +835,15 @@ module.exports = class extends BaseGenerator {
                             deleteValue = `Suppression ${entityClassPlural}`;
                         }
                         json[deleteKey] = deleteValue;
+
+                        const deleteConfirmKey = `pageEntities${entityClass}DeleteOk`;
+                        let deleteConfirmValue = '';
+                        if (json.locale === 'en') {
+                            deleteConfirmValue = `${entityClass} deleted successfuly`;
+                        } else if (json.locale === 'fr') {
+                            deleteConfirmValue = `${entityClass} supprimé avec succés`;
+                        }
+                        json[deleteConfirmKey] = deleteConfirmValue;
 
                         for(let field of fields) {
                             let key = `pageEntities${entityClass}${field.fieldNameCapitalized}Field`;

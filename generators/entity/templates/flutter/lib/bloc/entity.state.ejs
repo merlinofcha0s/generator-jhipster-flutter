@@ -38,10 +38,20 @@ fields.forEach(field => {
     } else if (field.fieldType === 'Instant') {
       field.fieldType = 'DateTime';
       field.defaultValue = 'null';
+      context.hasDateTime = true;
+    } else if(field.fieldIsEnum) {
+      field.defaultValue = 'null';
     } else {
       field.defaultValue = '\'\'';
     }
 });
+
+context.dateTimeFields = Array.from(fields);
+context.dateTimeFields = context.dateTimeFields.filter(field => field.fieldType == 'DateTime');
+
+const hasDateTime = context.hasDateTime;
+const dateTimeFields = context.dateTimeFields;
+console.dir(dateTimeFields);
 
 _%>
 part of '<%= entityFileName %>_bloc.dart';
@@ -64,7 +74,8 @@ class <%= entityClass %>State extends Equatable {
   <%_ }); _%>
 
   
-  const <%= entityClass %>State({
+  <%= entityClass %>State(
+    <%_ fields.forEach(field => { _%><%_ if(field.fieldType === 'DateTime') { _%><%= field.fieldNameCapitalized %>Input <%= field.fieldName %>,<%_ } _%><%_ }); _%> {
     this.<%= entityClassPluralLowered %> = const [],
     this.<%= entityClassCamelCase %>StatusUI = <%= entityClass %>StatusUI.init,
     this.loaded<%= entityClass %> = const <%= entityClass %>(<%- idField.defaultValue %>, <%_ fields.forEach(field => { _%> <%- field.defaultValue %>, <%_ }); _%><%_ relationships.forEach(relationship => { _%> null, <%_ }); _%>),
@@ -73,16 +84,24 @@ class <%= entityClass %>State extends Equatable {
     this.generalNotificationKey = '',
     this.deleteStatus = <%= entityClass %>DeleteStatus.none,
     <%_ fields.forEach(field => { _%>
+      <%_ if(field.fieldType !== 'DateTime') { _%>
     this.<%= field.fieldName %> = const <%= field.fieldNameCapitalized %>Input.pure(),
+      <%_ } _%>
       <%_ }); _%>
-  });
+  }) <%_ if(hasDateTime) { _%> : <%_ } _%><%_ dateTimeFields.forEach((field, index) => { _%>
+    <%_ if(field.fieldType === 'DateTime' && index != dateTimeFields.length - 1) { _%>
+this.<%= field.fieldName %> = <%= field.fieldName %> ?? <%= field.fieldNameCapitalized %>Input.pure(),
+    <%_ } else if(field.fieldType === 'DateTime' && index == dateTimeFields.length - 1) {_%>
+this.<%= field.fieldName %> = <%= field.fieldName %> ?? <%= field.fieldNameCapitalized %>Input.pure()
+      <%_ } _%>
+  <%_ }); _%>;
 
   <%= entityClass %>State copyWith({
     List<<%= entityClass %>> <%= entityClassPluralLowered %>,
     <%= entityClass %>StatusUI <%= entityClassCamelCase %>StatusUI,
     bool editMode,
     <%= entityClass %>DeleteStatus deleteStatus,
-    <%= entityClass %> loadedEmployee,
+    <%= entityClass %> loaded<%= entityClass %>,
     FormzStatus formStatus,
     String generalNotificationKey,
     <%_ fields.forEach(field => { _%>
@@ -90,15 +109,22 @@ class <%= entityClass %>State extends Equatable {
     <%_ }); _%>
   }) {
     return <%= entityClass %>State(
+      <%_ fields.forEach(field => { _%>
+        <%_ if(field.fieldType === 'DateTime') { _%>
+        <%= field.fieldName %>,
+        <%_ } _%>
+        <%_ }); _%>
       <%= entityClassPluralLowered %>: <%= entityClassPluralLowered %> ?? this.<%= entityClassPluralLowered %>,
       <%= entityClassCamelCase %>StatusUI: <%= entityClassCamelCase %>StatusUI ?? this.<%= entityClassCamelCase %>StatusUI,
-      loadedEmployee: loaded<%= entityClass %> ?? this.loaded<%= entityClass %>,
+      loaded<%= entityClass %>: loaded<%= entityClass %> ?? this.loaded<%= entityClass %>,
       editMode: editMode ?? this.editMode,
       formStatus: formStatus ?? this.formStatus,
       generalNotificationKey: generalNotificationKey ?? this.generalNotificationKey,
       deleteStatus: deleteStatus ?? this.deleteStatus,
       <%_ fields.forEach(field => { _%>
+      <%_ if(field.fieldType !== 'DateTime') { _%>
       <%= field.fieldName %>: <%= field.fieldName %> ?? this.<%= field.fieldName %>,
+      <%_ } _%>
       <%_ }); _%>
     );
   }

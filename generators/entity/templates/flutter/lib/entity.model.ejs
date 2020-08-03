@@ -74,7 +74,7 @@ import '../<%- idx %>/<%- idx %>_model.dart';<%}} %>
 @jsonSerializable
 class <%= entityClass %> {
 <%_ for (idx in dartFields) { %>
-  @JsonProperty(name: '<%- dartFields[idx]['name'] _%>')
+  @JsonProperty(name: '<%- dartFields[idx]['name'] _%>' <%_ if(dartFields[idx]['type'] === 'DateTime') { _%>, converterParams: {'format': 'yyyy-MM-dd\'T\'HH:mm:ss\'Z\''}<%_ }  _%>)
     <%_ if(dartFields[idx]['isList']) { _%>
   final List<<%- dartFields[idx]['type'] %>> <%- dartFields[idx]['name'] _%>;
     <%_ } else { _%>

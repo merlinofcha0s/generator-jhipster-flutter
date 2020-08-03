@@ -23,6 +23,7 @@ import 'package:formz/formz.dart';
 import 'package:intl/intl.dart';
 import 'package:<%= baseName %>/routes.dart';
 import 'package:<%= baseName %>/shared/repository/http_utils.dart';
+import 'package:<%= baseName %>/entities/<%= entityFileName %>/<%= entityFileName %>_model.dart';
 
 class <%= entityClass %>UpdateScreen extends StatelessWidget {
   <%= entityClass %>UpdateScreen({Key key}) : super(key: <%= camelizedUpperFirstBaseName %>Keys.<%= entityInstance %>CreateScreen);
@@ -91,6 +92,26 @@ class <%= entityClass %>UpdateScreen extends StatelessWidget {
             }
         );
       }
+    <%_ } else if (field.fieldIsEnum) {_%>
+      Widget <%= field.fieldName %>Field() {
+        return BlocBuilder<<%= entityClass %>Bloc,<%= entityClass %>State>(
+            buildWhen: (previous, current) => previous.<%= field.fieldName %> != current.<%= field.fieldName %>,
+            builder: (context, state) {
+              return Padding(
+                padding: const EdgeInsets.only(left: 3.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(S.of(context).pageEntities<%= entityClass %><%= field.fieldNameCapitalized %>Field, style: Theme.of(context).textTheme.bodyText1,),
+                    DropdownButton<<%= field.fieldType %>>(
+                        value: state.<%= field.fieldName %>.value,
+                        onChanged: (value) { context.bloc<<%= entityClass %>Bloc>().add(<%= field.fieldType %>Changed(<%= field.fieldName %>: value)); },
+                        items: createDropdown<%= field.fieldType %>Items(<%= field.fieldType %>.values)),
+                  ],
+                ),
+              );
+            });
+      }
     <%_ } else {_%>
       Widget <%= field.fieldName %>Field() {
         return BlocBuilder<<%= entityClass %>Bloc, <%= entityClass %>State>(
@@ -107,6 +128,22 @@ class <%= entityClass %>UpdateScreen extends StatelessWidget {
         );
       }
     <%_ } _%> 
+  <%_ }); _%>
+
+  <%_ fields.forEach(field => { _%>
+    <%_ if(field.fieldIsEnum) { _%>
+      List<DropdownMenuItem<<%= field.fieldType %>>> createDropdown<%= field.fieldType %>Items(List<<%= field.fieldType %>> <%= field.fieldName %>s) {
+        List<DropdownMenuItem<<%= field.fieldType %>>> <%= field.fieldName %>DropDown = [];
+    
+        for (<%= field.fieldType %> <%= field.fieldName %> in <%= field.fieldName %>s) {
+          DropdownMenuItem<<%= field.fieldType %>> dropdown = DropdownMenuItem<<%= field.fieldType %>>(
+              value: <%= field.fieldName %>, child: Text(<%= field.fieldName %>.toString()));
+              <%= field.fieldName %>DropDown.add(dropdown);
+        }
+    
+        return <%= field.fieldName %>DropDown;
+      }
+    <%_ } _%>
   <%_ }); _%>
 
   Widget validationZone() {
