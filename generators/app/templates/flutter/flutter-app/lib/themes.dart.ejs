@@ -29,7 +29,8 @@ class Themes {
     ),
     colorScheme: ColorScheme.light(
         primary: jhPrimaryColor,
-        onPrimary: jhPrimaryColor,
+        onPrimary: Colors.white,
+        onSecondary: Colors.white,
         primaryVariant: jhPrimaryColorAccent,
         secondary: jhSecondaryColor,
         secondaryVariant: jhSecondaryColorAccent,

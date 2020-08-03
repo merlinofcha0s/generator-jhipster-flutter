@@ -1,48 +1,62 @@
+<%_
+const baseName = context.baseName;
+const entityInstance = context.entityInstance;
+const entityFileName = context.entityFileName;
+const entityClassPlural = context.entityClassPlural;
+const entityClassPluralLowered = context.entityClassPluralLowered;
+const entityClass = context.entityClass;
+const entityClassCamelCase = context.entityClassCamelCase;
+const entityClassKebabCase = context.entityClassKebabCase;
+const entityClassKebabCasePlural = context.entityClassKebabCasePlural;
+const camelizedUpperFirstBaseName = context.camelizedUpperFirstBaseName;
+const fields = context.fields;
+const relationships = context.relationships;
+const primaryKeyType = context.primaryKeyType;
+_%>
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jhipsterfluttersample/account/login/login_repository.dart';
-import 'package:jhipsterfluttersample/entities/employee/bloc/employee_bloc.dart';
-import 'package:jhipsterfluttersample/entities/employee/employee_model.dart';
-import 'package:jhipsterfluttersample/generated/l10n.dart';
-import 'package:jhipsterfluttersample/keys.dart';
+import 'package:<%= baseName %>/entities/<%= entityFileName %>/bloc/<%= entityFileName %>_bloc.dart';
+import 'package:<%= baseName %>/entities/<%= entityFileName %>/<%= entityFileName %>_model.dart';
+import 'package:<%= baseName %>/generated/l10n.dart';
+import 'package:<%= baseName %>/keys.dart';
 import 'package:flutter/material.dart';
-import 'package:jhipsterfluttersample/routes.dart';
+import 'package:<%= baseName %>/routes.dart';
 import 'package:intl/intl.dart';
-import 'package:jhipsterfluttersample/shared/widgets/loading_indicator_widget.dart';
+import 'package:<%= baseName %>/shared/widgets/loading_indicator_widget.dart';
 
-class EmployeeViewScreen extends StatelessWidget {
-  EmployeeViewScreen({Key key}) : super(key: JhipsterfluttersampleKeys.employeeListScreen);
+class <%= entityClass %>ViewScreen extends StatelessWidget {
+  <%= entityClass %>ViewScreen({Key key}) : super(key: <%= camelizedUpperFirstBaseName %>Keys.<%= entityInstance %>CreateScreen);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
           appBar: AppBar(
             centerTitle: true,
-            title:Text(S.of(context).pageEntitiesEmployeeViewTitle),
+            title:Text(S.of(context).pageEntities<%= entityClass %>ViewTitle),
           ),
           body: SingleChildScrollView(
             padding: const EdgeInsets.all(15.0),
-            child: BlocBuilder<EmployeeBloc, EmployeeState>(
-              buildWhen: (previous, current) => previous.loadedEmployee != current.loadedEmployee,
+            child: BlocBuilder<<%= entityClass %>Bloc, <%= entityClass %>State>(
+              buildWhen: (previous, current) => previous.loaded<%= entityClass %> != current.loaded<%= entityClass %>,
               builder: (context, state) {
                 return Visibility(
-                  visible: state.employeeStatusUI == EmployeeStatusUI.done,
+                  visible: state.<%= entityInstance %>StatusUI == <%= entityClass %>StatusUI.done,
                   replacement: LoadingIndicator(),
                   child: Column(children: <Widget>[
-                    employeeCard(state.loadedEmployee, context)
+                    <%= entityInstance %>Card(state.loaded<%= entityClass %>, context)
                   ]),
                 );
               }
             ),
           ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => Navigator.pushNamed(context, JhipsterfluttersampleRoutes.entitiesEmployeeCreate),
+          onPressed: () => Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.entities<%= entityClass %>Create),
           child: Icon(Icons.add, color: Theme.of(context).iconTheme.color,),
           backgroundColor: Theme.of(context).primaryColor,
         )
     );
   }
 
-  Widget employeeCard(Employee employee, BuildContext context) {
+  Widget <%= entityInstance %>Card(<%= entityClass %> <%= entityInstance %>, BuildContext context) {
     return Card(
       child: Container(
         padding: EdgeInsets.all(20),
@@ -51,13 +65,16 @@ class EmployeeViewScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text('id : ' + employee.id.toString(), style: Theme.of(context).textTheme.bodyText1,),
-            Text('Lastname : ' + employee.lastName, style: Theme.of(context).textTheme.bodyText1,),
-            Text('Firstname : ' + employee.firstName, style: Theme.of(context).textTheme.bodyText1,),
-            Text('Hire Date : ' + (employee?.hireDate != null ? DateFormat.yMMMMd(S.of(context).locale).format(employee.hireDate) : ''), style: Theme.of(context).textTheme.bodyText1,),
-            Text('Phone Number : ' + employee.phoneNumber, style: Theme.of(context).textTheme.bodyText1,),
-            Text('Salary : ' + employee.salary.toString(), style: Theme.of(context).textTheme.bodyText1,),
-            Text('CommissionPct : ' + employee.commissionPct.toString(), style: Theme.of(context).textTheme.bodyText1,),
+            Text('<%= context.idField.fieldNameHumanized %> : ' + <%= entityInstance %>.<%= context.idField.fieldName %>.toString(), style: Theme.of(context).textTheme.bodyText1,),
+            <%_ fields.forEach(field => { _%>
+              <%_ if(field.fieldType === 'DateTime') { _%>
+                Text('<%= field.fieldNameHumanized %> : ' + (<%= entityInstance %>?.<%= field.fieldName %> != null ? DateFormat.yMMMMd(S.of(context).locale).format(<%= entityInstance %>.hireDate) : ''), style: Theme.of(context).textTheme.bodyText1,),
+              <%_ } else if(field.fieldType === 'int') {_%>
+                Text('<%= field.fieldNameHumanized %> : ' + <%= entityInstance %>.<%= field.fieldName %>.toString(), style: Theme.of(context).textTheme.bodyText1,),
+              <%_ } else {_%>
+                Text('<%= field.fieldNameHumanized %> : ' + <%= entityInstance %>.<%= field.fieldName %>.toString(), style: Theme.of(context).textTheme.bodyText1,),
+              <%_ } _%>
+            <%_ }); _%>
           ],
         ),
       ),

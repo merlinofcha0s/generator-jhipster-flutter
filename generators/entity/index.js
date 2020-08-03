@@ -582,7 +582,7 @@ module.exports = class extends BaseGenerator {
             this.context.entityFileName, this.context.camelizedUpperFirstBaseName, this.context.entityClassCamelCase, this.context.entityClassPlural);
         this._addEntityToMapper(this.context.baseName, this.context.entityClass, this.context.entityFileName);
         this._addEntityToKey(this.context.entityClass, this.context.entityClassCamelCase);
-        this._addEntityToI18n(this.context.entityClass, this.context.entityFileName, this.context.entityClassPlural);
+        this._addEntityMainToI18n(this.context.entityClass, this.context.entityFileName, this.context.entityClassPlural, this.context.fields);
     }
 
     install() {
@@ -781,7 +781,7 @@ module.exports = class extends BaseGenerator {
      * @param {string} entityFileName - Entity File Name
      * @param {string} camelizedUpperFirstBaseName - Formatted base name (ex: MonApplication)
      */
-    _addEntityToI18n(entityClass, entityFileName, entityClassPlural) {
+    _addEntityMainToI18n(entityClass, entityFileName, entityClassPlural, fields) {
         if (this.context.enableTranslation) {
             const languages = flutterConstants.LANGUAGES;
             languages.forEach((lang) => {
@@ -797,6 +797,50 @@ module.exports = class extends BaseGenerator {
                             listValue = `Liste ${entityClassPlural}`;
                         }
                         json[listKey] = listValue;
+
+                        const updateKey = `pageEntities${entityClass}UpdateTitle`;
+                        let listUpdate = '';
+                        if (json.locale === 'en') {
+                            listUpdate = `Edit ${entityClassPlural} `;
+                        } else if (json.locale === 'fr') {
+                            listUpdate = `Editer ${entityClassPlural}`;
+                        }
+                        json[updateKey] = listUpdate;
+
+                        const createKey = `pageEntities${entityClass}CreateTitle`;
+                        let listCreate = '';
+                        if (json.locale === 'en') {
+                            listCreate = `Create ${entityClassPlural}`;
+                        } else if (json.locale === 'fr') {
+                            listCreate = `Créer ${entityClassPlural}`;
+                        }
+                        json[createKey] = listCreate;
+
+                        const viewKey = `pageEntities${entityClass}ViewTitle`;
+                        let listView = '';
+                        if (json.locale === 'en') {
+                            listView = `${entityClassPlural} View`;
+                        } else if (json.locale === 'fr') {
+                            listView = `Voir ${entityClassPlural}`;
+                        }
+                        json[viewKey] = listView;
+
+
+                        const deleteKey = `pageEntities${entityClass}DeletePopupTitle`;
+                        let deleteValue = '';
+                        if (json.locale === 'en') {
+                            deleteValue = `Delete ${entityClassPlural}`;
+                        } else if (json.locale === 'fr') {
+                            deleteValue = `Suppression ${entityClassPlural}`;
+                        }
+                        json[deleteKey] = deleteValue;
+
+                        for(let field of fields) {
+                            let key = `pageEntities${entityClass}${field.fieldNameCapitalized}Field`;
+                            let value = field.fieldNameCapitalized;
+                            json[key] = value;
+                        }
+
                     }, this);
                 } catch (e) {
                     this.debug('Error:', e);

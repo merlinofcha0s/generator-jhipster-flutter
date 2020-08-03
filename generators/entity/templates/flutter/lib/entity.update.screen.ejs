@@ -12,7 +12,6 @@ const camelizedUpperFirstBaseName = context.camelizedUpperFirstBaseName;
 const fields = context.fields;
 const relationships = context.relationships;
 const primaryKeyType = context.primaryKeyType;
-
 _%>
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -99,20 +98,15 @@ class <%= entityClass %>UpdateScreen extends StatelessWidget {
             builder: (context, state) {
               return TextFormField(
                   controller: context.bloc<<%= entityClass %>Bloc>().<%= field.fieldName %>Controller,
-                  onChanged: (value) { context.bloc<<%= entityClass %>Bloc>().add(<%= field.fieldNameCapitalized %>Changed(<%= field.fieldName %>: value)); },
-                  keyboardType:  
-                  <%_ if(field.fieldType === 'int') { _%>
-                    TextInputType.number,
-                  <%_ } else { _%> 
-                    TextInputType.text,
-                  <%_ } _%> 
+                  onChanged: (value) { context.bloc<<%= entityClass %>Bloc>()
+                    .add(<%= field.fieldNameCapitalized %>Changed(<%= field.fieldName %>: <%_ if(field.fieldType === 'int') { _%> int.parse(value) <%_ } else { _%> value <%_ } _%>)); },
+                  keyboardType:  <%_ if(field.fieldType === 'int') { _%> TextInputType.number,<%_ } else { _%> TextInputType.text,<%_ } _%>
                   decoration: InputDecoration(
                       labelText: S.of(context).pageEntities<%= entityClass %><%= field.fieldNameCapitalized %>Field));
             }
         );
       }
     <%_ } _%> 
-    
   <%_ }); _%>
 
   Widget validationZone() {
@@ -152,8 +146,8 @@ class <%= entityClass %>UpdateScreen extends StatelessWidget {
         buildWhen: (previous, current) => previous.formStatus != current.formStatus,
         builder: (context, state) {
           String buttonLabel = state.editMode == true ?
-          S.of(context).pageEntities<%= entityClass %>SubmitEdit.toUpperCase() :
-          S.of(context).pageEntities<%= entityClass %>SubmitCreate.toUpperCase();
+          S.of(context).entityActionEdit.toUpperCase() :
+          S.of(context).entityActionCreate.toUpperCase();
           return RaisedButton(
             child: Container(
                 width: MediaQuery.of(context).size.width,

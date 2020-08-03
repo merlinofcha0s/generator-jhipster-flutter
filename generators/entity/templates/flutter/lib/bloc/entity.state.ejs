@@ -25,6 +25,8 @@ let idField = {
   defaultValue: 0
 }
 
+context.idField = idField;
+
 fields.forEach(field => {
   indexForField++;
     if (field.fieldType === 'UUID') {

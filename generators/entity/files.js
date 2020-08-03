@@ -32,6 +32,10 @@ const flutterFiles = {
                     renameTo: (generator) => `${generator.context.entityFolderName}/${generator.context.entityFileName}_update_screen.dart`
                 },
                 {
+                    file: 'entity.view.screen',
+                    renameTo: (generator) => `${generator.context.entityFolderName}/${generator.context.entityFileName}_view_screen.dart`
+                },
+                {
                     file: 'entity.list',
                     renameTo: (generator) => `${generator.context.entityFolderName}/${generator.context.entityFileName}_list_screen.dart`
                 }

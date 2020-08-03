@@ -53,6 +53,7 @@ const FLUTTER_FILES = {
                 'shared/models/jwt_token.dart',
                 'shared/models/user_jwt.dart',
                 'shared/models/user.dart',
+                'shared/models/entity_arguments.dart',
                 'shared/repository/http_utils.dart',
                 'shared/repository/account_repository.dart',
                 'shared/exceptions/app_exception.dart',
