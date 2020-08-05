@@ -9,6 +9,7 @@ const entityClassCamelCase = context.entityClassCamelCase;
 const fields = context.fields;
 const relationships = context.relationships;
 const primaryKeyType = context.primaryKeyType;
+const enableTranslation = context.enableTranslation;
 _%>
 import 'dart:async';
 import 'package:bloc/bloc.dart';
@@ -20,7 +21,9 @@ import 'package:formz/formz.dart';
 import 'package:<%= baseName %>/entities/<%= entityFileName %>/<%= entityFileName %>_model.dart';
 import 'package:<%= baseName %>/entities/<%= entityFileName %>/<%= entityFileName %>_repository.dart';
 import 'package:<%= baseName %>/entities/<%= entityFileName %>/bloc/<%= entityFileName %>_form_model.dart';
+<%_ if(enableTranslation) { _%>
 import 'package:<%= baseName %>/generated/l10n.dart';
+<%_ } _%>
 import 'package:<%= baseName %>/shared/repository/http_utils.dart';
 import 'package:intl/intl.dart';
 
@@ -127,7 +130,7 @@ class <%= entityClass %>Bloc extends Bloc<<%= entityClass %>Event, <%= entityCla
 
     <%_ fields.forEach(field => { _%>
       <%_ if(field.fieldType === 'DateTime') { _%>
-    <%= field.fieldName %>Controller.text = DateFormat.yMMMMd(S.current.locale).format(loaded<%= entityClass %>?.<%= field.fieldName %>);
+    <%= field.fieldName %>Controller.text = DateFormat.yMMMMd(<%_ if(enableTranslation) { _%>S.current.locale<%_ } else { _%>'en'<%_ } _%>).format(loaded<%= entityClass %>?.<%= field.fieldName %>);
         <%_  } else if(field.fieldType === 'int') { _%>
     <%= field.fieldName %>Controller.text = loaded<%= entityClass %>.<%= field.fieldName %>.toString();
         <%_ } else if (!field.fieldIsEnum) { _%>
