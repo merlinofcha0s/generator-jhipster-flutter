@@ -13,8 +13,13 @@ const fields = context.fields;
 const relationships = context.relationships;
 const primaryKeyType = context.primaryKeyType;
 const enableTranslation = context.enableTranslation;
+const hasDateTime = context.hasDateTime;
 _%>
+
+<%_ if(hasDateTime) { _%>
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:intl/intl.dart';
+<%_ } _%>
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:<%= baseName %>/entities/<%= entityFileName %>/bloc/<%= entityFileName %>_bloc.dart';
 <%_ if(enableTranslation) { _%>
@@ -23,7 +28,6 @@ import 'package:<%= baseName %>/generated/l10n.dart';
 import 'package:<%= baseName %>/keys.dart';
 import 'package:flutter/material.dart';
 import 'package:formz/formz.dart';
-import 'package:intl/intl.dart';
 import 'package:<%= baseName %>/routes.dart';
 import 'package:<%= baseName %>/shared/repository/http_utils.dart';
 import 'package:<%= baseName %>/entities/<%= entityFileName %>/<%= entityFileName %>_model.dart';
@@ -115,6 +119,26 @@ class <%= entityClass %>UpdateScreen extends StatelessWidget {
               );
             });
       }
+      <%_ } else if (field.fieldType === 'bool') {_%>
+        Widget <%= field.fieldName %>Field() {
+          return BlocBuilder<<%= entityClass %>Bloc,<%= entityClass %>State>(
+              buildWhen: (previous, current) => previous.<%= field.fieldName %> != current.<%= field.fieldName %>,
+              builder: (context, state) {
+                return Padding(
+                  padding: const EdgeInsets.only(left: 3.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(<%_ if(enableTranslation) { _%>S.of(context).pageEntities<%= entityClass %><%= field.fieldNameCapitalized %>Field<%_ } else { _%>'<%= field.fieldName %>'<%_ } _%>, style: Theme.of(context).textTheme.bodyText1,),
+                      Switch(
+                          value: state.<%= field.fieldName %>.value,
+                          onChanged: (value) { context.bloc<<%= entityClass %>Bloc>().add(<%= field.fieldNameCapitalized %>Changed(<%= field.fieldName %>: value)); },
+                          activeColor: Theme.of(context).primaryColor,),
+                    ],
+                  ),
+                );
+              });
+        }
     <%_ } else {_%>
       Widget <%= field.fieldName %>Field() {
         return BlocBuilder<<%= entityClass %>Bloc, <%= entityClass %>State>(

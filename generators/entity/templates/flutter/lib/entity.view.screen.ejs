@@ -13,6 +13,7 @@ const fields = context.fields;
 const relationships = context.relationships;
 const primaryKeyType = context.primaryKeyType;
 const enableTranslation = context.enableTranslation;
+const hasDateTime = context.hasDateTime;
 _%>
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:<%= baseName %>/entities/<%= entityFileName %>/bloc/<%= entityFileName %>_bloc.dart';
@@ -23,7 +24,9 @@ import 'package:<%= baseName %>/generated/l10n.dart';
 import 'package:<%= baseName %>/keys.dart';
 import 'package:flutter/material.dart';
 import 'package:<%= baseName %>/routes.dart';
+<%_ if(hasDateTime) { _%>
 import 'package:intl/intl.dart';
+<%_ } _%>
 import 'package:<%= baseName %>/shared/widgets/loading_indicator_widget.dart';
 
 class <%= entityClass %>ViewScreen extends StatelessWidget {
@@ -72,7 +75,7 @@ class <%= entityClass %>ViewScreen extends StatelessWidget {
             <%_ fields.forEach(field => { _%>
               <%_ if(field.fieldType === 'DateTime') { _%>
               Text('<%= field.fieldNameHumanized %> : ' + (<%= entityInstance %>?.<%= field.fieldName %> != null ? DateFormat.yMMMMd(<%_ if(enableTranslation) { _%>S.of(context).locale<%_ } else { _%>'en'<%_ } _%>).format(<%= entityInstance %>.<%= field.fieldName %>) : ''), style: Theme.of(context).textTheme.bodyText1,),
-              <%_ } else if(field.fieldType === 'int') {_%>
+              <%_ } else if (field.fieldType === 'int' || field.fieldType === 'bool') {_%>
                 Text('<%= field.fieldNameHumanized %> : ' + <%= entityInstance %>.<%= field.fieldName %>.toString(), style: Theme.of(context).textTheme.bodyText1,),
               <%_ } else {_%>
                 Text('<%= field.fieldNameHumanized %> : ' + <%= entityInstance %>.<%= field.fieldName %>.toString(), style: Theme.of(context).textTheme.bodyText1,),

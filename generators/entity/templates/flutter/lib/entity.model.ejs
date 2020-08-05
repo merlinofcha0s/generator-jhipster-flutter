@@ -8,6 +8,7 @@ const fields = context.fields;
 const relationships = context.relationships;
 const entityClass = context.entityClass;
 const entityInstance = context.entityInstance;
+const baseName = context.baseName;
 let hasUserRelationship = false;
 let dartKeyType;
 if (pkType === 'String') {
@@ -70,8 +71,13 @@ relationships.forEach(rela => {
 _%>
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 
-<% for (idx in dartFields) { if (dartFields[idx]['desc'] == 'relationship') {%>
-import '../<%- idx %>/<%- idx %>_model.dart';<%}} %>
+<%_ for (idx in dartFields) { if (dartFields[idx]['desc'] == 'relationship') { _%>
+<%_ if (dartFields[idx]['type'] == 'User') { _%>
+import 'package:<%- baseName %>/shared/models/user.dart';
+<%_ } else { _%>
+import '../<%- idx %>/<%- idx %>_model.dart';
+<%_ } _%>
+<%_ }} _%>
 
 @jsonSerializable
 class <%= entityClass %> {

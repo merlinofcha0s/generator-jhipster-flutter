@@ -325,6 +325,9 @@ module.exports = class extends BaseGenerator {
                 context.validation = true;
             }
         });
+
+        _.remove(context.fields, field =>  field.fieldType === 'byte[]');
+
         let hasUserField = false;
         // Load in-memory data for relationships
         context.relationships.forEach((relationship) => {
