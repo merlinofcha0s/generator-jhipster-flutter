@@ -582,7 +582,7 @@ module.exports = class extends BaseGenerator {
         this._addEntityToRoute(this.context.baseName, this.context.entityClass,
             this.context.entityFileName, this.context.camelizedUpperFirstBaseName, this.context.entityClassCamelCase, this.context.entityClassPlural);
         this._addEntityToMapper(this.context.baseName, this.context.entityClass, this.context.entityFileName);
-        this._addEntityToKey(this.context.entityClass, this.context.entityClassCamelCase);
+        this._addEntityToKey(this.context.entityClass, this.context.entityClassCamelCase, this.context.entityInstance);
         this._addEntityMainToI18n(this.context.entityClass, this.context.entityFileName, this.context.entityClassPlural, this.context.fields);
     }
 
@@ -868,13 +868,13 @@ module.exports = class extends BaseGenerator {
      * @param {string} entityFileName - Entity File Name
      * @param {string} camelizedUpperFirstBaseName - Formatted base name (ex: MonApplication)
      */
-    _addEntityToKey(entityClass, entityClassCamelCase) {
+    _addEntityToKey(entityClass, entityClassCamelCase, entityInstance) {
         const keysClassPath = 'lib/keys.dart';
 
         try {
-            const keyList = `static const ${entityClassCamelCase}ListScreen = Key('__${entityClassCamelCase}ListScreen__'); \n`;
-            const keyCreate = `  static const ${entityClassCamelCase}CreateScreen = Key('__${entityClassCamelCase}CreateScreen__'); \n`;
-            const keyView = `  static const ${entityClassCamelCase}ViewScreen = Key('__${entityClassCamelCase}ViewScreen__');`;
+            const keyList = `static const ${entityInstance}ListScreen = Key('__${entityClassCamelCase}ListScreen__'); \n`;
+            const keyCreate = `  static const ${entityInstance}CreateScreen = Key('__${entityClassCamelCase}CreateScreen__'); \n`;
+            const keyView = `  static const ${entityInstance}ViewScreen = Key('__${entityClassCamelCase}ViewScreen__');`;
             const keys = keyList + keyCreate + keyView;
 
             utils.rewriteFile({

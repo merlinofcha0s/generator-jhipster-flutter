@@ -5,7 +5,6 @@ const entityFileName = context.entityFileName;
 const entityClassPlural = context.entityClassPlural;
 const entityClass = context.entityClass;
 const entityClassPluralLowered = context.entityClassPluralLowered;
-const entityClassCamelCase = context.entityClassCamelCase;
 const fields = context.fields;
 const relationships = context.relationships;
 const primaryKeyType = context.primaryKeyType;
@@ -31,7 +30,7 @@ part '<%= entityFileName %>_events.dart';
 part '<%= entityFileName %>_state.dart';
 
 class <%= entityClass %>Bloc extends Bloc<<%= entityClass %>Event, <%= entityClass %>State> {
-  final <%= entityClass %>Repository _<%= entityClassCamelCase %>Repository;
+  final <%= entityClass %>Repository _<%= entityInstance %>Repository;
 
   <%_ fields.forEach(field => { _%>
     <%_ if(!field.fieldIsEnum) { _%>
@@ -39,8 +38,8 @@ class <%= entityClass %>Bloc extends Bloc<<%= entityClass %>Event, <%= entityCla
     <%_ } _%>
   <%_ }); _%>
 
-  <%= entityClass %>Bloc({@required <%= entityClass %>Repository <%= entityClassCamelCase %>Repository}) : assert(<%= entityClassCamelCase %>Repository != null),
-        _<%= entityClassCamelCase %>Repository = <%= entityClassCamelCase %>Repository, 
+  <%= entityClass %>Bloc({@required <%= entityClass %>Repository <%= entityInstance %>Repository}) : assert(<%= entityInstance %>Repository != null),
+        _<%= entityInstance %>Repository = <%= entityInstance %>Repository, 
   super(<%= entityClass %>State(<%_ fields.forEach(field => { _%> <%_ if(field.fieldType === 'DateTime') { _%> null,<%_ } _%> <%_ }); _%>));
 
   @override
@@ -66,9 +65,9 @@ class <%= entityClass %>Bloc extends Bloc<<%= entityClass %>Event, <%= entityCla
   }
 
   Stream<<%= entityClass %>State> onInitList(Init<%= entityClass %>List event) async* {
-    yield state.copyWith(<%= entityClassCamelCase %>StatusUI: <%= entityClass %>StatusUI.loading);
-    List<<%= entityClass %>> <%= entityClassPluralLowered %> = await _<%= entityClassCamelCase %>Repository.getAll<%= entityClassPlural %>();
-    yield state.copyWith(<%= entityClassPluralLowered %>: <%= entityClassPluralLowered %>, <%= entityClassCamelCase %>StatusUI: <%= entityClass %>StatusUI.done);
+    yield state.copyWith(<%= entityInstance %>StatusUI: <%= entityClass %>StatusUI.loading);
+    List<<%= entityClass %>> <%= entityClassPluralLowered %> = await _<%= entityInstance %>Repository.getAll<%= entityClassPlural %>();
+    yield state.copyWith(<%= entityClassPluralLowered %>: <%= entityClassPluralLowered %>, <%= entityInstance %>StatusUI: <%= entityClass %>StatusUI.done);
   }
 
   Stream<<%= entityClass %>State> onSubmit() async* {

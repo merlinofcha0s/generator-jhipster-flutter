@@ -6,7 +6,6 @@ const entityClassPlural = context.entityClassPlural;
 const entityClassPluralLowered = context.entityClassPluralLowered;
 const entityClass = context.entityClass;
 const camelizedUpperFirstBaseName = context.camelizedUpperFirstBaseName;
-const entityClassCamelCase = context.entityClassCamelCase;
 const enableTranslation = context.enableTranslation;
 const fields = context.fields;
 _%>
@@ -26,7 +25,7 @@ import 'package:<%= baseName %>/routes.dart';
 import 'package:<%= baseName %>/shared/models/entity_arguments.dart';
 
 class <%= entityClass %>ListScreen extends StatelessWidget {
-    <%= entityClass %>ListScreen({Key key}) : super(key: <%= camelizedUpperFirstBaseName %>Keys.<%= entityClassCamelCase %>ListScreen);
+    <%= entityClass %>ListScreen({Key key}) : super(key: <%= camelizedUpperFirstBaseName %>Keys.<%= entityInstance %>ListScreen);
     final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
@@ -52,10 +51,10 @@ class <%= entityClass %>ListScreen extends StatelessWidget {
               buildWhen: (previous, current) => previous.<%= entityClassPluralLowered %> != current.<%= entityClassPluralLowered %>,
               builder: (context, state) {
                 return Visibility(
-                  visible: state.<%= entityClassCamelCase %>StatusUI == <%= entityClass %>StatusUI.done,
+                  visible: state.<%= entityInstance %>StatusUI == <%= entityClass %>StatusUI.done,
                   replacement: LoadingIndicator(),
                   child: Column(children: <Widget>[
-                    for (<%= entityClass %> <%= entityClassCamelCase %> in state.<%= entityClassPluralLowered %>) <%= entityClassCamelCase %>Card(<%= entityClassCamelCase %>, context)
+                    for (<%= entityClass %> <%= entityInstance %> in state.<%= entityClassPluralLowered %>) <%= entityInstance %>Card(<%= entityInstance %>, context)
                   ]),
                 );
               }
@@ -73,7 +72,7 @@ class <%= entityClass %>ListScreen extends StatelessWidget {
     );
   }
 
-  Widget <%= entityClassCamelCase %>Card(<%= entityClass %> <%= entityClassCamelCase %>, BuildContext context) {
+  Widget <%= entityInstance %>Card(<%= entityClass %> <%= entityInstance %>, BuildContext context) {
     <%= entityClass %>Bloc <%= entityInstance %>Bloc = BlocProvider.of<<%= entityClass %>Bloc>(context);
     return Card(
       child: Container(
@@ -84,9 +83,9 @@ class <%= entityClass %>ListScreen extends StatelessWidget {
               leading: Icon(Icons.turned_in),
               <%_ for (let i = 0; i < 2 && i < fields.length ; i++) { _%>
                 <%_ if(i == 0) { _%>
-                  title: Text('<%= fields[i].fieldNameHumanized %> : ${<%= entityClassCamelCase %>.<%= fields[i].fieldName %>.toString()}'),
+                  title: Text('<%= fields[i].fieldNameHumanized %> : ${<%= entityInstance %>.<%= fields[i].fieldName %>.toString()}'),
               <%_ } else { _%>
-                  subtitle: Text('<%= fields[i].fieldNameHumanized %> : ${<%= entityClassCamelCase %>.<%= fields[i].fieldName %>.toString()}'),
+                  subtitle: Text('<%= fields[i].fieldNameHumanized %> : ${<%= entityInstance %>.<%= fields[i].fieldName %>.toString()}'),
               <%_ } _%>
             <%_ } _%>
             ),

@@ -108,7 +108,7 @@ class <%= entityClass %>UpdateScreen extends StatelessWidget {
                     Text(<%_ if(enableTranslation) { _%>S.of(context).pageEntities<%= entityClass %><%= field.fieldNameCapitalized %>Field<%_ } else { _%>'<%= field.fieldName %>'<%_ } _%>, style: Theme.of(context).textTheme.bodyText1,),
                     DropdownButton<<%= field.fieldType %>>(
                         value: state.<%= field.fieldName %>.value,
-                        onChanged: (value) { context.bloc<<%= entityClass %>Bloc>().add(<%= field.fieldType %>Changed(<%= field.fieldName %>: value)); },
+                        onChanged: (value) { context.bloc<<%= entityClass %>Bloc>().add(<%= field.fieldNameCapitalized %>Changed(<%= field.fieldName %>: value)); },
                         items: createDropdown<%= field.fieldType %>Items(<%= field.fieldType %>.values)),
                   ],
                 ),

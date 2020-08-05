@@ -41,6 +41,8 @@ fields.forEach(field => {
     } else if (fieldType === 'Instant') {
         dartType = 'DateTime';
         desc = '.toIso8601String()' + 'Z';
+    } else if (fieldType === 'Boolean') {
+        dartType = 'bool';
     } else {
         dartType = fieldType ;
     } 
