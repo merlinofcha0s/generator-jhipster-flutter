@@ -580,7 +580,7 @@ module.exports = class extends BaseGenerator {
         this.log(chalk.green(`Writing ${this.context.entityClass} entity...`));
         this.writeFilesToDisk(files.flutterFiles, this, false, `${CLIENT_FLUTTER_TEMPLATES_DIR}`);
         this._addEntityToRoute(this.context.baseName, this.context.entityClass,
-            this.context.entityFileName, this.context.camelizedUpperFirstBaseName, this.context.entityClassCamelCase, this.context.entityClassPlural);
+            this.context.entityFileName, this.context.camelizedUpperFirstBaseName, this.context.entityClassPlural, this.context.entityInstance);
         this._addEntityToMapper(this.context.baseName, this.context.entityClass, this.context.entityFileName);
         this._addEntityToKey(this.context.entityClass, this.context.entityClassCamelCase, this.context.entityInstance);
         this._addEntityMainToI18n(this.context.entityClass, this.context.entityFileName, this.context.entityClassPlural, this.context.fields);
@@ -613,7 +613,7 @@ module.exports = class extends BaseGenerator {
      * @param {string} entityFileName - Entity File Name
      * @param {string} camelizedUpperFirstBaseName - Formatted base name (ex: MonApplication)
      */
-    _addEntityToRoute(baseName, entityClass, entityFileName, camelizedUpperFirstBaseName, entityClassCamelCase, entityClassPlural) {
+    _addEntityToRoute(baseName, entityClass, entityFileName, camelizedUpperFirstBaseName, entityClassPlural, entityInstance) {
         const appClassPath = 'lib/app.dart';
         entityFileName = _.snakeCase(_.lowerCase(entityFileName));
         const routesClassPath = 'lib/routes.dart';
@@ -621,7 +621,7 @@ module.exports = class extends BaseGenerator {
         try {
             const listRoute = `${camelizedUpperFirstBaseName}Routes.entities${entityClass}List: (context) {
           return BlocProvider<${entityClass}Bloc>(
-            create: (context) => ${entityClass}Bloc(${entityClassCamelCase}Repository: ${entityClass}Repository())
+            create: (context) => ${entityClass}Bloc(${entityInstance}Repository: ${entityClass}Repository())
             ..add(Init${entityClass}List()),
             child: ${entityClass}ListScreen());
           },`;
@@ -676,7 +676,7 @@ module.exports = class extends BaseGenerator {
 
             const createRoute = `${camelizedUpperFirstBaseName}Routes.entities${entityClass}Create: (context) {
                 return BlocProvider<${entityClass}Bloc>(
-                  create: (context) => ${entityClass}Bloc(${entityClassCamelCase}Repository: ${entityClass}Repository()),
+                  create: (context) => ${entityClass}Bloc(${entityInstance}Repository: ${entityClass}Repository()),
                   child: ${entityClass}UpdateScreen());
                 },`;
             utils.rewriteFile({
@@ -690,7 +690,7 @@ module.exports = class extends BaseGenerator {
             const updateRoute = `${camelizedUpperFirstBaseName}Routes.entities${entityClass}Edit: (context) {
             EntityArguments arguments = ModalRoute.of(context).settings.arguments;
                 return BlocProvider<${entityClass}Bloc>(
-                   create: (context) => ${entityClass}Bloc(${entityClassCamelCase}Repository: ${entityClass}Repository())
+                   create: (context) => ${entityClass}Bloc(${entityInstance}Repository: ${entityClass}Repository())
                   ..add(Load${entityClass}ByIdForEdit(id: arguments.id)),
                 child: ${entityClass}UpdateScreen());
             },`;
@@ -705,7 +705,7 @@ module.exports = class extends BaseGenerator {
             const viewRoute = `${camelizedUpperFirstBaseName}Routes.entities${entityClass}View: (context) {
             EntityArguments arguments = ModalRoute.of(context).settings.arguments;
                 return BlocProvider<${entityClass}Bloc>(
-                    create: (context) => ${entityClass}Bloc(${entityClassCamelCase}Repository: ${entityClass}Repository())
+                    create: (context) => ${entityClass}Bloc(${entityInstance}Repository: ${entityClass}Repository())
                     ..add(Load${entityClass}ByIdForView(id: arguments.id)),
                     child: ${entityClass}ViewScreen());
                 },`;
