@@ -36,7 +36,7 @@ class <%= entityClass %>ListScreen extends StatelessWidget {
         if(state.deleteStatus == <%= entityClass %>DeleteStatus.ok) {
           Navigator.of(context).pop();
           scaffoldKey.currentState.showSnackBar(new SnackBar(
-              content: new Text(S.of(context).pageEntities<%= entityClass %>DeleteOk)
+              content: new Text(<%_ if(enableTranslation) { _%>S.of(context).pageEntities<%= entityClass %>DeleteOk<%_ } else { _%> '<%= entityClass %> deleted successfuly'  <%_ } _%>)
           ));
         }
       },
@@ -131,17 +131,17 @@ class <%= entityClass %>ListScreen extends StatelessWidget {
     return BlocProvider<<%= entityClass %>Bloc>.value(
       value: <%= entityInstance %>Bloc,
       child: AlertDialog(
-        title: new Text(S.of(context).pageEntities<%= entityClass %>DeletePopupTitle),
-        content: new Text(S.of(context).entityActionConfirmDelete),
+        title: new Text(<%_ if(enableTranslation) { _%>S.of(context).pageEntities<%= entityClass %>DeletePopupTitle<%_ } else { _%>'Delete <%= entityClassPlural %>'<%_ } _%>),
+        content: new Text(<%_ if(enableTranslation) { _%>S.of(context).entityActionConfirmDelete<%_ } else { _%>'Are you sure?'<%_ } _%>),
         actions: <Widget>[
           new FlatButton(
-            child: new Text(S.of(context).entityActionConfirmDeleteYes),
+            child: new Text(<%_ if(enableTranslation) { _%>S.of(context).entityActionConfirmDeleteYes<%_ } else { _%>'Yes'<%_ } _%>),
             onPressed: () {
               <%= entityInstance %>Bloc.add(Delete<%= entityClass %>ById(id: id));
             },
           ),
           new FlatButton(
-            child: new Text(S.of(context).entityActionConfirmDeleteNo),
+            child: new Text(<%_ if(enableTranslation) { _%>S.of(context).entityActionConfirmDeleteNo<%_ } else { _%>'No'<%_ } _%>),
             onPressed: () {
               Navigator.of(context).pop();
             },

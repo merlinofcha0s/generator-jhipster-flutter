@@ -9,6 +9,7 @@ const entityClassCamelCase = context.entityClassCamelCase;
 const fields = context.fields;
 const relationships = context.relationships;
 const primaryKeyType = context.primaryKeyType;
+const enableTranslation = context.enableTranslation;
 
 let indexForField = 0;
 
@@ -51,8 +52,6 @@ context.dateTimeFields = context.dateTimeFields.filter(field => field.fieldType 
 
 const hasDateTime = context.hasDateTime;
 const dateTimeFields = context.dateTimeFields;
-console.dir(dateTimeFields);
-
 _%>
 part of '<%= entityFileName %>_bloc.dart';
 

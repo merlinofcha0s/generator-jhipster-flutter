@@ -802,7 +802,7 @@ module.exports = class extends BaseGenerator {
                         const updateKey = `pageEntities${entityClass}UpdateTitle`;
                         let listUpdate = '';
                         if (json.locale === 'en') {
-                            listUpdate = `Edit ${entityClassPlural} `;
+                            listUpdate = `Edit ${entityClassPlural}`;
                         } else if (json.locale === 'fr') {
                             listUpdate = `Editer ${entityClassPlural}`;
                         }

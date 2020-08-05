@@ -12,11 +12,14 @@ const camelizedUpperFirstBaseName = context.camelizedUpperFirstBaseName;
 const fields = context.fields;
 const relationships = context.relationships;
 const primaryKeyType = context.primaryKeyType;
+const enableTranslation = context.enableTranslation;
 _%>
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:<%= baseName %>/entities/<%= entityFileName %>/bloc/<%= entityFileName %>_bloc.dart';
+<%_ if(enableTranslation) { _%>
 import 'package:<%= baseName %>/generated/l10n.dart';
+<%_ } _%>
 import 'package:<%= baseName %>/keys.dart';
 import 'package:flutter/material.dart';
 import 'package:formz/formz.dart';
@@ -42,8 +45,8 @@ class <%= entityClass %>UpdateScreen extends StatelessWidget {
             title: BlocBuilder<<%= entityClass %>Bloc, <%= entityClass %>State>(
                 buildWhen: (previous, current) => previous.editMode != current.editMode,
                 builder: (context, state) {
-                  String title = state.editMode == true ? S.of(context).pageEntities<%= entityClass %>UpdateTitle :
-                  S.of(context).pageEntities<%= entityClass %>CreateTitle;
+                String title = state.editMode == true ? <%_ if(enableTranslation) { _%>S.of(context).pageEntities<%= entityClass %>UpdateTitle<%_ } else { _%>'Edit <%= entityClassPlural %>'<%_ } _%>:
+                <%_ if(enableTranslation) { _%>S.of(context).pageEntities<%= entityClass %>CreateTitle<%_ } else { _%>'Create <%=entityClassPlural%>'<%_ } _%>;
                  return Text(title);
                 }
             ),
@@ -77,12 +80,12 @@ class <%= entityClass %>UpdateScreen extends StatelessWidget {
               return DateTimeField(
                 controller: context.bloc<<%= entityClass %>Bloc>().<%= field.fieldName %>Controller,
                 onChanged: (value) { context.bloc<<%= entityClass %>Bloc>().add(<%= field.fieldNameCapitalized %>Changed(<%= field.fieldName %>: value)); },
-                format: DateFormat.yMMMMd(S.of(context).locale),
+                format: DateFormat.yMMMMd(<%_ if(enableTranslation) { _%>S.of(context).locale<%_ } else { _%>'en'<%_ } _%>),
                 keyboardType: TextInputType.datetime,
-                decoration: InputDecoration(labelText: S.of(context).pageEntities<%= entityClass %><%= field.fieldNameCapitalized %>Field,),
+            decoration: InputDecoration(labelText: <%_ if(enableTranslation) { _%>S.of(context).pageEntities<%= entityClass %><%= field.fieldNameCapitalized %>Field<%_ } else { _%>'<%= field.fieldName %>'<%_ } _%>,),
                 onShowPicker: (context, currentValue) {
                   return showDatePicker(
-                      locale: Locale(S.of(context).locale),
+                      locale: Locale(<%_ if(enableTranslation) { _%>S.of(context).locale<%_ } else { _%>'en'<%_ } _%>),
                       context: context,
                       firstDate: DateTime(1950),
                       initialDate: currentValue ?? DateTime.now(),
@@ -102,7 +105,7 @@ class <%= entityClass %>UpdateScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(S.of(context).pageEntities<%= entityClass %><%= field.fieldNameCapitalized %>Field, style: Theme.of(context).textTheme.bodyText1,),
+                    Text(<%_ if(enableTranslation) { _%>S.of(context).pageEntities<%= entityClass %><%= field.fieldNameCapitalized %>Field<%_ } else { _%>'<%= field.fieldName %>'<%_ } _%>, style: Theme.of(context).textTheme.bodyText1,),
                     DropdownButton<<%= field.fieldType %>>(
                         value: state.<%= field.fieldName %>.value,
                         onChanged: (value) { context.bloc<<%= entityClass %>Bloc>().add(<%= field.fieldType %>Changed(<%= field.fieldName %>: value)); },
@@ -123,7 +126,7 @@ class <%= entityClass %>UpdateScreen extends StatelessWidget {
                     .add(<%= field.fieldNameCapitalized %>Changed(<%= field.fieldName %>: <%_ if(field.fieldType === 'int') { _%> int.parse(value) <%_ } else { _%> value <%_ } _%>)); },
                   keyboardType:  <%_ if(field.fieldType === 'int') { _%> TextInputType.number,<%_ } else { _%> TextInputType.text,<%_ } _%>
                   decoration: InputDecoration(
-                      labelText: S.of(context).pageEntities<%= entityClass %><%= field.fieldNameCapitalized %>Field));
+                      labelText: <%_ if(enableTranslation) { _%>S.of(context).pageEntities<%= entityClass %><%= field.fieldNameCapitalized %>Field<%_ } else { _%>'<%= field.fieldName %>'<%_ } _%>));
             }
         );
       }
@@ -163,10 +166,10 @@ class <%= entityClass %>UpdateScreen extends StatelessWidget {
     MaterialColor notificationColors;
 
     if (state.generalNotificationKey.toString().compareTo(HttpUtils.errorServerKey) == 0) {
-      notificationTranslated = S.of(context).genericErrorServer;
+      notificationTranslated = <%_ if(enableTranslation) { _%>S.of(context).genericErrorServer<%_ } else { _%>'Something wrong when calling the server, please try again'<%_ } _%>;
       notificationColors = Theme.of(context).errorColor;
     } else if (state.generalNotificationKey.toString().compareTo(HttpUtils.badRequestServerKey) == 0) {
-      notificationTranslated = S.of(context).genericErrorBadRequest;
+      notificationTranslated = <%_ if(enableTranslation) { _%>S.of(context).genericErrorBadRequest<%_ } else { _%>'Something wrong happened with the received data'<%_ } _%>;
       notificationColors = Theme.of(context).errorColor;
     }
 
@@ -183,8 +186,8 @@ class <%= entityClass %>UpdateScreen extends StatelessWidget {
         buildWhen: (previous, current) => previous.formStatus != current.formStatus,
         builder: (context, state) {
           String buttonLabel = state.editMode == true ?
-          S.of(context).entityActionEdit.toUpperCase() :
-          S.of(context).entityActionCreate.toUpperCase();
+          <%_ if(enableTranslation) { _%>S.of(context).entityActionEdit.toUpperCase()<%_ } else { _%>'Edit'<%_ } _%> :
+          <%_ if(enableTranslation) { _%>S.of(context).entityActionCreate.toUpperCase()<%_ } else { _%>'Create'<%_ } _%>;
           return RaisedButton(
             child: Container(
                 width: MediaQuery.of(context).size.width,

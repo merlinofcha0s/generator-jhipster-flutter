@@ -12,11 +12,14 @@ const camelizedUpperFirstBaseName = context.camelizedUpperFirstBaseName;
 const fields = context.fields;
 const relationships = context.relationships;
 const primaryKeyType = context.primaryKeyType;
+const enableTranslation = context.enableTranslation;
 _%>
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:<%= baseName %>/entities/<%= entityFileName %>/bloc/<%= entityFileName %>_bloc.dart';
 import 'package:<%= baseName %>/entities/<%= entityFileName %>/<%= entityFileName %>_model.dart';
+<%_ if(enableTranslation) { _%>
 import 'package:<%= baseName %>/generated/l10n.dart';
+<%_ } _%>
 import 'package:<%= baseName %>/keys.dart';
 import 'package:flutter/material.dart';
 import 'package:<%= baseName %>/routes.dart';
@@ -31,7 +34,7 @@ class <%= entityClass %>ViewScreen extends StatelessWidget {
     return Scaffold(
           appBar: AppBar(
             centerTitle: true,
-            title:Text(S.of(context).pageEntities<%= entityClass %>ViewTitle),
+            title:Text(<%_ if(enableTranslation) { _%>S.of(context).pageEntities<%= entityClass %>ViewTitle<%_ } else { _%>'<%= entityClassPlural %> View'<%_ } _%>),
           ),
           body: SingleChildScrollView(
             padding: const EdgeInsets.all(15.0),
@@ -68,7 +71,7 @@ class <%= entityClass %>ViewScreen extends StatelessWidget {
             Text('<%= context.idField.fieldNameHumanized %> : ' + <%= entityInstance %>.<%= context.idField.fieldName %>.toString(), style: Theme.of(context).textTheme.bodyText1,),
             <%_ fields.forEach(field => { _%>
               <%_ if(field.fieldType === 'DateTime') { _%>
-                Text('<%= field.fieldNameHumanized %> : ' + (<%= entityInstance %>?.<%= field.fieldName %> != null ? DateFormat.yMMMMd(S.of(context).locale).format(<%= entityInstance %>.<%= field.fieldName %>) : ''), style: Theme.of(context).textTheme.bodyText1,),
+              Text('<%= field.fieldNameHumanized %> : ' + (<%= entityInstance %>?.<%= field.fieldName %> != null ? DateFormat.yMMMMd(<%_ if(enableTranslation) { _%>S.of(context).locale<%_ } else { _%>'en'<%_ } _%>).format(<%= entityInstance %>.<%= field.fieldName %>) : ''), style: Theme.of(context).textTheme.bodyText1,),
               <%_ } else if(field.fieldType === 'int') {_%>
                 Text('<%= field.fieldNameHumanized %> : ' + <%= entityInstance %>.<%= field.fieldName %>.toString(), style: Theme.of(context).textTheme.bodyText1,),
               <%_ } else {_%>
