@@ -326,7 +326,7 @@ module.exports = class extends BaseGenerator {
             }
         });
 
-        _.remove(context.fields, field =>  field.fieldType === 'byte[]');
+        _.remove(context.fields, (field) => field.fieldType === 'byte[]');
 
         let hasUserField = false;
         // Load in-memory data for relationships
@@ -575,59 +575,55 @@ module.exports = class extends BaseGenerator {
         context.pkType = context.primaryKeyType;
         context.hasUserField = hasUserField;
 
-        _.remove(context.relationships, relationship =>  relationship.relationshipType === 'one-to-many');
-        _.remove(context.relationships, relationship =>  relationship.relationshipType === 'many-to-many');
+        _.remove(context.relationships, (relationship) => relationship.relationshipType === 'one-to-many');
+        _.remove(context.relationships, (relationship) => relationship.relationshipType === 'many-to-many');
 
-        this.log('entity class : ' + context.entityClass);
-        //console.dir(context.fields);
+        this.log(`entity class : ${context.entityClass}`);
 
-        let indexForField = 0;
+        const idField = {
+            fieldName: 'id',
+            fieldType: 'int',
+            fieldIsEnum: false,
+            fieldNameCapitalized: 'Id',
+            fieldNameUnderscored: 'id',
+            fieldNameAsDatabaseColumn: 'id',
+            fieldNameHumanized: 'Id',
+            fieldInJavaBeanMethod: 'Id',
+            fieldValidate: false,
+            defaultValue: 0
+        };
 
-        let idField = {
-          fieldName: 'id',
-          fieldType: 'int',
-          fieldIsEnum: false,
-          fieldNameCapitalized: 'Id',
-          fieldNameUnderscored: 'id',
-          fieldNameAsDatabaseColumn: 'id',
-          fieldNameHumanized: 'Id',
-          fieldInJavaBeanMethod: 'Id',
-          fieldValidate: false,
-          defaultValue: 0
-        }
-        
         context.idField = idField;
-        
-        context.fields.forEach(field => {
-          indexForField++;
+
+        context.fields.forEach((field) => {
             if (field.fieldType === 'UUID') {
-              field.fieldType = 'String';
-              field.defaultValue = '\'\'';
+                field.fieldType = 'String';
+                field.defaultValue = '\'\'';
             } else if (field.fieldType === 'Integer' || field.fieldType === 'Long') {
-              field.fieldType = 'int';
-              field.defaultValue = 0;
+                field.fieldType = 'int';
+                field.defaultValue = 0;
             } else if (field.fieldType === 'Instant') {
-              field.fieldType = 'DateTime';
-              field.defaultValue = 'null';
-              context.hasDateTime = true;
+                field.fieldType = 'DateTime';
+                field.defaultValue = 'null';
+                context.hasDateTime = true;
             } else if (field.fieldType === 'Boolean') {
-              field.fieldType = 'bool';
-              field.defaultValue = false;
-            } else if(field.fieldIsEnum) {
-              field.defaultValue = 'null';
+                field.fieldType = 'bool';
+                field.defaultValue = false;
+            } else if (field.fieldIsEnum) {
+                field.defaultValue = 'null';
             } else {
-              field.defaultValue = '\'\'';
+                field.defaultValue = '\'\'';
             }
         });
-        
-        context.dateTimeFields = Array.from(context.fields);
-        context.dateTimeFields = context.dateTimeFields.filter(field => field.fieldType == 'DateTime');
 
-        context.relationships.forEach(relation => { 
-            if(relation.relationshipType == 'many-to-one' || relation.relationshipType == 'one-to-one' && relation.ownerSide == true
-            || relation.relationshipType == 'many-to-many'  && relation.ownerSide == true ){
+        context.dateTimeFields = Array.from(context.fields);
+        context.dateTimeFields = context.dateTimeFields.filter((field) => field.fieldType === 'DateTime');
+
+        context.relationships.forEach((relation) => {
+            if ((relation.relationshipType === 'many-to-one') || (relation.relationshipType === 'one-to-one' && relation.ownerSide === true)
+            || (relation.relationshipType === 'many-to-many' && relation.ownerSide === true)) {
                 relation.desc = 'relationship';
-                relation.isList = (relation.relationshipType=='many-to-many') ? true : false;
+                relation.isList = (relation.relationshipType === 'many-to-many');
             }
         });
     }
@@ -694,7 +690,7 @@ module.exports = class extends BaseGenerator {
             const screenUpdateImport = `import 'package:${baseName}/entities/${entityFileName}/${entityFileName}_update_screen.dart';\n`;
             const screenViewImport = `import 'package:${baseName}/entities/${entityFileName}/${entityFileName}_view_screen.dart';\n`;
             const repoImport = `import 'package:${baseName}/entities/${entityFileName}/${entityFileName}_repository.dart';`;
-            
+
             const newImports = blocImport + screenListImport + screenUpdateImport + screenViewImport + repoImport;
             utils.rewriteFile({
                 file: appClassPath,
@@ -765,14 +761,13 @@ module.exports = class extends BaseGenerator {
                     ..add(Load${entityClass}ByIdForView(id: arguments.id)),
                     child: ${entityClass}ViewScreen());
                 },`;
-                utils.rewriteFile({
-                    file: appClassPath,
-                    needle: 'jhipster-merlin-needle-route-add',
-                    splicable: [
-                        this.stripMargin(viewRoute)
-                    ]
-                }, this);
-
+            utils.rewriteFile({
+                file: appClassPath,
+                needle: 'jhipster-merlin-needle-route-add',
+                splicable: [
+                    this.stripMargin(viewRoute)
+                ]
+            }, this);
         } catch (e) {
             this.log(`${chalk.yellow('\nUnable to find ') + appClassPath + chalk.yellow(' or missing required jhipster-needle. Reference to ') + entityClass})}`);
             this.debug('Error:', e);
@@ -882,7 +877,6 @@ module.exports = class extends BaseGenerator {
                         }
                         json[viewKey] = listView;
 
-
                         const deleteKey = `pageEntities${entityClass}DeletePopupTitle`;
                         let deleteValue = '';
                         if (json.locale === 'en') {
@@ -901,12 +895,11 @@ module.exports = class extends BaseGenerator {
                         }
                         json[deleteConfirmKey] = deleteConfirmValue;
 
-                        for(let field of fields) {
-                            let key = `pageEntities${entityClass}${field.fieldNameCapitalized}Field`;
-                            let value = field.fieldNameCapitalized;
+                        fields.forEach((field) => {
+                            const key = `pageEntities${entityClass}${field.fieldNameCapitalized}Field`;
+                            const value = field.fieldNameCapitalized;
                             json[key] = value;
-                        }
-
+                        });
                     }, this);
                 } catch (e) {
                     this.debug('Error:', e);
