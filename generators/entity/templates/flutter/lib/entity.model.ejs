@@ -5,12 +5,12 @@ const relationships = context.relationships;
 const entityClass = context.entityClass;
 const entityInstance = context.entityInstance;
 const baseName = context.baseName;
-const idField = context.idField
+const idField = context.idField;
 _%>
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 
 <%_ relationships.forEach(relation => { if (relation.desc == 'relationship') { _%>
-<%_ if (relation.relationshipFieldName == 'User') { _%>
+<%_ if (relation.relationshipNameCapitalized == 'User') { _%>
 import 'package:<%- baseName %>/shared/models/user.dart';
 <%_ } else { _%>
 import '../<%- relation.otherEntityName %>/<%- relation.otherEntityName %>_model.dart';

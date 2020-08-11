@@ -140,7 +140,7 @@ module.exports = class extends BaseGenerator {
         const entityName = context.name;
         const entityNamePluralizedAndSpinalCased = _.kebabCase(pluralize(entityName));
 
-        context.entityClass = _.startCase(entityName);
+        context.entityClass = _.upperFirst(_.camelCase(entityName));
         context.entityClassCamelCase = _.camelCase(context.entityClass);
         context.entityClassPlural = pluralize(context.entityClass);
         context.entityClassPluralLowered = _.camelCase(_.lowerCase(context.entityClassPlural));
