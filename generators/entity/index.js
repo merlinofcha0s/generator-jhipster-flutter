@@ -140,7 +140,7 @@ module.exports = class extends BaseGenerator {
         const entityName = context.name;
         const entityNamePluralizedAndSpinalCased = _.kebabCase(pluralize(entityName));
 
-        context.entityClass = entityName;
+        context.entityClass = _.startCase(entityName);
         context.entityClassCamelCase = _.camelCase(context.entityClass);
         context.entityClassPlural = pluralize(context.entityClass);
         context.entityClassPluralLowered = _.camelCase(_.lowerCase(context.entityClassPlural));
@@ -577,6 +577,59 @@ module.exports = class extends BaseGenerator {
 
         _.remove(context.relationships, relationship =>  relationship.relationshipType === 'one-to-many');
         _.remove(context.relationships, relationship =>  relationship.relationshipType === 'many-to-many');
+
+        this.log('entity class : ' + context.entityClass);
+        //console.dir(context.fields);
+
+        let indexForField = 0;
+
+        let idField = {
+          fieldName: 'id',
+          fieldType: 'int',
+          fieldIsEnum: false,
+          fieldNameCapitalized: 'Id',
+          fieldNameUnderscored: 'id',
+          fieldNameAsDatabaseColumn: 'id',
+          fieldNameHumanized: 'Id',
+          fieldInJavaBeanMethod: 'Id',
+          fieldValidate: false,
+          defaultValue: 0
+        }
+        
+        context.idField = idField;
+        
+        context.fields.forEach(field => {
+          indexForField++;
+            if (field.fieldType === 'UUID') {
+              field.fieldType = 'String';
+              field.defaultValue = '\'\'';
+            } else if (field.fieldType === 'Integer' || field.fieldType === 'Long') {
+              field.fieldType = 'int';
+              field.defaultValue = 0;
+            } else if (field.fieldType === 'Instant') {
+              field.fieldType = 'DateTime';
+              field.defaultValue = 'null';
+              context.hasDateTime = true;
+            } else if (field.fieldType === 'Boolean') {
+              field.fieldType = 'bool';
+              field.defaultValue = false;
+            } else if(field.fieldIsEnum) {
+              field.defaultValue = 'null';
+            } else {
+              field.defaultValue = '\'\'';
+            }
+        });
+        
+        context.dateTimeFields = Array.from(context.fields);
+        context.dateTimeFields = context.dateTimeFields.filter(field => field.fieldType == 'DateTime');
+
+        context.relationships.forEach(relation => { 
+            if(relation.relationshipType == 'many-to-one' || relation.relationshipType == 'one-to-one' && relation.ownerSide == true
+            || relation.relationshipType == 'many-to-many'  && relation.ownerSide == true ){
+                relation.desc = 'relationship';
+                relation.isList = (relation.relationshipType=='many-to-many') ? true : false;
+            }
+        });
     }
 
     writing() {

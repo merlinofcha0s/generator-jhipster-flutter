@@ -9,49 +9,7 @@ const fields = context.fields;
 const relationships = context.relationships;
 const primaryKeyType = context.primaryKeyType;
 const enableTranslation = context.enableTranslation;
-
-let indexForField = 0;
-
-let idField = {
-  fieldName: 'id',
-  fieldType: 'int',
-  fieldIsEnum: false,
-  fieldNameCapitalized: 'Id',
-  fieldNameUnderscored: 'id',
-  fieldNameAsDatabaseColumn: 'id',
-  fieldNameHumanized: 'Id',
-  fieldInJavaBeanMethod: 'Id',
-  fieldValidate: false,
-  defaultValue: 0
-}
-
-context.idField = idField;
-
-fields.forEach(field => {
-  indexForField++;
-    if (field.fieldType === 'UUID') {
-      field.fieldType = 'String';
-      field.defaultValue = '\'\'';
-    } else if (field.fieldType === 'Integer' || field.fieldType === 'Long') {
-      field.fieldType = 'int';
-      field.defaultValue = 0;
-    } else if (field.fieldType === 'Instant') {
-      field.fieldType = 'DateTime';
-      field.defaultValue = 'null';
-      context.hasDateTime = true;
-    } else if (field.fieldType === 'Boolean') {
-      field.fieldType = 'bool';
-      field.defaultValue = false;
-    } else if(field.fieldIsEnum) {
-      field.defaultValue = 'null';
-    } else {
-      field.defaultValue = '\'\'';
-    }
-});
-
-context.dateTimeFields = Array.from(fields);
-context.dateTimeFields = context.dateTimeFields.filter(field => field.fieldType == 'DateTime');
-
+const idField = context.idField;
 const hasDateTime = context.hasDateTime;
 const dateTimeFields = context.dateTimeFields;
 _%>

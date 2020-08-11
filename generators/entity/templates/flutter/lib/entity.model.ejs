@@ -1,107 +1,60 @@
 <%_
-const variables = {};
-const dartFields = {};
-const index = {};
-const defaultVariablesValues = {};
 const pkType = context.pkType;
 const fields = context.fields;
 const relationships = context.relationships;
 const entityClass = context.entityClass;
 const entityInstance = context.entityInstance;
 const baseName = context.baseName;
-let hasUserRelationship = false;
-let dartKeyType;
-if (pkType === 'String') {
-    dartKeyType = 'string';
-} else {
-    dartKeyType = 'number';
-}
-variables['id'] = 'id';
-const id = {};
-var i = 0;
-id['type'] = 'int';
-id['name'] = 'id';
-id['i']=i;
-dartFields['id'] = id;
-function capitalize(text) {
-    return text.substr( 0, 1 ).toUpperCase() + text.substr( 1 );
-}
-fields.forEach(field => {
-    i++;
-    const varValue = {};
-    const fieldType = field.fieldType;
-    const fieldName = field.fieldName;
-    let dartType;
-    let desc;
-    if (field.fieldIsEnum) {
-        dartType = field.fieldType;
-    } else if (fieldType === 'UUID') {
-        dartType = 'String';
-    } else if (fieldType === 'Integer' || fieldType === 'Long') {
-        dartType = 'int';
-    } else if (fieldType === 'Instant') {
-        dartType = 'DateTime';
-        desc = '.toIso8601String()' + 'Z';
-    } else if (fieldType === 'Boolean') {
-        dartType = 'bool';
-    } else {
-        dartType = fieldType ;
-    } 
-    varValue['type'] = dartType;
-    varValue['name'] = fieldName;
-    varValue['desc'] = desc;
-    varValue['i']=i;
-    
-    dartFields[fieldName] = varValue;
-    
-});
-relationships.forEach(rela => { 
-    if(rela.relationshipType == 'many-to-one' || rela.relationshipType == 'one-to-one' && rela.ownerSide == true
-    || rela.relationshipType == 'many-to-many'  && rela.ownerSide == true ){
-        i++;
-        const varValue = {};
-        varValue['type'] = capitalize(rela.otherEntityName);
-        varValue['name'] = rela.relationshipName;
-        varValue['desc'] = 'relationship';
-        varValue['isList'] = (rela.relationshipType=='many-to-many')?true:false;
-        
-        dartFields[rela.otherEntityName] = varValue;
-    }
-});
+const idField = context.idField
 _%>
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 
-<%_ for (idx in dartFields) { if (dartFields[idx]['desc'] == 'relationship') { _%>
-<%_ if (dartFields[idx]['type'] == 'User') { _%>
+<%_ relationships.forEach(relation => { if (relation.desc == 'relationship') { _%>
+<%_ if (relation.relationshipFieldName == 'User') { _%>
 import 'package:<%- baseName %>/shared/models/user.dart';
 <%_ } else { _%>
-import '../<%- idx %>/<%- idx %>_model.dart';
+import '../<%- relation.otherEntityName %>/<%- relation.otherEntityName %>_model.dart';
 <%_ } _%>
-<%_ }} _%>
+<%_ }}); _%>
 
 @jsonSerializable
 class <%= entityClass %> {
-<%_ for (idx in dartFields) { %>
-  @JsonProperty(name: '<%- dartFields[idx]['name'] _%>' <%_ if(dartFields[idx]['type'] === 'DateTime') { _%>, converterParams: {'format': 'yyyy-MM-dd\'T\'HH:mm:ss\'Z\''}<%_ }  _%>)
-    <%_ if(dartFields[idx]['isList']) { _%>
-  final List<<%- dartFields[idx]['type'] %>> <%- dartFields[idx]['name'] _%>;
-    <%_ } else { _%>
-  final <%= dartFields[idx]['type'] %> <%= dartFields[idx]['name'] %>;
-    <%_ } _%>
-<%_ } _%>
+
+  @JsonProperty(name: '<%- idField.fieldName _%>')
+  final <%= idField.fieldType %> <%= idField.fieldName %>;
+<%_ fields.forEach(field => { %>
+  @JsonProperty(name: '<%- field.fieldName _%>' <%_ if(field.fieldType === 'DateTime') { _%>, converterParams: {'format': 'yyyy-MM-dd\'T\'HH:mm:ss\'Z\''}<%_ }  _%>)
+  final <%= field.fieldType %> <%= field.fieldName %>;
+<%_ }); _%>
+<%_ relationships.forEach(relationship => { %>
+  @JsonProperty(name: '<%- relationship.relationshipFieldName _%>')
+      <%_ if(relationship.isList) { _%>
+  final List<<%- relationship.otherEntityNameCapitalized %>> <%- relationship.relationshipFieldName _%>;
+      <%_ } else { _%>
+  final <%= relationship.otherEntityNameCapitalized %> <%= relationship.relationshipFieldName %>;
+      <%_ } _%>
+  <%_ }); _%>
         
  const <%= entityClass %> (
-     <%_ for (idx in dartFields) { _%>
-        this.<%- dartFields[idx]['name'] -%>,
-        <%_ } _%> 
+     this.<%= idField.fieldName %>,
+     <%_ fields.forEach(field => { _%>
+        this.<%- field.fieldName -%>,
+        <%_ }); _%> 
+    <%_ relationships.forEach(relationship => { _%>
+        this.<%- relationship.relationshipFieldName -%>,
+    <%_ }); _%> 
     );
 
 @override
 String toString() {
     return '<%= entityClass %>{'+
-    <% for (idx in dartFields) { _%>
-        '<%= dartFields[idx]['name'] _%>: $<%= dartFields[idx]['name'] _%>,' +
-    <% } _%> 
+    '<%= idField.fieldName _%>: $<%= idField.fieldName _%>,' +
+    <%_ fields.forEach(field => { _%>
+        '<%= field.fieldName _%>: $<%= field.fieldName _%>,' +
+        <%_ }); _%> 
+    <%_ relationships.forEach(relationship => { _%>
+        '<%= relationship.relationshipFieldName _%>: $<%= relationship.relationshipFieldName _%>,' +
+    <%_ }); _%>
     '}';
    }
 
@@ -109,24 +62,12 @@ String toString() {
 bool operator == (Object other) => 
     identical(this, other) ||
     other is <%= entityClass %> &&
-    <% var iEqual = 0; for (idx in dartFields) { _%>
-    <% if(iEqual != i) {_%>
-    <%- dartFields[idx]['name'] + ' == other.' + dartFields[idx]['name'] + ' '-%> &&
-    <% } else {_%>
-    <%- dartFields[idx]['name'] _%> == other.<%- dartFields[idx]['name'] %>;
-    <% } _%> 
-    <%  iEqual++; } _%>
+    <%- idField.fieldName + ' == other.' + idField.fieldName + ' '-%>;
 
 
 @override
 int get hashCode => 
-    <% var iEqual = 0; for (idx in dartFields) { _%>
-    <% if(iEqual != i) {_%>
-    <%- dartFields[idx]['name'] + '.hashCode ' -%> ^
-    <% } else {_%>
-    <%- dartFields[idx]['name'] + '.hashCode' _%>;
-    <% } _%> 
-    <%  iEqual++; } _%>
+    <%- idField.fieldName + '.hashCode ' -%>;
 }
 
 
