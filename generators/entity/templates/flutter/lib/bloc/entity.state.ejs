@@ -1,0 +1,98 @@
+<%_
+const baseName = context.baseName;
+const entityInstance = context.entityInstance;
+const entityFileName = context.entityFileName;
+const entityClassPlural = context.entityClassPlural;
+const entityClassPluralLowered = context.entityClassPluralLowered;
+const entityClass = context.entityClass;
+const fields = context.fields;
+const relationships = context.relationships;
+const primaryKeyType = context.primaryKeyType;
+const enableTranslation = context.enableTranslation;
+const idField = context.idField;
+const hasDateTime = context.hasDateTime;
+const dateTimeFields = context.dateTimeFields;
+_%>
+part of '<%= entityFileName %>_bloc.dart';
+
+enum <%= entityClass %>StatusUI {init, loading, error, done}
+enum <%= entityClass %>DeleteStatus {ok, ko, none}
+
+class <%= entityClass %>State extends Equatable {
+  final List<<%= entityClass %>> <%= entityClassPluralLowered %>;
+  final <%= entityClass %> loaded<%= entityClass %>;
+  final bool editMode;
+  final <%= entityClass %>DeleteStatus deleteStatus;
+  final <%= entityClass %>StatusUI <%= entityInstance %>StatusUI;
+
+  final FormzStatus formStatus;
+  final String generalNotificationKey;
+
+  <%_ fields.forEach(field => { _%>
+  final <%= field.fieldNameCapitalized %>Input <%= field.fieldName %>;
+  <%_ }); _%>
+
+  
+  <%= entityClass %>State(
+    <%_ fields.forEach(field => { _%><%_ if(field.fieldType === 'DateTime') { _%><%= field.fieldNameCapitalized %>Input <%= field.fieldName %>,<%_ } _%><%_ }); _%> {
+    this.<%= entityClassPluralLowered %> = const [],
+    this.<%= entityInstance %>StatusUI = <%= entityClass %>StatusUI.init,
+    this.loaded<%= entityClass %> = const <%= entityClass %>(<%- idField.defaultValue %>, <%_ fields.forEach(field => { _%> <%- field.defaultValue %>, <%_ }); _%><%_ relationships.forEach(relationship => { _%> null, <%_ }); _%>),
+    this.editMode = false,
+    this.formStatus = FormzStatus.pure,
+    this.generalNotificationKey = '',
+    this.deleteStatus = <%= entityClass %>DeleteStatus.none,
+    <%_ fields.forEach(field => { _%>
+      <%_ if(field.fieldType !== 'DateTime') { _%>
+    this.<%= field.fieldName %> = const <%= field.fieldNameCapitalized %>Input.pure(),
+      <%_ } _%>
+      <%_ }); _%>
+  }) <%_ if(hasDateTime) { _%> : <%_ } _%><%_ dateTimeFields.forEach((field, index) => { _%>
+    <%_ if(field.fieldType === 'DateTime' && index != dateTimeFields.length - 1) { _%>
+this.<%= field.fieldName %> = <%= field.fieldName %> ?? <%= field.fieldNameCapitalized %>Input.pure(),
+    <%_ } else if(field.fieldType === 'DateTime' && index == dateTimeFields.length - 1) {_%>
+this.<%= field.fieldName %> = <%= field.fieldName %> ?? <%= field.fieldNameCapitalized %>Input.pure()
+      <%_ } _%>
+  <%_ }); _%>;
+
+  <%= entityClass %>State copyWith({
+    List<<%= entityClass %>> <%= entityClassPluralLowered %>,
+    <%= entityClass %>StatusUI <%= entityInstance %>StatusUI,
+    bool editMode,
+    <%= entityClass %>DeleteStatus deleteStatus,
+    <%= entityClass %> loaded<%= entityClass %>,
+    FormzStatus formStatus,
+    String generalNotificationKey,
+    <%_ fields.forEach(field => { _%>
+    <%= field.fieldNameCapitalized %>Input <%= field.fieldName %>,
+    <%_ }); _%>
+  }) {
+    return <%= entityClass %>State(
+      <%_ fields.forEach(field => { _%>
+        <%_ if(field.fieldType === 'DateTime') { _%>
+        <%= field.fieldName %>,
+        <%_ } _%>
+        <%_ }); _%>
+      <%= entityClassPluralLowered %>: <%= entityClassPluralLowered %> ?? this.<%= entityClassPluralLowered %>,
+      <%= entityInstance %>StatusUI: <%= entityInstance %>StatusUI ?? this.<%= entityInstance %>StatusUI,
+      loaded<%= entityClass %>: loaded<%= entityClass %> ?? this.loaded<%= entityClass %>,
+      editMode: editMode ?? this.editMode,
+      formStatus: formStatus ?? this.formStatus,
+      generalNotificationKey: generalNotificationKey ?? this.generalNotificationKey,
+      deleteStatus: deleteStatus ?? this.deleteStatus,
+      <%_ fields.forEach(field => { _%>
+      <%_ if(field.fieldType !== 'DateTime') { _%>
+      <%= field.fieldName %>: <%= field.fieldName %> ?? this.<%= field.fieldName %>,
+      <%_ } _%>
+      <%_ }); _%>
+    );
+  }
+
+  @override
+  List<Object> get props => [<%= entityClassPluralLowered %>, <%= entityInstance %>StatusUI,
+     loaded<%= entityClass %>, editMode, deleteStatus, formStatus, generalNotificationKey, 
+     <%_ fields.forEach(field => { _%><%= field.fieldName %>%>,<%_ }); _%>];
+
+  @override
+  bool get stringify => true;
+}

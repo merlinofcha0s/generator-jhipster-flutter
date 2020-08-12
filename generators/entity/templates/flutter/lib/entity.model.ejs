@@ -1,0 +1,85 @@
+<%_
+const pkType = context.pkType;
+const fields = context.fields;
+const relationships = context.relationships;
+const entityClass = context.entityClass;
+const entityInstance = context.entityInstance;
+const baseName = context.baseName;
+const idField = context.idField;
+_%>
+import 'package:dart_json_mapper/dart_json_mapper.dart';
+
+<%_ relationships.forEach(relation => { if (relation.desc == 'relationship') { _%>
+<%_ if (relation.relationshipNameCapitalized == 'User') { _%>
+import 'package:<%- baseName %>/shared/models/user.dart';
+<%_ } else { _%>
+import '../<%- relation.otherEntityName %>/<%- relation.otherEntityName %>_model.dart';
+<%_ } _%>
+<%_ }}); _%>
+
+@jsonSerializable
+class <%= entityClass %> {
+
+  @JsonProperty(name: '<%- idField.fieldName _%>')
+  final <%= idField.fieldType %> <%= idField.fieldName %>;
+<%_ fields.forEach(field => { %>
+  @JsonProperty(name: '<%- field.fieldName _%>' <%_ if(field.fieldType === 'DateTime') { _%>, converterParams: {'format': 'yyyy-MM-dd\'T\'HH:mm:ss\'Z\''}<%_ }  _%>)
+  final <%= field.fieldType %> <%= field.fieldName %>;
+<%_ }); _%>
+<%_ relationships.forEach(relationship => { %>
+  @JsonProperty(name: '<%- relationship.relationshipFieldName _%>')
+      <%_ if(relationship.isList) { _%>
+  final List<<%- relationship.otherEntityNameCapitalized %>> <%- relationship.relationshipFieldName _%>;
+      <%_ } else { _%>
+  final <%= relationship.otherEntityNameCapitalized %> <%= relationship.relationshipFieldName %>;
+      <%_ } _%>
+  <%_ }); _%>
+        
+ const <%= entityClass %> (
+     this.<%= idField.fieldName %>,
+     <%_ fields.forEach(field => { _%>
+        this.<%- field.fieldName -%>,
+        <%_ }); _%> 
+    <%_ relationships.forEach(relationship => { _%>
+        this.<%- relationship.relationshipFieldName -%>,
+    <%_ }); _%> 
+    );
+
+@override
+String toString() {
+    return '<%= entityClass %>{'+
+    '<%= idField.fieldName _%>: $<%= idField.fieldName _%>,' +
+    <%_ fields.forEach(field => { _%>
+        '<%= field.fieldName _%>: $<%= field.fieldName _%>,' +
+        <%_ }); _%> 
+    <%_ relationships.forEach(relationship => { _%>
+        '<%= relationship.relationshipFieldName _%>: $<%= relationship.relationshipFieldName _%>,' +
+    <%_ }); _%>
+    '}';
+   }
+
+@override
+bool operator == (Object other) => 
+    identical(this, other) ||
+    other is <%= entityClass %> &&
+    <%- idField.fieldName + ' == other.' + idField.fieldName + ' '-%>;
+
+
+@override
+int get hashCode => 
+    <%- idField.fieldName + '.hashCode ' -%>;
+}
+
+
+<%_ const enumsAlreadyDeclared = [];
+fields.forEach(field => {
+    if (field.fieldIsEnum && enumsAlreadyDeclared.indexOf(field.fieldType) === -1) {
+        enumsAlreadyDeclared.push(field.fieldType); _%>
+@jsonSerializable
+@Json(enumValues: <%= field.fieldType %>.values)
+enum <%= field.fieldType %> {<%
+        const enums = field.fieldValues.split(',');
+        for (let i = 0; i < enums.length; i++) { %>
+    <%= enums[i] %> <%if (i < enums.length - 1) { %>,<% }
+        } %>
+} <%_ }}); _%>

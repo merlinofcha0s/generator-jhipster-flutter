@@ -1,0 +1,50 @@
+<%_
+const baseName = context.baseName;
+const entityInstance = context.entityInstance;
+const entityFileName = context.entityFileName;
+const entityClassPlural = context.entityClassPlural;
+const entityClassPluralLowered = context.entityClassPluralLowered;
+const entityClass = context.entityClass;
+const entityClassCamelCase = context.entityClassCamelCase;
+const fields = context.fields;
+const relationships = context.relationships;
+const primaryKeyType = context.primaryKeyType;
+_%>
+import 'package:formz/formz.dart';
+import 'package:<%= baseName %>/entities/<%= entityFileName %>/<%= entityFileName %>_model.dart';
+
+<%_ fields.forEach(field => { _%>
+enum <%= field.fieldNameCapitalized %>ValidationError { invalid }
+  <%_ if(field.fieldType === 'DateTime') { _%>
+class <%= field.fieldNameCapitalized %>Input extends FormzInput<<%= field.fieldType %>, <%= field.fieldNameCapitalized %>ValidationError> {
+  <%= field.fieldNameCapitalized %>Input.pure() : super.pure(<%= field.fieldType %>.now());
+  <%= field.fieldNameCapitalized %>Input.dirty([<%= field.fieldType %> value]) : super.dirty(value);
+
+  @override
+  <%= field.fieldNameCapitalized %>ValidationError validator(<%= field.fieldType %> value) {
+    return null;
+  }
+}
+  <%_ } else if(field.fieldIsEnum) { _%>
+class <%= field.fieldNameCapitalized %>Input extends FormzInput<<%= field.fieldType %>, <%= field.fieldNameCapitalized %>ValidationError> {
+  const <%= field.fieldNameCapitalized %>Input.pure() : super.pure(<%= field.fieldType %>.<%= field.fieldValues.split(',')[0] %>);
+  const <%= field.fieldNameCapitalized %>Input.dirty([<%= field.fieldType %> value]) : super.dirty(value);
+
+  @override
+  <%= field.fieldNameCapitalized %>ValidationError validator(<%= field.fieldType %> value) {
+    return null;
+  }
+}
+  <%_ } else { _%>
+class <%= field.fieldNameCapitalized %>Input extends FormzInput<<%= field.fieldType %>, <%= field.fieldNameCapitalized %>ValidationError> {
+  const <%= field.fieldNameCapitalized %>Input.pure() : super.pure(<%- field.defaultValue %>);
+  const <%= field.fieldNameCapitalized %>Input.dirty([<%= field.fieldType %> value = <%- field.defaultValue %>]) : super.dirty(value);
+
+  @override
+  <%= field.fieldNameCapitalized %>ValidationError validator(<%= field.fieldType %> value) {
+    return null;
+  }
+}
+<%_ } _%>
+
+<%_ }); _%>

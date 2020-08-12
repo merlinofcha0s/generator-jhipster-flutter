@@ -1,10 +1,12 @@
 import 'package:formz/formz.dart';
+<%_ if (enableTranslation) { _%>
 import 'package:<%= baseName %>/generated/l10n.dart';
+<%_ } _%>
 
 enum FirstnameValidationError { invalid }
 
 extension FirstnameValidationErrorX on FirstnameValidationError {
-  String get invalidMessage => S.current.pageSettingsFirstnameErrorValidation(FirstnameInput.numberMin);
+String get invalidMessage => <%_ if (enableTranslation) { _%>S.current.pageSettingsFirstnameErrorValidation(FirstnameInput.numberMin)<%_ } else { _%>'Firstname has to be ${FirstnameInput.numberMin} characters minimum'<%_ } _%>;
 }
 
 class FirstnameInput extends FormzInput<String, FirstnameValidationError> {
@@ -26,7 +28,7 @@ class FirstnameInput extends FormzInput<String, FirstnameValidationError> {
 enum LastnameValidationError { invalid }
 
 extension LastnameValidationErrorX on LastnameValidationError {
-  String get invalidMessage => S.current.pageSettingsLastnameErrorValidation(LastnameInput.numberMin);
+String get invalidMessage => <%_ if (enableTranslation) { _%>S.current.pageSettingsLastnameErrorValidation(LastnameInput.numberMin)<%_ } else { _%>'Lastname has to be ${LastnameInput.numberMin} characters minimum'<%_ } _%>;
 }
 
 class LastnameInput extends FormzInput<String, LastnameValidationError> {
@@ -48,7 +50,7 @@ class LastnameInput extends FormzInput<String, LastnameValidationError> {
 enum EmailValidationError { invalid }
 
 extension EmailValidationErrorX on EmailValidationError {
-  String get invalidMessage => S.current.pageSettingsEmailErrorValidation;
+  String get invalidMessage => <%_ if (enableTranslation) { _%>S.current.pageSettingsEmailErrorValidation<%_ } else { _%>'Email format incorrect'<%_ } _%>;
 }
 
 class EmailInput extends FormzInput<String, EmailValidationError> {

@@ -1,0 +1,89 @@
+<%_
+const baseName = context.baseName;
+const entityInstance = context.entityInstance;
+const entityFileName = context.entityFileName;
+const entityClassPlural = context.entityClassPlural;
+const entityClassPluralLowered = context.entityClassPluralLowered;
+const entityClass = context.entityClass;
+const entityClassCamelCase = context.entityClassCamelCase;
+const entityClassKebabCase = context.entityClassKebabCase;
+const entityClassKebabCasePlural = context.entityClassKebabCasePlural;
+const camelizedUpperFirstBaseName = context.camelizedUpperFirstBaseName;
+const fields = context.fields;
+const relationships = context.relationships;
+const primaryKeyType = context.primaryKeyType;
+const enableTranslation = context.enableTranslation;
+const hasDateTime = context.hasDateTime;
+_%>
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:<%= baseName %>/entities/<%= entityFileName %>/bloc/<%= entityFileName %>_bloc.dart';
+import 'package:<%= baseName %>/entities/<%= entityFileName %>/<%= entityFileName %>_model.dart';
+<%_ if(enableTranslation) { _%>
+import 'package:<%= baseName %>/generated/l10n.dart';
+<%_ } _%>
+import 'package:<%= baseName %>/keys.dart';
+import 'package:flutter/material.dart';
+import 'package:<%= baseName %>/routes.dart';
+<%_ if(hasDateTime) { _%>
+import 'package:intl/intl.dart';
+<%_ } _%>
+import 'package:<%= baseName %>/shared/widgets/loading_indicator_widget.dart';
+
+class <%= entityClass %>ViewScreen extends StatelessWidget {
+  <%= entityClass %>ViewScreen({Key key}) : super(key: <%= camelizedUpperFirstBaseName %>Keys.<%= entityInstance %>CreateScreen);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title:Text(<%_ if(enableTranslation) { _%>S.of(context).pageEntities<%= entityClass %>ViewTitle<%_ } else { _%>'<%= entityClassPlural %> View'<%_ } _%>),
+          ),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(15.0),
+            child: BlocBuilder<<%= entityClass %>Bloc, <%= entityClass %>State>(
+              buildWhen: (previous, current) => previous.loaded<%= entityClass %> != current.loaded<%= entityClass %>,
+              builder: (context, state) {
+                return Visibility(
+                  visible: state.<%= entityInstance %>StatusUI == <%= entityClass %>StatusUI.done,
+                  replacement: LoadingIndicator(),
+                  child: Column(children: <Widget>[
+                    <%= entityInstance %>Card(state.loaded<%= entityClass %>, context)
+                  ]),
+                );
+              }
+            ),
+          ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.entities<%= entityClass %>Create),
+          child: Icon(Icons.add, color: Theme.of(context).iconTheme.color,),
+          backgroundColor: Theme.of(context).primaryColor,
+        )
+    );
+  }
+
+  Widget <%= entityInstance %>Card(<%= entityClass %> <%= entityInstance %>, BuildContext context) {
+    return Card(
+      child: Container(
+        padding: EdgeInsets.all(20),
+        width: MediaQuery.of(context).size.width * 0.90,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text('<%= context.idField.fieldNameHumanized %> : ' + <%= entityInstance %>.<%= context.idField.fieldName %>.toString(), style: Theme.of(context).textTheme.bodyText1,),
+            <%_ fields.forEach(field => { _%>
+              <%_ if(field.fieldType === 'DateTime') { _%>
+              Text('<%= field.fieldNameHumanized %> : ' + (<%= entityInstance %>?.<%= field.fieldName %> != null ? DateFormat.yMMMMd(<%_ if(enableTranslation) { _%>S.of(context).locale<%_ } else { _%>'en'<%_ } _%>).format(<%= entityInstance %>.<%= field.fieldName %>) : ''), style: Theme.of(context).textTheme.bodyText1,),
+              <%_ } else if (field.fieldType === 'int' || field.fieldType === 'bool') {_%>
+                Text('<%= field.fieldNameHumanized %> : ' + <%= entityInstance %>.<%= field.fieldName %>.toString(), style: Theme.of(context).textTheme.bodyText1,),
+              <%_ } else {_%>
+                Text('<%= field.fieldNameHumanized %> : ' + <%= entityInstance %>.<%= field.fieldName %>.toString(), style: Theme.of(context).textTheme.bodyText1,),
+              <%_ } _%>
+            <%_ }); _%>
+          ],
+        ),
+      ),
+    );
+  }
+}

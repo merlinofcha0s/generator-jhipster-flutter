@@ -1,0 +1,192 @@
+<%_
+const baseName = context.baseName;
+const entityInstance = context.entityInstance;
+const entityFileName = context.entityFileName;
+const entityClassPlural = context.entityClassPlural;
+const entityClass = context.entityClass;
+const entityClassPluralLowered = context.entityClassPluralLowered;
+const fields = context.fields;
+const relationships = context.relationships;
+const primaryKeyType = context.primaryKeyType;
+const enableTranslation = context.enableTranslation;
+_%>
+import 'dart:async';
+import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter/widgets.dart';
+import 'package:formz/formz.dart';
+
+import 'package:<%= baseName %>/entities/<%= entityFileName %>/<%= entityFileName %>_model.dart';
+import 'package:<%= baseName %>/entities/<%= entityFileName %>/<%= entityFileName %>_repository.dart';
+import 'package:<%= baseName %>/entities/<%= entityFileName %>/bloc/<%= entityFileName %>_form_model.dart';
+<%_ if(enableTranslation) { _%>
+import 'package:<%= baseName %>/generated/l10n.dart';
+<%_ } _%>
+import 'package:<%= baseName %>/shared/repository/http_utils.dart';
+import 'package:intl/intl.dart';
+
+part '<%= entityFileName %>_events.dart';
+part '<%= entityFileName %>_state.dart';
+
+class <%= entityClass %>Bloc extends Bloc<<%= entityClass %>Event, <%= entityClass %>State> {
+  final <%= entityClass %>Repository _<%= entityInstance %>Repository;
+
+  <%_ fields.forEach(field => { _%>
+    <%_ if(!field.fieldIsEnum && field.fieldType !== 'bool') { _%>
+  final <%= field.fieldName %>Controller = TextEditingController();
+    <%_ } _%>
+  <%_ }); _%>
+
+  <%= entityClass %>Bloc({@required <%= entityClass %>Repository <%= entityInstance %>Repository}) : assert(<%= entityInstance %>Repository != null),
+        _<%= entityInstance %>Repository = <%= entityInstance %>Repository, 
+  super(<%= entityClass %>State(<%_ fields.forEach(field => { _%> <%_ if(field.fieldType === 'DateTime') { _%> null,<%_ } _%> <%_ }); _%>));
+
+  @override
+  void onTransition(Transition<<%= entityClass %>Event, <%= entityClass %>State> transition) {
+    super.onTransition(transition);
+  }
+
+  @override
+  Stream<<%= entityClass %>State> mapEventToState(<%= entityClass %>Event event) async* {
+    if (event is Init<%= entityClass %>List) {
+      yield* onInitList(event);
+    } else if (event is <%= entityClass %>FormSubmitted) {
+      yield* onSubmit();
+    } else if (event is Load<%= entityClass %>ByIdForEdit) {
+      yield* onLoad<%= entityClass %>IdForEdit(event);
+    } else if (event is Delete<%= entityClass %>ById) {
+      yield* onDelete<%= entityClass %>Id(event);
+    } else if (event is Load<%= entityClass %>ByIdForView) {
+      yield* onLoad<%= entityClass %>IdForView(event);
+    } <%_ fields.forEach(field => { _%> else if (event is <%= field.fieldNameCapitalized %>Changed){
+      yield* on<%= field.fieldNameCapitalized %>Change(event);
+    }<%_ }); _%>
+  }
+
+  Stream<<%= entityClass %>State> onInitList(Init<%= entityClass %>List event) async* {
+    yield this.state.copyWith(<%= entityInstance %>StatusUI: <%= entityClass %>StatusUI.loading);
+    List<<%= entityClass %>> <%= entityClassPluralLowered %> = await _<%= entityInstance %>Repository.getAll<%= entityClassPlural %>();
+    yield this.state.copyWith(<%= entityClassPluralLowered %>: <%= entityClassPluralLowered %>, <%= entityInstance %>StatusUI: <%= entityClass %>StatusUI.done);
+  }
+
+  Stream<<%= entityClass %>State> onSubmit() async* {
+    if (this.state.formStatus.isValidated) {
+      yield this.state.copyWith(formStatus: FormzStatus.submissionInProgress);
+      try {
+        <%= entityClass %> result;
+        if(this.state.editMode) {
+          <%= entityClass %> new<%= entityClass %> = <%= entityClass %>(state.loaded<%= entityClass %>.id,
+          <%_ fields.forEach(field => { _%> 
+            this.state.<%= field.fieldName %>.value,  
+            <%_ }); _%>
+          <%_ relationships.forEach(relationship => { _%> 
+            null, 
+          <%_ }); _%>
+          );
+
+          result = await _<%= entityInstance %>Repository.update(new<%= entityClass %>);
+        } else {
+          <%= entityClass %> new<%= entityClass %> = <%= entityClass %>(null,
+          <%_ fields.forEach(field => { _%> 
+            this.state.<%= field.fieldName %>.value,  
+            <%_ }); _%>
+          <%_ relationships.forEach(relationship => { _%> 
+            null, 
+          <%_ }); _%>
+          );
+
+          result = await _<%= entityInstance %>Repository.create(new<%= entityClass %>);
+        }
+
+        if (result == null) {
+          yield this.state.copyWith(formStatus: FormzStatus.submissionFailure,
+              generalNotificationKey: HttpUtils.badRequestServerKey);
+        } else {
+          yield this.state.copyWith(formStatus: FormzStatus.submissionSuccess,
+              generalNotificationKey: HttpUtils.successResult);
+        }
+      } catch (e) {
+        yield this.state.copyWith(formStatus: FormzStatus.submissionFailure,
+            generalNotificationKey: HttpUtils.errorServerKey);
+      }
+    }
+  }
+
+  Stream<<%= entityClass %>State> onLoad<%= entityClass %>IdForEdit(Load<%= entityClass %>ByIdForEdit event) async* {
+    yield this.state.copyWith(<%= entityInstance %>StatusUI: <%= entityClass %>StatusUI.loading);
+    <%= entityClass %> loaded<%= entityClass %> = await _<%= entityInstance %>Repository.get<%= entityClass %>(event.id);
+
+    <%_ fields.forEach(field => { _%> 
+    final <%= field.fieldName %> = <%= field.fieldNameCapitalized %>Input.dirty(loaded<%= entityClass %>?.<%= field.fieldName %> != null ? loaded<%= entityClass %>.<%= field.fieldName %>: <%- field.defaultValue %>);
+    <%_ }); _%>
+
+    yield this.state.copyWith(loaded<%= entityClass %>: loaded<%= entityClass %>, editMode: true,
+    <%_ fields.forEach(field => { _%> 
+      <%= field.fieldName %>: <%= field.fieldName %>,
+    <%_ }); _%>
+    <%= entityInstance %>StatusUI: <%= entityClass %>StatusUI.done);
+
+    <%_ fields.forEach(field => { _%>
+      <%_ if(field.fieldType === 'DateTime') { _%>
+    <%= field.fieldName %>Controller.text = DateFormat.yMMMMd(<%_ if(enableTranslation) { _%>S.current.locale<%_ } else { _%>'en'<%_ } _%>).format(loaded<%= entityClass %>?.<%= field.fieldName %>);
+        <%_  } else if(field.fieldType === 'int') { _%>
+    <%= field.fieldName %>Controller.text = loaded<%= entityClass %>.<%= field.fieldName %>.toString();
+        <%_ } else if (!field.fieldIsEnum && field.fieldType !== 'bool') { _%>
+    <%= field.fieldName %>Controller.text = loaded<%= entityClass %>.<%= field.fieldName %>;
+        <%_ } _%>
+    <%_ }); _%>
+  }
+
+  Stream<<%= entityClass %>State> onDelete<%= entityClass %>Id(Delete<%= entityClass %>ById event) async* {
+    try {
+      await _<%= entityInstance %>Repository.delete(event.id);
+      this.add(Init<%= entityClass %>List());
+      yield this.state.copyWith(deleteStatus: <%= entityClass %>DeleteStatus.ok);
+    } catch (e) {
+      yield this.state.copyWith(deleteStatus: <%= entityClass %>DeleteStatus.ko,
+          generalNotificationKey: HttpUtils.errorServerKey);
+    }
+    yield this.state.copyWith(deleteStatus: <%= entityClass %>DeleteStatus.none);
+  }
+
+  Stream<<%= entityClass %>State> onLoad<%= entityClass %>IdForView(Load<%= entityClass %>ByIdForView event) async* {
+    yield this.state.copyWith(<%= entityInstance %>StatusUI: <%= entityClass %>StatusUI.loading);
+    try {
+      <%= entityClass %> loaded<%= entityClass %> = await _<%= entityInstance %>Repository.get<%= entityClass %>(event.id);
+      yield this.state.copyWith(loaded<%= entityClass %>: loaded<%= entityClass %>, <%= entityInstance %>StatusUI: <%= entityClass %>StatusUI.done);
+    } catch(e) {
+      yield this.state.copyWith(loaded<%= entityClass %>: null, <%= entityInstance %>StatusUI: <%= entityClass %>StatusUI.error);
+    }
+  }
+
+
+<%_ fields.forEach(field => { _%>
+  Stream<<%= entityClass %>State> on<%= field.fieldNameCapitalized %>Change(<%= field.fieldNameCapitalized %>Changed event) async* {
+    final <%= field.fieldName %> = <%= field.fieldNameCapitalized %>Input.dirty(event.<%= field.fieldName %>);
+    yield this.state.copyWith(
+      <%= field.fieldName %>: <%= field.fieldName %>,
+      formStatus: Formz.validate([
+      <%_ fields.forEach(fieldValidation => { _%>
+        <%_ if(field.fieldName === fieldValidation.fieldName) { _%>
+        <%= field.fieldName %>,
+        <%_ } else { _%>
+      this.state.<%= fieldValidation.fieldName %>,
+      <%_ } _%>
+      <%_ }); _%>
+      ]),
+    );
+  }
+<%_ }); _%>
+
+  @override
+  Future<void> close() {
+    <%_ fields.forEach(field => { _%>
+      <%_ if(!field.fieldIsEnum && field.fieldType !== 'bool') { _%>
+    <%= field.fieldName %>Controller.dispose();
+    <%_ } _%>
+    <%_ }); _%>
+    return super.close();
+  }
+
+}

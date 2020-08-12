@@ -122,6 +122,7 @@ module.exports = class extends BaseGenerator {
                 name: 'enableTranslation',
                 message: 'Would you like to enable internationalization support?',
                 default: true,
+                store: true,
             },
             {
                 when: (response) => response.enableTranslation === true,
@@ -138,6 +139,7 @@ module.exports = class extends BaseGenerator {
                 name: 'languages',
                 message: 'Please choose additional languages to install',
                 choices: (response) => _.filter(SUPPORTED_LANGUAGES, (o) => o.value !== response.nativeLanguage),
+                store: true,
             },
         ];
 

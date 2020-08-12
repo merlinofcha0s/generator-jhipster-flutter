@@ -4,9 +4,18 @@ import 'app.dart';
 import 'main.reflectable.dart';
 import 'mapper.dart';
 
+<%_ if (!enableTranslation) { _%>
+  import 'package:intl/intl.dart';
+  import 'package:intl/date_symbol_data_local.dart';
+  <%_ } _%>
+
 void main() {
   initializeReflectable();
   configMapper();
   Constants.setEnvironment(Environment.DEV);
+  <%_ if (!enableTranslation) { _%>
+  Intl.defaultLocale = "en";
+  initializeDateFormatting();
+  <%_ } _%>
   runApp(<%= camelizedUpperFirstBaseName %>App());
 }

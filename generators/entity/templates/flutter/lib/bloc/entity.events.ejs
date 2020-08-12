@@ -1,0 +1,64 @@
+<%_
+const baseName = context.baseName;
+const entityInstance = context.entityInstance;
+const entityFileName = context.entityFileName;
+const entityClassPlural = context.entityClassPlural;
+const entityClassPluralLowered = context.entityClassPluralLowered;
+const entityClass = context.entityClass;
+const fields = context.fields;
+const relationships = context.relationships;
+const primaryKeyType = context.primaryKeyType;
+_%>
+part of '<%= entityFileName %>_bloc.dart';
+
+abstract class <%= entityClass %>Event extends Equatable {
+  const <%= entityClass %>Event();
+
+  @override
+  List<Object> get props => [];
+
+  @override
+  bool get stringify => true;
+}
+
+class Init<%= entityClass %>List extends <%= entityClass %>Event {}
+
+<%_ fields.forEach(field => { _%>
+class <%= field.fieldNameCapitalized %>Changed extends <%= entityClass %>Event {
+  final <%= field.fieldType %> <%= field.fieldName %>;
+  
+  const <%= field.fieldNameCapitalized %>Changed({@required this.<%= field.fieldName %>});
+  
+  @override
+  List<Object> get props => [<%= field.fieldName %>];
+}
+<%_ }); _%>
+
+class <%= entityClass %>FormSubmitted extends <%= entityClass %>Event {}
+
+class Load<%= entityClass %>ByIdForEdit extends <%= entityClass %>Event {
+  final int id;
+
+  const Load<%= entityClass %>ByIdForEdit({@required this.id});
+
+  @override
+  List<Object> get props => [id];
+}
+
+class Delete<%= entityClass %>ById extends <%= entityClass %>Event {
+  final int id;
+
+  const Delete<%= entityClass %>ById({@required this.id});
+
+  @override
+  List<Object> get props => [id];
+}
+
+class Load<%= entityClass %>ByIdForView extends <%= entityClass %>Event {
+  final int id;
+
+  const Load<%= entityClass %>ByIdForView({@required this.id});
+
+  @override
+  List<Object> get props => [id];
+}

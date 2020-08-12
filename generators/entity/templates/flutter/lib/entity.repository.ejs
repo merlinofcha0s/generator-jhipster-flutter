@@ -1,0 +1,44 @@
+<%_
+const baseName = context.baseName;
+const entityInstance = context.entityInstance;
+const entityFileName = context.entityFileName;
+const entityClassPlural = context.entityClassPlural;
+const entityClassPluralLowered = context.entityClassPluralLowered;
+const entityClass = context.entityClass;
+const entityClassCamelCase = context.entityClassCamelCase;
+const entityClassKebabCase = context.entityClassKebabCase;
+const entityClassKebabCasePlural = context.entityClassKebabCasePlural;
+_%>
+import 'package:<%= baseName %>/entities/<%= entityFileName %>/<%= entityFileName %>_model.dart';
+import 'package:<%= baseName %>/shared/repository/http_utils.dart';
+import 'package:dart_json_mapper/dart_json_mapper.dart';
+
+class <%= entityClass %>Repository {
+    <%= entityClass %>Repository();
+  
+  static final String uriEndpoint = '/<%= entityClassKebabCasePlural %>';
+
+  Future<List<<%= entityClass %>>> getAll<%= entityClassPlural %>() async {
+    final all<%= entityClassPlural %>Request = await HttpUtils.getRequest(uriEndpoint);
+    return JsonMapper.deserialize<List<<%= entityClass %>>>(all<%= entityClassPlural %>Request.body);
+  }
+
+  Future<<%= entityClass %>> get<%= entityClass %>(int id) async {
+    final <%= entityInstance %>Request = await HttpUtils.getRequest('$uriEndpoint/$id');
+    return JsonMapper.deserialize<<%= entityClass %>>(<%= entityInstance %>Request.body);
+  }
+
+  Future<<%= entityClass %>> create(<%= entityClass %> <%= entityInstance %>) async {
+    final <%= entityInstance %>Request = await HttpUtils.postRequest('$uriEndpoint', <%= entityInstance %>);
+    return JsonMapper.deserialize<<%= entityClass %>>(<%= entityInstance %>Request.body);
+  }
+
+  Future<<%= entityClass %>> update(<%= entityClass %> <%= entityInstance %>) async {
+    final <%= entityInstance %>Request = await HttpUtils.putRequest('$uriEndpoint', <%= entityInstance %>);
+    return JsonMapper.deserialize<<%= entityClass %>>(<%= entityInstance %>Request.body);
+  }
+
+  Future<void> delete(int id) async {
+    final <%= entityInstance %>Request = await HttpUtils.deleteRequest('$uriEndpoint/$id');
+  }
+}

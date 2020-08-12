@@ -1,10 +1,13 @@
 import 'package:formz/formz.dart';
+<%_ if (enableTranslation) { _%>
 import 'package:<%= baseName %>/generated/l10n.dart';
+<%_ } _%>
+
 
 enum LoginValidationError { invalid }
 
 extension LoginValidationErrorX on LoginValidationError {
-  String get invalidMessage => S.current.pageRegisterLoginValidationError(LoginInput.numberMin);
+String get invalidMessage => <%_ if (enableTranslation) { _%>S.current.pageRegisterLoginValidationError(LoginInput.numberMin)<%_ } else { _%>'The login has to contain more than ${LoginInput.numberMin}'<%_ } _%>;
 }
 
 class LoginInput extends FormzInput<String, LoginValidationError> {
@@ -22,7 +25,7 @@ class LoginInput extends FormzInput<String, LoginValidationError> {
 enum EmailValidationError { invalid }
 
 extension EmailValidationErrorX on EmailValidationError {
-  String get invalidMessage => S.current.pageRegisterMailValidationError;
+String get invalidMessage => <%_ if (enableTranslation) { _%>S.current.pageRegisterMailValidationError<%_ } else { _%>'Please enter a valid address email'<%_ } _%>;
 }
 
 class EmailInput extends FormzInput<String, EmailValidationError> {
@@ -38,7 +41,7 @@ class EmailInput extends FormzInput<String, EmailValidationError> {
 enum PasswordValidationError { invalid }
 
 extension PasswordValidationErrorX on PasswordValidationError {
-  String get invalidMessage => S.current.pageRegisterPasswordValidationError(PasswordInput.numberMin);
+String get invalidMessage => <%_ if (enableTranslation) { _%>S.current.pageRegisterPasswordValidationError(PasswordInput.numberMin)<%_ } else { _%>'Rules : 1 uppercase, 1 number and ${PasswordInput.numberMin} characters'<%_ } _%>;
 }
 
 class PasswordInput extends FormzInput<String, PasswordValidationError> {
@@ -57,7 +60,7 @@ class PasswordInput extends FormzInput<String, PasswordValidationError> {
 enum ConfirmPasswordValidationError { invalid }
 
 extension ConfirmPasswordValidationErrorX on ConfirmPasswordValidationError {
-  String get invalidMessage => S.current.pageRegisterConfirmationPasswordValidationError(ConfirmPasswordInput.numberMin);
+String get invalidMessage => <%_ if (enableTranslation) { _%>S.current.pageRegisterConfirmationPasswordValidationError(ConfirmPasswordInput.numberMin)<%_ } else { _%>'Rules : 1 uppercase, 1 number and ${ConfirmPasswordInput.numberMin} characters'<%_ } _%>;
 }
 
 class ConfirmPasswordInput extends FormzInput<String, ConfirmPasswordValidationError> {
