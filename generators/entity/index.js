@@ -111,7 +111,7 @@ module.exports = class extends BaseGenerator {
 
                 this.jhipsterAppConfig = this.getAllJhipsterConfig();
 
-                const rawdata = fs.readFileSync(`${context.backendPath}/.yo-rc.json`);
+                const rawdata = fs.readFileSync(path.normalize(`${context.backendPath}/.yo-rc.json`));
                 const yoRC = JSON.parse(rawdata);
                 this.context.baseName = yoRC['generator-jhipster-flutter-merlin'].promptValues.baseName;
                 this.context.camelizedBaseName = _.camelCase(this.context.baseName);
@@ -122,7 +122,7 @@ module.exports = class extends BaseGenerator {
                 if (context.backendPath) {
                     this.log(chalk.green('\nFound the entity folder configuration file, entity can be automatically generated!\n'));
                     context.useConfigurationFile = true;
-                    context.fromPath = `${context.backendPath}//${context.jhipsterConfigDirectory}//${context.name}.json`;
+                    context.fromPath = path.normalize(`${context.backendPath}//${context.jhipsterConfigDirectory}//${context.name}.json`);
                     this.context.prodDatabaseType = this.jhipsterAppConfig.prodDatabaseType;
                     this.context.jhiPrefix = this.jhipsterAppConfig.jhiPrefix;
                     this.context.fieldNamesUnderscored = [];
@@ -576,8 +576,6 @@ module.exports = class extends BaseGenerator {
 
         _.remove(context.relationships, (relationship) => relationship.relationshipType === 'one-to-many');
         _.remove(context.relationships, (relationship) => relationship.relationshipType === 'many-to-many');
-
-        this.log(`entity class : ${context.entityClass}`);
 
         const idField = {
             fieldName: 'id',
