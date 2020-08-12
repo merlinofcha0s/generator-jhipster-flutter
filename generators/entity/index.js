@@ -126,6 +126,7 @@ module.exports = class extends BaseGenerator {
                     context.fromPath = `${context.backendPath}\\${context.jhipsterConfigDirectory}\\${context.name}.json`;
                     console.log(context.fromPath);
                     this.spawnCommandSync('ls');
+                    this.spawnCommandSync('pwd');
                     this.context.prodDatabaseType = this.jhipsterAppConfig.prodDatabaseType;
                     this.context.jhiPrefix = this.jhipsterAppConfig.jhiPrefix;
                     this.context.fieldNamesUnderscored = [];
