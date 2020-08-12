@@ -33,12 +33,9 @@ describe('Flutter JHipster entity module', () => {
     describe('Employee entity generation with I18n', () => {
         before((done) => {
             helpers
-                .run(path.join(__dirname, '../generators/entity/index.js'), {tmpdir: false})
+                .run(path.join(__dirname, '../generators/entity/index.js'))
                 .withArguments(['Employee', path.join(__dirname, '../test/templates/entity-i18n')])
                 .withOptions({ fromCLI: true })
-                .withPrompts({
-                    directoryPath: path.join(__dirname, '../test/templates/entity-i18n'),
-                })
                 .on('end', done);
         });
 
@@ -56,12 +53,9 @@ describe('Flutter JHipster entity module', () => {
     describe('Job entity generation without I18n', () => {
         before((done) => {
             helpers
-                .run(path.join(__dirname, '../generators/entity/index.js'), {tmpdir: false})
+                .run(path.join(__dirname, '../generators/entity/index.js'))
                 .withArguments(['Job', path.join(__dirname, '../test/templates/entity')])
                 .withOptions({ fromCLI: true })
-                .withPrompts({
-                    directoryPath: path.join(__dirname, '../test/templates/entity-i18n'),
-                })
                 .on('end', done);
         });
 

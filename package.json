@@ -53,6 +53,7 @@
   "scripts": {
     "lint": "eslint .",
     "lint-fix": "npm run lint -- --fix",
+    "pretest": "npm run lint",
     "test": "npm run test:unit -- test/*.spec.js",
     "test:unit": "mocha --timeout 120000 --slow 0 --reporter spec",
     "jsdoc": "jsdoc --configure jsdoc-conf.json",
