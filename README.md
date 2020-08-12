@@ -28,6 +28,7 @@ Get started and (Full not yet) documentation on my blog [here](https://blog.hero
   - Change language in user preferences UI
   - Apply the preferred locale instead of the device one
 - BLoC Architecture [More informations](https://pub.dev/packages/flutter_bloc)
+- JSON serializer / deserializer Java Jackson like [More informations](https://pub.dev/packages/dart_json_mapper)
 - Language choice
   - Java / Kotlin for Android 
   - Objective C / Swift for iOS
@@ -36,11 +37,13 @@ Get started and (Full not yet) documentation on my blog [here](https://blog.hero
   - Prod
 - IntelliJ Config file for dev and prod profile
 
-## Main Libraries
+## Entity generator
 
-- [dart_json_mapper](https://pub.dev/packages/dart_json_mapper)
-- [flutter_intl](https://plugins.jetbrains.com/plugin/13666-flutter-intl)
-- [flutter_bloc](https://pub.dev/packages/flutter_bloc)
+Generate your entity from your jhipster project
+- One by one
+- All your entities
+
+More informations [here](https://blog.herofactory.dev/using-the-flutter-entity-generator-jhipster/)
 
 # Prerequisites
 
