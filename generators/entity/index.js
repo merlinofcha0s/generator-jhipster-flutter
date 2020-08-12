@@ -123,7 +123,7 @@ module.exports = class extends BaseGenerator {
                     this.log(chalk.green('\nFound the entity folder configuration file, entity can be automatically generated!\n'));
 
                     context.useConfigurationFile = true;
-                    context.fromPath = `${context.backendPath}\\${context.jhipsterConfigDirectory}\\${context.name}.json`;
+                    context.fromPath = `${context.backendPath}//${context.jhipsterConfigDirectory}//${context.name}.json`;
                     console.log(context.fromPath);
                     this.spawnCommandSync('ls');
                     this.spawnCommandSync('pwd');
