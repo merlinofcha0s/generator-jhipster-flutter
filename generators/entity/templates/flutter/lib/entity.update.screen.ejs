@@ -30,16 +30,17 @@ import 'package:formz/formz.dart';
 import 'package:<%= baseName %>/routes.dart';
 import 'package:<%= baseName %>/shared/repository/http_utils.dart';
 import 'package:<%= baseName %>/entities/<%= entityFileName %>/<%= entityFileName %>_model.dart';
+import '<%= entityFileName %>_route.dart';
 
 class <%= entityClass %>UpdateScreen extends StatelessWidget {
-  <%= entityClass %>UpdateScreen({Key key}) : super(key: <%= camelizedUpperFirstBaseName %>Keys.<%= entityInstance %>CreateScreen);
+  <%= entityClass %>UpdateScreen({Key key}) : super(key: <%= entityClass %>Routes.editScreenKey);
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<<%= entityClass %>Bloc, <%= entityClass %>State>(
       listener: (context, state) {
         if(state.formStatus.isSubmissionSuccess){
-          Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.entities<%= entityClass %>List);
+          Navigator.pushNamed(context, <%= entityClass %>Routes.list);
         }
       },
       child: Scaffold(

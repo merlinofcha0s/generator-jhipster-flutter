@@ -1,0 +1,61 @@
+<%_
+const baseName = context.baseName;
+const entityInstance = context.entityInstance;
+const entityFileName = context.entityFileName;
+const entityClassPlural = context.entityClassPlural;
+const entityClassPluralLowered = context.entityClassPluralLowered;
+const entityClass = context.entityClass;
+const entityClassCamelCase = context.entityClassCamelCase;
+const entityClassKebabCase = context.entityClassKebabCase;
+const entityClassKebabCasePlural = context.entityClassKebabCasePlural;
+_%>
+
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:<%= baseName %>/shared/models/entity_arguments.dart';
+
+import 'bloc/<%= entityFileName %>_bloc.dart';
+import '<%= entityFileName %>_list_screen.dart';
+import '<%= entityFileName %>_repository.dart';
+import '<%= entityFileName %>_update_screen.dart';
+import '<%= entityFileName %>_view_screen.dart';
+
+class <%= entityClass %>Routes {
+  static final list = '/entities/<%= entityInstance %>-list';
+  static final create = '/entities/<%= entityInstance %>-create';
+  static final edit = '/entities/<%= entityInstance %>-edit';
+  static final view = '/entities/<%= entityInstance %>-view';
+
+  static const listScreenKey = Key('__<%= entityInstance %>ListScreen__');
+  static const createScreenKey = Key('__<%= entityInstance %>CreateScreen__');
+  static const editScreenKey = Key('__<%= entityInstance %>EditScreen__');
+  static const viewScreenKey = Key('__<%= entityInstance %>ViewScreen__');
+
+  static final map = <String, WidgetBuilder>{
+    list: (context) {
+      return BlocProvider<<%= entityClass %>Bloc>(
+          create: (context) => <%= entityClass %>Bloc(<%= entityInstance %>Repository: <%= entityClass %>Repository())
+            ..add(Init<%= entityClass %>List()),
+          child: <%= entityClass %>ListScreen());
+    },
+    create: (context) {
+      return BlocProvider<<%= entityClass %>Bloc>(
+          create: (context) => <%= entityClass %>Bloc(<%= entityInstance %>Repository: <%= entityClass %>Repository()),
+          child: <%= entityClass %>UpdateScreen());
+    },
+    edit: (context) {
+      EntityArguments arguments = ModalRoute.of(context).settings.arguments;
+      return BlocProvider<<%= entityClass %>Bloc>(
+          create: (context) => <%= entityClass %>Bloc(<%= entityInstance %>Repository: <%= entityClass %>Repository())
+            ..add(Load<%= entityClass %>ByIdForEdit(id: arguments.id)),
+          child: <%= entityClass %>UpdateScreen());
+    },
+    view: (context) {
+      EntityArguments arguments = ModalRoute.of(context).settings.arguments;
+      return BlocProvider<<%= entityClass %>Bloc>(
+          create: (context) => <%= entityClass %>Bloc(<%= entityInstance %>Repository: <%= entityClass %>Repository())
+            ..add(Load<%= entityClass %>ByIdForView(id: arguments.id)),
+          child: <%= entityClass %>ViewScreen());
+    },
+  };
+}

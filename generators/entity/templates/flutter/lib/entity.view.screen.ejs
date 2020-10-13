@@ -28,9 +28,10 @@ import 'package:<%= baseName %>/routes.dart';
 import 'package:intl/intl.dart';
 <%_ } _%>
 import 'package:<%= baseName %>/shared/widgets/loading_indicator_widget.dart';
+import '<%= entityFileName %>_route.dart';
 
 class <%= entityClass %>ViewScreen extends StatelessWidget {
-  <%= entityClass %>ViewScreen({Key key}) : super(key: <%= camelizedUpperFirstBaseName %>Keys.<%= entityInstance %>CreateScreen);
+  <%= entityClass %>ViewScreen({Key key}) : super(key: <%= entityClass %>Routes.createScreenKey);
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +56,7 @@ class <%= entityClass %>ViewScreen extends StatelessWidget {
             ),
           ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.entities<%= entityClass %>Create),
+          onPressed: () => Navigator.pushNamed(context, <%= entityClass %>Routes.create),
           child: Icon(Icons.add, color: Theme.of(context).iconTheme.color,),
           backgroundColor: Theme.of(context).primaryColor,
         )
