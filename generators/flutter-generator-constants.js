@@ -33,7 +33,6 @@ const FLUTTER_FILES = {
                 'keys.dart',
                 'main_prod.dart',
                 'main.dart',
-                'mapper.dart',
                 'routes.dart',
                 'themes.dart'
             ]
