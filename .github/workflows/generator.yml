@@ -9,7 +9,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                node_version: [12.16.1]
+                node_version: [12.19.0]
                 os: [ubuntu-latest]
         steps:
             - uses: actions/checkout@v2
@@ -23,7 +23,7 @@ jobs:
                   architecture: x64
             - uses: subosito/flutter-action@v1.3.2
               with:
-                  flutter-version: '1.17.5'
+                  flutter-version: '1.22.1'
                   channel: 'stable'
             - run: npm ci
             - run: npm test

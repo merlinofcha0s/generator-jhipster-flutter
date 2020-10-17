@@ -1,8 +1,7 @@
 import 'package:<%= baseName %>/environment.dart';
 import 'package:flutter/material.dart';
 import 'app.dart';
-import 'main.reflectable.dart';
-import 'mapper.dart';
+import 'main.mapper.g.dart' show initializeJsonMapper;
 
 <%_ if (!enableTranslation) { _%>
   import 'package:intl/intl.dart';
@@ -10,9 +9,8 @@ import 'mapper.dart';
   <%_ } _%>
 
 void main() {
-  initializeReflectable();
-  configMapper();
   Constants.setEnvironment(Environment.DEV);
+  initializeJsonMapper();
   <%_ if (!enableTranslation) { _%>
   Intl.defaultLocale = "en";
   initializeDateFormatting();

@@ -1,12 +1,19 @@
 import 'package:<%= baseName %>/environment.dart';
 import 'package:flutter/material.dart';
 import 'app.dart';
-import 'main.reflectable.dart';
-import 'mapper.dart';
+import 'main.mapper.g.dart' show initializeJsonMapper;
+
+<%_ if (!enableTranslation) { _%>
+  import 'package:intl/intl.dart';
+  import 'package:intl/date_symbol_data_local.dart';
+  <%_ } _%>
 
 void main() {
-  initializeReflectable();
-  configMapper();
   Constants.setEnvironment(Environment.PROD);
+  initializeJsonMapper();
+  <%_ if (!enableTranslation) { _%>
+  Intl.defaultLocale = "en";
+  initializeDateFormatting();
+  <%_ } _%>
   runApp(<%= camelizedUpperFirstBaseName %>App());
 }
