@@ -666,7 +666,6 @@ module.exports = class extends BaseGenerator {
         entityFileName = _.snakeCase(_.lowerCase(entityFileName));
 
         try {
-
             const routeImport = `import 'entities/${entityFileName}/${entityFileName}_route.dart';`;
 
             utils.rewriteFile({
@@ -685,7 +684,6 @@ module.exports = class extends BaseGenerator {
                     this.stripMargin(addRoute)
                 ]
             }, this);
-
 
             const drawerClassPath = 'lib/shared/widgets/drawer/drawer_widget.dart';
             const newMenuEntry = `ListTile(
@@ -709,7 +707,6 @@ module.exports = class extends BaseGenerator {
                     this.stripMargin(newMenuImportEntry)
                 ]
             }, this);
-
         } catch (e) {
             this.log(`${chalk.yellow('\nUnable to find ') + appClassPath + chalk.yellow(' or missing required jhipster-needle. Reference to ') + entityClass})}`);
             this.debug('Error:', e);
