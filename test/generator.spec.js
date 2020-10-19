@@ -24,6 +24,7 @@ const expectedFiles = {
         `${MAIN_SRC_DIR}app.dart`,
         `${MAIN_SRC_DIR}environment.dart`,
         `${MAIN_SRC_DIR}keys.dart`,
+        `${MAIN_SRC_DIR}mapper.dart`,
         `${MAIN_SRC_DIR}main_prod.dart`,
         `${MAIN_SRC_DIR}main.dart`,
         `${MAIN_SRC_DIR}routes.dart`

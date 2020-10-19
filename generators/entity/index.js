@@ -631,6 +631,7 @@ module.exports = class extends BaseGenerator {
         this._addEntityToRoute(this.context.baseName, this.context.entityClass,
             this.context.entityFileName, this.context.camelizedUpperFirstBaseName, this.context.entityClassPlural, this.context.entityInstance);
         this._addEntityMainToI18n(this.context.entityClass, this.context.entityFileName, this.context.entityClassPlural, this.context.fields);
+        this._addEntityToMapper(this.context.baseName, this.context.entityClass, this.context.entityFileName);
     }
 
     install() {
@@ -697,6 +698,15 @@ module.exports = class extends BaseGenerator {
                 needle: 'jhipster-merlin-needle-menu-entry-add',
                 splicable: [
                     this.stripMargin(newMenuEntry)
+                ]
+            }, this);
+
+            const newMenuImportEntry = `import 'package:${baseName}/entities/${entityFileName}/${entityFileName}_route.dart';`;
+            utils.rewriteFile({
+                file: drawerClassPath,
+                needle: 'jhipster-merlin-needle-menu-import-entry-add',
+                splicable: [
+                    this.stripMargin(newMenuImportEntry)
                 ]
             }, this);
 
@@ -787,6 +797,43 @@ module.exports = class extends BaseGenerator {
                     this.debug('Error:', e);
                 }
             });
+        }
+    }
+
+    /**
+     * Add a mapping information for new entity with the correct imports
+     *
+     * @param {string} baseName - Base application name
+     * @param {string} entityInstance - Entity Instance
+     * @param {string} entityClass - Entity Class
+     * @param {string} entityFileName - Entity File Name
+     * @param {string} camelizedUpperFirstBaseName - Formatted base name (ex: MonApplication)
+     */
+    _addEntityToMapper(baseName, entityClass, entityFileName) {
+        const mapperClassPath = 'lib/mapper.dart';
+        entityFileName = _.snakeCase(_.lowerCase(entityFileName));
+
+        try {
+            const importModel = `import 'package:${baseName}/entities/${entityFileName}/${entityFileName}_model.dart';`;
+            utils.rewriteFile({
+                file: mapperClassPath,
+                needle: 'jhipster-merlin-needle-mapper-import-add',
+                splicable: [
+                    this.stripMargin(importModel)
+                ]
+            }, this);
+
+            const mapperDeclaration = `typeOf<List<${entityClass}>>(): (value) => value.cast<${entityClass}>(),`;
+            utils.rewriteFile({
+                file: mapperClassPath,
+                needle: 'jhipster-merlin-needle-mapper-list-add',
+                splicable: [
+                    this.stripMargin(mapperDeclaration)
+                ]
+            }, this);
+        } catch (e) {
+            this.log(`${chalk.yellow('\nUnable to find ') + mapperClassPath + chalk.yellow(' or missing required jhipster-needle. Reference to ') + entityClass}}`);
+            this.debug('Error:', e);
         }
     }
 };
