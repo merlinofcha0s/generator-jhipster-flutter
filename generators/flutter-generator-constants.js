@@ -98,6 +98,7 @@ const FLUTTER_FILES = {
             path: ANDROID_SRC_DIR,
             templates: [
                 'app/build.gradle',
+                'app/src/main/AndroidManifest.xml'
             ]
         }
     ],

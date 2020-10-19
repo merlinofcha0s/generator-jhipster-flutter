@@ -47,7 +47,8 @@ const expectedFiles = {
         `${MAIN_SRC_DIR}account/settings/settings_screen.dart`
     ],
     android: [
-        `${ANDROID_SRC_DIR}app/build.gradle`
+        `${ANDROID_SRC_DIR}app/build.gradle`,
+        `${ANDROID_SRC_DIR}app/src/main/AndroidManifest.xml`
     ],
     intellij: [
         `${INTELLIJ_CONFIG_DIR}main_dart_dev.xml`,
