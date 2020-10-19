@@ -25,12 +25,12 @@
     "eslint-config-airbnb": "18.1.0",
     "generator-jhipster": ">=6.0.0",
     "jhipster-core": "7.3.2",
-    "semver": "7.3.2",
     "lodash": "4.17.19",
     "mkdirp": "1.0.4",
     "pluralize": "8.0.0",
     "prettier": "2.0.5",
     "randexp": "0.5.3",
+    "semver": "7.3.2",
     "shelljs": "0.8.4"
   },
   "devDependencies": {
