@@ -31,7 +31,6 @@ const FLUTTER_FILES = {
                 'app.dart',
                 'environment.dart',
                 'keys.dart',
-                'mapper.dart',
                 'main_prod.dart',
                 'main.dart',
                 'routes.dart',
