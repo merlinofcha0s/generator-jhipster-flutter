@@ -16,16 +16,15 @@ import 'package:<%= baseName %>/entities/<%= entityFileName %>/<%= entityFileNam
 <%_ if(enableTranslation) { _%>
 import 'package:<%= baseName %>/generated/l10n.dart';
 <%_ } _%>
-import 'package:<%= baseName %>/keys.dart';
 import 'package:flutter/material.dart';
 import 'package:<%= baseName %>/shared/widgets/drawer/bloc/drawer_bloc.dart';
 import 'package:<%= baseName %>/shared/widgets/drawer/drawer_widget.dart';
 import 'package:<%= baseName %>/shared/widgets/loading_indicator_widget.dart';
-import 'package:<%= baseName %>/routes.dart';
 import 'package:<%= baseName %>/shared/models/entity_arguments.dart';
+import '<%= entityFileName %>_route.dart';
 
 class <%= entityClass %>ListScreen extends StatelessWidget {
-    <%= entityClass %>ListScreen({Key key}) : super(key: <%= camelizedUpperFirstBaseName %>Keys.<%= entityInstance %>ListScreen);
+    <%= entityClass %>ListScreen({Key key}) : super(key: <%= entityClass %>Routes.listScreenKey);
     final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
@@ -64,7 +63,7 @@ class <%= entityClass %>ListScreen extends StatelessWidget {
             create: (context) => DrawerBloc(loginRepository: LoginRepository()),
             child: <%= camelizedUpperFirstBaseName %>Drawer()),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => Navigator.pushNamed(context, <%= camelizedUpperFirstBaseName %>Routes.entities<%= entityClass %>Create),
+          onPressed: () => Navigator.pushNamed(context, <%= entityClass %>Routes.create),
           child: Icon(Icons.add, color: Theme.of(context).iconTheme.color,),
           backgroundColor: Theme.of(context).primaryColor,
         )
@@ -95,7 +94,7 @@ class <%= entityClass %>ListScreen extends StatelessWidget {
               child: Text(<%_ if(enableTranslation) { _%>S.of(context).entityActionView<%_ } else { _%>'View'<%_ } _%>%>),
                   onPressed: () => Navigator.pushNamed(
                     context,
-                    <%= camelizedUpperFirstBaseName %>Routes.entities<%= entityClass %>View,
+                    <%= entityClass %>Routes.view,
                     arguments: EntityArguments(<%= entityInstance %>.id)
                 ),
                 ),
@@ -103,7 +102,7 @@ class <%= entityClass %>ListScreen extends StatelessWidget {
                   child: Text(<%_ if(enableTranslation) { _%>S.of(context).entityActionEdit<%_ } else { _%>'Edit'<%_ } _%>),
                   onPressed: () => Navigator.pushNamed(
                     context,
-                    <%= camelizedUpperFirstBaseName %>Routes.entities<%= entityClass %>Edit,
+                    <%= entityClass %>Routes.edit,
                     arguments: EntityArguments(<%= entityInstance %>.id)
                   ),
                 ),

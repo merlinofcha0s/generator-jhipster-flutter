@@ -630,7 +630,6 @@ module.exports = class extends BaseGenerator {
         this.writeFilesToDisk(files.flutterFiles, this, false, `${CLIENT_FLUTTER_TEMPLATES_DIR}`);
         this._addEntityToRoute(this.context.baseName, this.context.entityClass,
             this.context.entityFileName, this.context.camelizedUpperFirstBaseName, this.context.entityClassPlural, this.context.entityInstance);
-        this._addEntityToKey(this.context.entityClass, this.context.entityClassCamelCase, this.context.entityInstance);
         this._addEntityMainToI18n(this.context.entityClass, this.context.entityFileName, this.context.entityClassPlural, this.context.fields);
     }
 
@@ -664,47 +663,24 @@ module.exports = class extends BaseGenerator {
     _addEntityToRoute(baseName, entityClass, entityFileName, camelizedUpperFirstBaseName, entityClassPlural, entityInstance) {
         const appClassPath = 'lib/app.dart';
         entityFileName = _.snakeCase(_.lowerCase(entityFileName));
-        const routesClassPath = 'lib/routes.dart';
 
         try {
-            const listRoute = `${camelizedUpperFirstBaseName}Routes.entities${entityClass}List: (context) {
-          return BlocProvider<${entityClass}Bloc>(
-            create: (context) => ${entityClass}Bloc(${entityInstance}Repository: ${entityClass}Repository())
-            ..add(Init${entityClass}List()),
-            child: ${entityClass}ListScreen());
-          },`;
-            utils.rewriteFile({
-                file: appClassPath,
-                needle: 'jhipster-merlin-needle-route-add',
-                splicable: [
-                    this.stripMargin(listRoute)
-                ]
-            }, this);
+            const routeImport = `import 'entities/${entityFileName}/${entityFileName}_route.dart';`;
 
-            const blocImport = `import 'package:${baseName}/entities/${entityFileName}/bloc/${entityFileName}_bloc.dart'; \n`;
-            const screenListImport = `import 'package:${baseName}/entities/${entityFileName}/${entityFileName}_list_screen.dart';\n`;
-            const screenUpdateImport = `import 'package:${baseName}/entities/${entityFileName}/${entityFileName}_update_screen.dart';\n`;
-            const screenViewImport = `import 'package:${baseName}/entities/${entityFileName}/${entityFileName}_view_screen.dart';\n`;
-            const repoImport = `import 'package:${baseName}/entities/${entityFileName}/${entityFileName}_repository.dart';`;
-
-            const newImports = blocImport + screenListImport + screenUpdateImport + screenViewImport + repoImport;
             utils.rewriteFile({
                 file: appClassPath,
                 needle: 'jhipster-merlin-needle-import-add',
                 splicable: [
-                    this.stripMargin(newImports)
+                    this.stripMargin(routeImport)
                 ]
             }, this);
 
-            const newRouteURL = `  static final entities${entityClass}List = '/entities/${entityFileName}-list';
-            static final entities${entityClass}Create = '/entities/${entityFileName}-create';
-            static final entities${entityClass}Edit = '/entities/${entityFileName}-edit';
-            static final entities${entityClass}View = '/entities/${entityFileName}-view';`;
+            const addRoute = `...${entityClass}Routes.map,`;
             utils.rewriteFile({
-                file: routesClassPath,
-                needle: 'jhipster-merlin-needle-route-url-add',
+                file: appClassPath,
+                needle: 'jhipster-merlin-needle-route-add',
                 splicable: [
-                    this.stripMargin(newRouteURL)
+                    this.stripMargin(addRoute)
                 ]
             }, this);
 
@@ -712,7 +688,7 @@ module.exports = class extends BaseGenerator {
             const newMenuEntry = `ListTile(
                 leading: Icon(Icons.label, size: iconSize,),
                 title: Text('${entityClassPlural}'),
-                onTap: () => Navigator.pushNamed(context, ${camelizedUpperFirstBaseName}Routes.entities${entityClass}List),
+                onTap: () => Navigator.pushNamed(context, ${entityClass}Routes.list),
             ),`;
             utils.rewriteFile({
                 file: drawerClassPath,
@@ -722,46 +698,12 @@ module.exports = class extends BaseGenerator {
                 ]
             }, this);
 
-            const createRoute = `${camelizedUpperFirstBaseName}Routes.entities${entityClass}Create: (context) {
-                return BlocProvider<${entityClass}Bloc>(
-                  create: (context) => ${entityClass}Bloc(${entityInstance}Repository: ${entityClass}Repository()),
-                  child: ${entityClass}UpdateScreen());
-                },`;
+            const newMenuImportEntry = `import 'package:${baseName}/entities/${entityFileName}/${entityFileName}_route.dart';`;
             utils.rewriteFile({
-                file: appClassPath,
-                needle: 'jhipster-merlin-needle-route-add',
+                file: drawerClassPath,
+                needle: 'jhipster-merlin-needle-menu-import-entry-add',
                 splicable: [
-                    this.stripMargin(createRoute)
-                ]
-            }, this);
-
-            const updateRoute = `${camelizedUpperFirstBaseName}Routes.entities${entityClass}Edit: (context) {
-            EntityArguments arguments = ModalRoute.of(context).settings.arguments;
-                return BlocProvider<${entityClass}Bloc>(
-                   create: (context) => ${entityClass}Bloc(${entityInstance}Repository: ${entityClass}Repository())
-                  ..add(Load${entityClass}ByIdForEdit(id: arguments.id)),
-                child: ${entityClass}UpdateScreen());
-            },`;
-            utils.rewriteFile({
-                file: appClassPath,
-                needle: 'jhipster-merlin-needle-route-add',
-                splicable: [
-                    this.stripMargin(updateRoute)
-                ]
-            }, this);
-
-            const viewRoute = `${camelizedUpperFirstBaseName}Routes.entities${entityClass}View: (context) {
-            EntityArguments arguments = ModalRoute.of(context).settings.arguments;
-                return BlocProvider<${entityClass}Bloc>(
-                    create: (context) => ${entityClass}Bloc(${entityInstance}Repository: ${entityClass}Repository())
-                    ..add(Load${entityClass}ByIdForView(id: arguments.id)),
-                    child: ${entityClass}ViewScreen());
-                },`;
-            utils.rewriteFile({
-                file: appClassPath,
-                needle: 'jhipster-merlin-needle-route-add',
-                splicable: [
-                    this.stripMargin(viewRoute)
+                    this.stripMargin(newMenuImportEntry)
                 ]
             }, this);
         } catch (e) {
@@ -851,37 +793,6 @@ module.exports = class extends BaseGenerator {
                     this.debug('Error:', e);
                 }
             });
-        }
-    }
-
-    /**
-     * Add a mapping information for new entity with the correct imports
-     *
-     * @param {string} baseName - Base application name
-     * @param {string} entityInstance - Entity Instance
-     * @param {string} entityClass - Entity Class
-     * @param {string} entityFileName - Entity File Name
-     * @param {string} camelizedUpperFirstBaseName - Formatted base name (ex: MonApplication)
-     */
-    _addEntityToKey(entityClass, entityClassCamelCase, entityInstance) {
-        const keysClassPath = 'lib/keys.dart';
-
-        try {
-            const keyList = `static const ${entityInstance}ListScreen = Key('__${entityClassCamelCase}ListScreen__'); \n`;
-            const keyCreate = `  static const ${entityInstance}CreateScreen = Key('__${entityClassCamelCase}CreateScreen__'); \n`;
-            const keyView = `  static const ${entityInstance}ViewScreen = Key('__${entityClassCamelCase}ViewScreen__');`;
-            const keys = keyList + keyCreate + keyView;
-
-            utils.rewriteFile({
-                file: keysClassPath,
-                needle: 'jhipster-merlin-needle-key-add',
-                splicable: [
-                    this.stripMargin(keys)
-                ]
-            }, this);
-        } catch (e) {
-            this.log(`${chalk.yellow('\nUnable to find ') + keysClassPath + chalk.yellow(' or missing required jhipster-needle. Reference to ') + entityClass}}`);
-            this.debug('Error:', e);
         }
     }
 };

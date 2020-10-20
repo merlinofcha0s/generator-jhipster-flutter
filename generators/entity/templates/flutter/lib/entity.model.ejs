@@ -23,7 +23,8 @@ class <%= entityClass %> {
   @JsonProperty(name: '<%- idField.fieldName _%>')
   final <%= idField.fieldType %> <%= idField.fieldName %>;
 <%_ fields.forEach(field => { %>
-  @JsonProperty(name: '<%- field.fieldName _%>' <%_ if(field.fieldType === 'DateTime') { _%>, converterParams: {'format': 'yyyy-MM-dd\'T\'HH:mm:ss\'Z\''}<%_ }  _%>)
+  @JsonProperty(name: '<%- field.fieldName _%>' <%_ if(field.fieldType === 'DateTime') { _%>, converterParams: {'format': 'yyyy-MM-dd\'T\'HH:mm:ss\'Z\''}<%_ }  _%>
+  <%_ if(field.fieldIsEnum) { _%>, enumValues: <%= field.fieldType %>.values <%_ }  _%>)
   final <%= field.fieldType %> <%= field.fieldName %>;
 <%_ }); _%>
 <%_ relationships.forEach(relationship => { %>

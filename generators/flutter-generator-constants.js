@@ -48,7 +48,6 @@ const FLUTTER_FILES = {
                 'shared/widgets/drawer/bloc/drawer_events.dart',
                 'shared/widgets/drawer/bloc/drawer_state.dart',
                 'shared/widgets/loading_indicator_widget.dart',
-                'shared/mixins/validators_mixin.dart',
                 'shared/models/jwt_token.dart',
                 'shared/models/user_jwt.dart',
                 'shared/models/user.dart',
