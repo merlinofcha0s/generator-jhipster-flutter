@@ -79,46 +79,50 @@ class <%= entityClass %>ListScreen extends StatelessWidget {
         child: Column(
           children: <Widget>[
             ListTile(
-              leading: Icon(Icons.turned_in),
+              leading: Icon(
+                Icons.account_circle,
+                size: 60.0,
+                color: Theme.of(context).primaryColor,
+              ),
               <%_ for (let i = 0; i < 2 && i < fields.length ; i++) { _%>
                 <%_ if(i == 0) { _%>
                   title: Text('<%= fields[i].fieldNameHumanized %> : ${<%= entityInstance %>.<%= fields[i].fieldName %>.toString()}'),
-              <%_ } else { _%>
+                  <%_ } else { _%>
                   subtitle: Text('<%= fields[i].fieldNameHumanized %> : ${<%= entityInstance %>.<%= fields[i].fieldName %>.toString()}'),
+                  <%_ } _%>
               <%_ } _%>
-            <%_ } _%>
-            ),
-            ButtonBar(
-              children: <Widget>[
-                FlatButton(
-              child: Text(<%_ if(enableTranslation) { _%>S.of(context).entityActionView<%_ } else { _%>'View'<%_ } _%>%>),
-                  onPressed: () => Navigator.pushNamed(
-                    context,
-                    <%= entityClass %>Routes.view,
-                    arguments: EntityArguments(<%= entityInstance %>.id)
-                ),
-                ),
-                FlatButton(
-                  child: Text(<%_ if(enableTranslation) { _%>S.of(context).entityActionEdit<%_ } else { _%>'Edit'<%_ } _%>),
-                  onPressed: () => Navigator.pushNamed(
-                    context,
-                    <%= entityClass %>Routes.edit,
-                    arguments: EntityArguments(<%= entityInstance %>.id)
-                  ),
-                ),
-                FlatButton(
-                  child: Text(<%_ if(enableTranslation) { _%>S.of(context).entityActionDelete<%_ } else { _%>'Delete'<%_ } _%>),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return deleteDialog(<%= entityInstance %>Bloc, context, <%= entityInstance %>.id);
-                      },
-                    );
+              trailing: DropdownButton(
+                  icon: Icon(Icons.more_vert),
+                  onChanged: (String newValue) {
+                    switch (newValue) {
+                      case "Edit":
+                        Navigator.pushNamed(
+                            context, <%= entityClass %>Routes.edit,
+                            arguments: EntityArguments(<%= entityInstance %>.id));
+                        break;
+                      case "Delete":
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return deleteDialog(
+                              <%= entityInstance %>Bloc, context, <%= entityInstance %>.id);
+                          },
+                        );
+                    }
                   },
-                ),
-              ],
-            )
+                  items: [
+                    DropdownMenuItem<String>(
+                      value: 'Edit',
+                      child: Text('Edit'),
+                    ),
+                    DropdownMenuItem<String>(
+                        value: 'Delete', child: Text('Delete'))
+                  ]),
+              selected: false,
+              onTap: () => Navigator.pushNamed(
+                  context, <%= entityClass %>Routes.view,
+                  arguments: EntityArguments(<%= entityInstance %>.id)),
+            ),
           ],
         ),
       ),
