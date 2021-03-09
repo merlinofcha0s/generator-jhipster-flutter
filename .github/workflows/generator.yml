@@ -19,9 +19,9 @@ jobs:
             - uses: actions/setup-java@v1.4.3
               with:
                   java-version: '11'
-            - uses: subosito/flutter-action@v1.3.2
+            - uses: subosito/flutter-action@v1.4.0
               with:
-                  flutter-version: '1.22.1'
+                  flutter-version: '1.22.x'
                   channel: 'stable'
             - run: npm ci
             - run: npm test
