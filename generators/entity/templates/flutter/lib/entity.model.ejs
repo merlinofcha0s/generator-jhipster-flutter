@@ -9,11 +9,11 @@ const idField = context.idField;
 _%>
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 
-<%_ relationships.forEach(relation => { if (relation.desc == 'relationship') { _%>
-<%_ if (relation.relationshipNameCapitalized == 'User') { _%>
+<%_ relationships.forEach(relation => { if (relation.desc === 'relationship') { _%>
+<%_ if (relation.relationshipNameCapitalized === 'User') { _%>
 import 'package:<%- baseName %>/shared/models/user.dart';
 <%_ } else { _%>
-import '../<%- relation.otherEntityName %>/<%- relation.otherEntityName %>_model.dart';
+import '../<%- relation.otherEntityFolderName %>/<%- relation.otherEntityFileName %>_model.dart';
 <%_ } _%>
 <%_ }}); _%>
 
@@ -35,15 +35,15 @@ class <%= entityClass %> {
   final <%= relationship.otherEntityNameCapitalized %> <%= relationship.relationshipFieldName %>;
       <%_ } _%>
   <%_ }); _%>
-        
+
  const <%= entityClass %> (
      this.<%= idField.fieldName %>,
      <%_ fields.forEach(field => { _%>
         this.<%- field.fieldName -%>,
-        <%_ }); _%> 
+        <%_ }); _%>
     <%_ relationships.forEach(relationship => { _%>
         this.<%- relationship.relationshipFieldName -%>,
-    <%_ }); _%> 
+    <%_ }); _%>
     );
 
 @override
@@ -52,7 +52,7 @@ String toString() {
     '<%= idField.fieldName _%>: $<%= idField.fieldName _%>,' +
     <%_ fields.forEach(field => { _%>
         '<%= field.fieldName _%>: $<%= field.fieldName _%>,' +
-        <%_ }); _%> 
+        <%_ }); _%>
     <%_ relationships.forEach(relationship => { _%>
         '<%= relationship.relationshipFieldName _%>: $<%= relationship.relationshipFieldName _%>,' +
     <%_ }); _%>
@@ -60,14 +60,14 @@ String toString() {
    }
 
 @override
-bool operator == (Object other) => 
+bool operator == (Object other) =>
     identical(this, other) ||
     other is <%= entityClass %> &&
     <%- idField.fieldName + ' == other.' + idField.fieldName + ' '-%>;
 
 
 @override
-int get hashCode => 
+int get hashCode =>
     <%- idField.fieldName + '.hashCode ' -%>;
 }
 
