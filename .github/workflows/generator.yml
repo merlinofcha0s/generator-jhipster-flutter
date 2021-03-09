@@ -1,5 +1,5 @@
 name: Generator
-on: [push, pull_request]
+on: [pull_request]
 jobs:
     generator-jhipster-flutter:
         name: npm test
@@ -9,21 +9,19 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                node_version: [12.19.0]
+                node_version: [14.16.0]
                 os: [ubuntu-latest]
         steps:
             - uses: actions/checkout@v2
             - uses: actions/setup-node@v1
               with:
                   node-version: ${{ matrix.node_version }}
-            - uses: actions/setup-java@v1.3.0
+            - uses: actions/setup-java@v1.4.3
               with:
-                  java-version: '11.x'
-                  java-package: jdk
-                  architecture: x64
-            - uses: subosito/flutter-action@v1.3.2
+                  java-version: '11'
+            - uses: subosito/flutter-action@v1.4.0
               with:
-                  flutter-version: '1.22.1'
+                  flutter-version: '1.22.x'
                   channel: 'stable'
             - run: npm ci
             - run: npm test
