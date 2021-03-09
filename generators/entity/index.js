@@ -487,9 +487,9 @@ module.exports = class extends BaseGenerator {
                     relationship.otherEntityModuleName = `${
                         context.angularXAppName + relationship.otherEntityNameCapitalized
                     }Module`;
-                    relationship.otherEntityFileName = _.kebabCase(relationship.otherEntityAngularName);
+                    relationship.otherEntityFileName = _.snakeCase(relationship.otherEntityAngularName);
                     if (relationship.otherEntityFolderName === undefined) {
-                        relationship.otherEntityFolderName = _.kebabCase(relationship.otherEntityAngularName);
+                        relationship.otherEntityFolderName = _.snakeCase(relationship.otherEntityAngularName);
                     }
                     if (
                         context.skipUiGrouping
