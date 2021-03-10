@@ -76,7 +76,7 @@ class MainScreen extends StatelessWidget {
   Widget linkWidget(BuildContext context, String text, String url){
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
-      child: RaisedButton(
+      child: ElevatedButton(
           onPressed: () => _launchURL(url),
           child: Container(
             child: Text(text, textAlign: TextAlign.center,),

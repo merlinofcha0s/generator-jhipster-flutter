@@ -40,7 +40,7 @@ class <%= camelizedUpperFirstBaseName %>Drawer extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.exit_to_app, size: iconSize,),
           title: Text(<%_ if (enableTranslation) { _%>S.of(context).drawerLogoutTitle<%_ } else { _%>'Sign out'<%_ } _%>),
-              onTap: () => context.bloc<DrawerBloc>().add(Logout())
+              onTap: () => context.read<DrawerBloc>().add(Logout())
             ),
             Divider(thickness: 2),
             // jhipster-merlin-needle-menu-entry-add

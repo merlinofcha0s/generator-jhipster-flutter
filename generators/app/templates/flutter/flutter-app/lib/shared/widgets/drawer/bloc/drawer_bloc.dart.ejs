@@ -9,7 +9,7 @@ part 'drawer_state.dart';
 class DrawerBloc extends Bloc<DrawerEvent, DrawerState> {
   final LoginRepository _loginRepository;
 
-  DrawerBloc({required LoginRepository loginRepository}) : assert(loginRepository != null),
+  DrawerBloc({required LoginRepository loginRepository}) :
         _loginRepository = loginRepository, super(const DrawerState());
 
   @override
