@@ -20,13 +20,13 @@ class RegisterState extends Equatable {
   });
 
   RegisterState copyWith({
-    LoginInput login,
-    EmailInput email,
-    PasswordInput password,
-    ConfirmPasswordInput confirmPassword,
-    TermsAndConditionsInput termsAndConditions,
-    FormzStatus status,
-    String generalErrorKey
+    LoginInput? login,
+    EmailInput? email,
+    PasswordInput? password,
+    ConfirmPasswordInput? confirmPassword,
+    TermsAndConditionsInput? termsAndConditions,
+    FormzStatus? status,
+    String? generalErrorKey
   }) {
     return RegisterState(
       login: login ?? this.login,

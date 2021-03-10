@@ -5,11 +5,11 @@ import 'package:<%= baseName %>/shared/repository/http_utils.dart';
 class AccountRepository {
   AccountRepository();
 
-  Future<String> register(User newUser) async {
+  Future<String?> register(User newUser) async {
     final registerRequest =
     await HttpUtils.postRequest<User>("/register", newUser);
 
-    String result;
+    String? result;
 
     if (registerRequest.statusCode == 400) {
       result = registerRequest.headers[HttpUtils.errorHeader];
@@ -25,9 +25,9 @@ class AccountRepository {
     return JsonMapper.deserialize<User>(saveRequest.body);
   }
 
-  Future<String> saveAccount(User user) async {
+  Future<String?> saveAccount(User user) async {
     final saveRequest = await HttpUtils.postRequest<User>("/account", user);
-    String result;
+    String? result;
     if (saveRequest.statusCode != 200) {
       if(saveRequest.headers[HttpUtils.errorHeader] != null) {
         result = saveRequest.headers[HttpUtils.errorHeader];

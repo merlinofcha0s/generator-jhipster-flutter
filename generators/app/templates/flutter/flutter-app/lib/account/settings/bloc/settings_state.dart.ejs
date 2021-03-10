@@ -28,16 +28,16 @@ class SettingsState extends Equatable {
   });
 
   SettingsState copyWith({
-    FirstnameInput firstname,
-    LastnameInput lastname,
-    EmailInput email,
+    FirstnameInput? firstname,
+    LastnameInput? lastname,
+    EmailInput? email,
     <%_ if (enableTranslation) { _%>
-    String language,
+    String? language,
     <%_ } _%>
-    FormzStatus status,
-    String generalNotificationKey,
-    SettingsAction action,
-    User currentUser
+    FormzStatus? status,
+    String? generalNotificationKey,
+    SettingsAction? action,
+    User? currentUser
   }) {
     return SettingsState(
       firstname: firstname ?? this.firstname,

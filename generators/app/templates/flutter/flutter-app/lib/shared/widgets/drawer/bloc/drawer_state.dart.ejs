@@ -9,7 +9,7 @@ class DrawerState extends Equatable {
   });
 
   DrawerState copyWith({
-    bool isLogout,
+    bool? isLogout,
   }) {
     return DrawerState(
       isLogout: isLogout ?? this.isLogout,

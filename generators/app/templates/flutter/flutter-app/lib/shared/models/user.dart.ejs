@@ -4,22 +4,22 @@ import 'package:dart_json_mapper/dart_json_mapper.dart';
 class User {
 
   @JsonProperty(name: 'firstName')
-  final String firstName;
+  final String? firstName;
 
   @JsonProperty(name: 'lastName')
-  final String lastName;
+  final String? lastName;
 
   @JsonProperty(name: 'login')
-  final String login;
+  final String? login;
 
   @JsonProperty(name: 'email')
-  final String email;
+  final String? email;
 
   @JsonProperty(name: 'password')
-  final String password;
+  final String? password;
 
   @JsonProperty(name: 'langKey')
-  final String langKey;
+  final String? langKey;
 
   const User(this.login, this.email, this.password, this.langKey,
       this.firstName, this.lastName);

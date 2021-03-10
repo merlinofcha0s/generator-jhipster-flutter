@@ -4,10 +4,10 @@ import 'package:dart_json_mapper/dart_json_mapper.dart';
 class UserJWT {
 
   @JsonProperty(name: 'username')
-  String username;
+  String? username;
 
   @JsonProperty(name: 'password')
-  String password;
+  String? password;
 
   UserJWT(this.username, this.password);
 

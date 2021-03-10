@@ -13,7 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 
 class MainScreen extends StatelessWidget {
-  MainScreen({Key key}) : super(key: <%= camelizedUpperFirstBaseName %>Keys.mainScreen);
+  MainScreen({Key? key}) : super(key: <%= camelizedUpperFirstBaseName %>Keys.mainScreen);
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,7 @@ class MainScreen extends StatelessWidget {
     return BlocBuilder<MainBloc, MainState>(
         buildWhen: (previous, current) => previous.currentUser != current.currentUser,
         builder: (context, state) {
-        String login = state.currentUser.login;
+        String login = state.currentUser.login!;
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[

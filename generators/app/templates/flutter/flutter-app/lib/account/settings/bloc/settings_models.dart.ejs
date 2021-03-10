@@ -16,7 +16,7 @@ class FirstnameInput extends FormzInput<String, FirstnameValidationError> {
   static int numberMin = 3;
 
   @override
-  FirstnameValidationError validator(String value) {
+  FirstnameValidationError? validator(String value) {
     if(value.isEmpty == false){
       return value.length >= numberMin ? null : FirstnameValidationError.invalid;
     } else {
@@ -38,7 +38,7 @@ class LastnameInput extends FormzInput<String, LastnameValidationError> {
   static int numberMin = 3;
 
   @override
-  LastnameValidationError validator(String value) {
+  LastnameValidationError? validator(String value) {
     if(value.isEmpty == false){
       return value.length >= numberMin ? null : LastnameValidationError.invalid;
     } else {
@@ -58,7 +58,7 @@ class EmailInput extends FormzInput<String, EmailValidationError> {
   const EmailInput.dirty([String value = '']) : super.dirty(value);
 
   @override
-  EmailValidationError validator(String value) {
+  EmailValidationError? validator(String value) {
     return value.contains('@') ? null : EmailValidationError.invalid;
   }
 }

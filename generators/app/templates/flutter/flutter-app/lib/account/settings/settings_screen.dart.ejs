@@ -116,7 +116,7 @@ class SettingsScreen extends StatelessWidget {
                 Text(S.of(context).pageSettingsFormLanguages, style: Theme.of(context).textTheme.bodyText1,),
                 DropdownButton<String>(
                     value: state.language,
-                    onChanged: (value) { context.bloc<SettingsBloc>().add(LanguageChanged(language: value)); },
+                    onChanged: (value) { context.bloc<SettingsBloc>().add(LanguageChanged(language: value!)); },
                     items: createDropdownLanguageItems(Constants.languages)),
               ],
             ),
@@ -126,7 +126,7 @@ class SettingsScreen extends StatelessWidget {
 
   List<DropdownMenuItem<String>> createDropdownLanguageItems(Map<String, String> languages) {
     return languages.keys.map<DropdownMenuItem<String>>((String key) =>
-            DropdownMenuItem<String>(value: key, child: Text(languages[key])))
+            DropdownMenuItem<String>(value: key, child: Text(languages[key]!)))
         .toList();
   }
 <%_ } _%>
@@ -165,7 +165,7 @@ class SettingsScreen extends StatelessWidget {
 
   Widget generateNotificationText(SettingsState state, BuildContext context) {
     String notificationTranslated = '';
-    MaterialColor notificationColors;
+    Color? notificationColors;
     if(state.generalNotificationKey.compareTo(SettingsBloc.successKey) == 0) {
       notificationTranslated = <%_ if (enableTranslation) { _%> S.of(context).pageSettingsSave <%_ } else { _%> 'Settings saved !' <%_ } _%>;
       notificationColors = Theme.of(context).primaryColor;

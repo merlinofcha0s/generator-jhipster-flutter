@@ -136,7 +136,7 @@ class RegisterScreen extends StatelessWidget {
                     height: 24,
                     width: 24,
                     child: Checkbox(
-                        onChanged: (value) { context.bloc<RegisterBloc>().add(TermsAndConditionsChanged(termsAndConditions: value)); },
+                        onChanged: (value) { context.bloc<RegisterBloc>().add(TermsAndConditionsChanged(termsAndConditions: value!)); },
                         value: state.termsAndConditions.value),
                   ),
                   Padding(

@@ -15,7 +15,7 @@ class LoadCurrentUser extends SettingsEvent {}
 class FirstnameChanged extends SettingsEvent {
   final String firstname;
 
-  const FirstnameChanged({@required this.firstname});
+  const FirstnameChanged({required this.firstname});
 
   @override
   List<Object> get props => [firstname];
@@ -24,7 +24,7 @@ class FirstnameChanged extends SettingsEvent {
 class LastnameChanged extends SettingsEvent {
   final String lastname;
 
-  const LastnameChanged({@required this.lastname});
+  const LastnameChanged({required this.lastname});
 
   @override
   List<Object> get props => [lastname];
@@ -33,7 +33,7 @@ class LastnameChanged extends SettingsEvent {
 class EmailChanged extends SettingsEvent {
   final String email;
 
-  const EmailChanged({@required this.email});
+  const EmailChanged({required this.email});
 
   @override
   List<Object> get props => [email];
@@ -43,7 +43,7 @@ class EmailChanged extends SettingsEvent {
 class LanguageChanged extends SettingsEvent {
   final String language;
 
-  const LanguageChanged({@required this.language});
+  const LanguageChanged({required this.language});
 
   @override
   List<Object> get props => [language];
