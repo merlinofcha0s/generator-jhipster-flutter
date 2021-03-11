@@ -24,7 +24,7 @@ import 'package:<%= baseName %>/shared/models/entity_arguments.dart';
 import '<%= entityFileName %>_route.dart';
 
 class <%= entityClass %>ListScreen extends StatelessWidget {
-    <%= entityClass %>ListScreen({Key key}) : super(key: <%= entityClass %>Routes.listScreenKey);
+    <%= entityClass %>ListScreen({Key? key}) : super(key: <%= entityClass %>Routes.listScreenKey);
     final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
@@ -33,7 +33,7 @@ class <%= entityClass %>ListScreen extends StatelessWidget {
       listener: (context, state) {
         if(state.deleteStatus == <%= entityClass %>DeleteStatus.ok) {
           Navigator.of(context).pop();
-          scaffoldKey.currentState.showSnackBar(new SnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(new SnackBar(
               content: new Text(<%_ if(enableTranslation) { _%>S.of(context).pageEntities<%= entityClass %>DeleteOk<%_ } else { _%> '<%= entityClass %> deleted successfuly'  <%_ } _%>)
           ));
         }
@@ -85,7 +85,7 @@ class <%= entityClass %>ListScreen extends StatelessWidget {
                 color: Theme.of(context).primaryColor,
               ),
               <%_ for (let i = 0; i < 2 && i < fields.length ; i++) { _%>
-                <%_ if(i == 0) { _%>
+                <%_ if(i === 0) { _%>
                   title: Text('<%= fields[i].fieldNameHumanized %> : ${<%= entityInstance %>.<%= fields[i].fieldName %>.toString()}'),
                   <%_ } else { _%>
                   subtitle: Text('<%= fields[i].fieldNameHumanized %> : ${<%= entityInstance %>.<%= fields[i].fieldName %>.toString()}'),
@@ -93,7 +93,7 @@ class <%= entityClass %>ListScreen extends StatelessWidget {
               <%_ } _%>
               trailing: DropdownButton(
                   icon: Icon(Icons.more_vert),
-                  onChanged: (String newValue) {
+                  onChanged: (String? newValue) {
                     switch (newValue) {
                       case "Edit":
                         Navigator.pushNamed(
@@ -129,20 +129,20 @@ class <%= entityClass %>ListScreen extends StatelessWidget {
     );
   }
 
-  Widget deleteDialog(<%= entityClass %>Bloc <%= entityInstance %>Bloc, BuildContext context, int id) {
+  Widget deleteDialog(<%= entityClass %>Bloc <%= entityInstance %>Bloc, BuildContext context, int? id) {
     return BlocProvider<<%= entityClass %>Bloc>.value(
       value: <%= entityInstance %>Bloc,
       child: AlertDialog(
         title: new Text(<%_ if(enableTranslation) { _%>S.of(context).pageEntities<%= entityClass %>DeletePopupTitle<%_ } else { _%>'Delete <%= entityClassPlural %>'<%_ } _%>),
         content: new Text(<%_ if(enableTranslation) { _%>S.of(context).entityActionConfirmDelete<%_ } else { _%>'Are you sure?'<%_ } _%>),
         actions: <Widget>[
-          new FlatButton(
+          new TextButton(
             child: new Text(<%_ if(enableTranslation) { _%>S.of(context).entityActionConfirmDeleteYes<%_ } else { _%>'Yes'<%_ } _%>),
             onPressed: () {
               <%= entityInstance %>Bloc.add(Delete<%= entityClass %>ById(id: id));
             },
           ),
-          new FlatButton(
+          new TextButton(
             child: new Text(<%_ if(enableTranslation) { _%>S.of(context).entityActionConfirmDeleteNo<%_ } else { _%>'No'<%_ } _%>),
             onPressed: () {
               Navigator.of(context).pop();

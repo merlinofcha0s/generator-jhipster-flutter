@@ -9,7 +9,7 @@ class MainState extends Equatable {
   });
 
   MainState copyWith({
-    User currentUser,
+    User? currentUser,
   }) {
     return MainState(
       currentUser: currentUser ?? this.currentUser,

@@ -14,7 +14,7 @@ import 'bloc/login_models.dart';
 
 
 class LoginScreen extends StatelessWidget {
-  LoginScreen({Key key}) : super(key: <%= camelizedUpperFirstBaseName %>Keys.mainScreen);
+  LoginScreen({Key? key}) : super(key: <%= camelizedUpperFirstBaseName %>Keys.mainScreen);
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class LoginScreen extends StatelessWidget {
         builder: (context, state) {
           return TextFormField(
               initialValue: state.login.value,
-              onChanged: (value) { context.bloc<LoginBloc>().add(LoginChanged(login: value)); },
+              onChanged: (value) { context.read<LoginBloc>().add(LoginChanged(login: value)); },
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
                   labelText: <%_ if (enableTranslation) { _%> S.of(context).pageRegisterFormLogin <%_ } else { _%> 'Login' <%_ } _%>,
@@ -74,7 +74,7 @@ class LoginScreen extends StatelessWidget {
         builder: (context, state) {
           return TextFormField(
               initialValue: state.password.value,
-              onChanged: (value) { context.bloc<LoginBloc>().add(PasswordChanged(password: value)); },
+              onChanged: (value) { context.read<LoginBloc>().add(PasswordChanged(password: value)); },
               obscureText: true,
               decoration: InputDecoration(
                   labelText:<%_ if (enableTranslation) { _%> S.of(context).pageRegisterFormPassword <%_ } else { _%> 'Password' <%_ } _%>,
@@ -94,8 +94,8 @@ class LoginScreen extends StatelessWidget {
   }
 
   Widget register(BuildContext context) {
-    return RaisedButton(
-      color: Colors.red,
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(primary: Colors.red),
       child: Container(
           width: MediaQuery.of(context).size.width,
           height: 50,
@@ -116,7 +116,7 @@ class LoginScreen extends StatelessWidget {
               child: Center(
                 child: Text(
                   generateError(state, context),
-                  style: TextStyle(fontSize: Theme.of(context).textTheme.bodyText1.fontSize, color: Theme.of(context).errorColor),
+                  style: TextStyle(fontSize: Theme.of(context).textTheme.bodyText1!.fontSize, color: Theme.of(context).errorColor),
                   textAlign: TextAlign.center,
                 ),
               ));
@@ -127,7 +127,7 @@ class LoginScreen extends StatelessWidget {
     return BlocBuilder<LoginBloc, LoginState>(
         buildWhen: (previous, current) => previous.status != current.status,
         builder: (context, state) {
-          return RaisedButton(
+          return ElevatedButton(
             child: Container(
                 width: MediaQuery.of(context).size.width,
                 height: 50,
@@ -140,7 +140,7 @@ class LoginScreen extends StatelessWidget {
                       )
                     ),
             onPressed: state.status.isValidated
-                ? () => context.bloc<LoginBloc>().add(FormSubmitted()) : null,
+                ? () => context.read<LoginBloc>().add(FormSubmitted()) : null,
           );
         });
   }

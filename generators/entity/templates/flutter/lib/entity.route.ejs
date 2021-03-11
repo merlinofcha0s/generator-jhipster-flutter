@@ -44,14 +44,14 @@ class <%= entityClass %>Routes {
           child: <%= entityClass %>UpdateScreen());
     },
     edit: (context) {
-      EntityArguments arguments = ModalRoute.of(context).settings.arguments;
+      EntityArguments? arguments = ModalRoute.of(context)?.settings.arguments as EntityArguments;
       return BlocProvider<<%= entityClass %>Bloc>(
           create: (context) => <%= entityClass %>Bloc(<%= entityInstance %>Repository: <%= entityClass %>Repository())
             ..add(Load<%= entityClass %>ByIdForEdit(id: arguments.id)),
           child: <%= entityClass %>UpdateScreen());
     },
     view: (context) {
-      EntityArguments arguments = ModalRoute.of(context).settings.arguments;
+      EntityArguments? arguments = ModalRoute.of(context)?.settings.arguments as EntityArguments;
       return BlocProvider<<%= entityClass %>Bloc>(
           create: (context) => <%= entityClass %>Bloc(<%= entityInstance %>Repository: <%= entityClass %>Repository())
             ..add(Load<%= entityClass %>ByIdForView(id: arguments.id)),

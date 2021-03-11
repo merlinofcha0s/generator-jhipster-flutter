@@ -16,10 +16,10 @@ class LoginState extends Equatable {
   });
 
   LoginState copyWith({
-    LoginInput login,
-    PasswordInput password,
-    FormzStatus status,
-    String generalErrorKey
+    LoginInput? login,
+    PasswordInput? password,
+    FormzStatus? status,
+    String? generalErrorKey
   }) {
     return LoginState(
       login: login ?? this.login,

@@ -62,8 +62,8 @@ class SettingsScreen extends StatelessWidget {
             || current.action == SettingsAction.reloadForLanguage,
         builder: (context, state) {
           return TextFormField(
-              controller: context.bloc<SettingsBloc>().firstNameController,
-              onChanged: (value) { context.bloc<SettingsBloc>().add(FirstnameChanged(firstname: value)); },
+              controller: context.read<SettingsBloc>().firstNameController,
+              onChanged: (value) { context.read<SettingsBloc>().add(FirstnameChanged(firstname: value)); },
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
                   labelText: <%_ if (enableTranslation) { _%> S.of(context).pageSettingsFormFirstname <%_ } else { _%> 'Firstname' <%_ } _%>,
@@ -78,8 +78,8 @@ class SettingsScreen extends StatelessWidget {
             || current.action == SettingsAction.reloadForLanguage,
         builder: (context, state) {
           return TextFormField(
-              controller: context.bloc<SettingsBloc>().lastNameController,
-              onChanged: (value) { context.bloc<SettingsBloc>().add(LastnameChanged(lastname: value)); },
+              controller: context.read<SettingsBloc>().lastNameController,
+              onChanged: (value) { context.read<SettingsBloc>().add(LastnameChanged(lastname: value)); },
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
                   labelText: <%_ if (enableTranslation) { _%> S.of(context).pageSettingsFormLastname <%_ } else { _%> 'Lastname' <%_ } _%>,
@@ -94,8 +94,8 @@ class SettingsScreen extends StatelessWidget {
             || current.action == SettingsAction.reloadForLanguage,
         builder: (context, state) {
           return TextFormField(
-              controller: context.bloc<SettingsBloc>().emailController,
-              onChanged: (value) { context.bloc<SettingsBloc>().add(EmailChanged(email: value)); },
+              controller: context.read<SettingsBloc>().emailController,
+              onChanged: (value) { context.read<SettingsBloc>().add(EmailChanged(email: value)); },
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
                   labelText: <%_ if (enableTranslation) { _%> S.of(context).pageSettingsFormEmail <%_ } else { _%> 'Email' <%_ } _%>,
@@ -116,7 +116,7 @@ class SettingsScreen extends StatelessWidget {
                 Text(S.of(context).pageSettingsFormLanguages, style: Theme.of(context).textTheme.bodyText1,),
                 DropdownButton<String>(
                     value: state.language,
-                    onChanged: (value) { context.bloc<SettingsBloc>().add(LanguageChanged(language: value)); },
+                    onChanged: (value) { context.read<SettingsBloc>().add(LanguageChanged(language: value!)); },
                     items: createDropdownLanguageItems(Constants.languages)),
               ],
             ),
@@ -126,7 +126,7 @@ class SettingsScreen extends StatelessWidget {
 
   List<DropdownMenuItem<String>> createDropdownLanguageItems(Map<String, String> languages) {
     return languages.keys.map<DropdownMenuItem<String>>((String key) =>
-            DropdownMenuItem<String>(value: key, child: Text(languages[key])))
+            DropdownMenuItem<String>(value: key, child: Text(languages[key]!)))
         .toList();
   }
 <%_ } _%>
@@ -135,7 +135,7 @@ class SettingsScreen extends StatelessWidget {
     return BlocBuilder<SettingsBloc, SettingsState>(
         buildWhen: (previous, current) => previous.formStatus != current.formStatus,
         builder: (context, state) {
-        return RaisedButton(
+        return ElevatedButton(
           child: Container(
               width: MediaQuery.of(context).size.width,
               child: Center(
@@ -145,7 +145,7 @@ class SettingsScreen extends StatelessWidget {
                   child: Text(<%_ if (enableTranslation) { _%> S.of(context).pageSettingsFormSave.toUpperCase() <%_ } else { _%> 'SAVE' <%_ } _%>),
                 ),
               )),
-          onPressed: state.formStatus.isValidated ? () => context.bloc<SettingsBloc>().add(FormSubmitted()) : null,
+          onPressed: state.formStatus.isValidated ? () => context.read<SettingsBloc>().add(FormSubmitted()) : null,
         );
       }
     );
@@ -165,7 +165,7 @@ class SettingsScreen extends StatelessWidget {
 
   Widget generateNotificationText(SettingsState state, BuildContext context) {
     String notificationTranslated = '';
-    MaterialColor notificationColors;
+    Color? notificationColors;
     if(state.generalNotificationKey.compareTo(SettingsBloc.successKey) == 0) {
       notificationTranslated = <%_ if (enableTranslation) { _%> S.of(context).pageSettingsSave <%_ } else { _%> 'Settings saved !' <%_ } _%>;
       notificationColors = Theme.of(context).primaryColor;

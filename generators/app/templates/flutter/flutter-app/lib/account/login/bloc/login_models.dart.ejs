@@ -16,7 +16,7 @@ class LoginInput extends FormzInput<String, LoginValidationError> {
   static final int numberMin = 3;
 
   @override
-  LoginValidationError validator(String value) {
+  LoginValidationError? validator(String value) {
     return value.length >= 3 ? null : LoginValidationError.invalid;
   }
 }
@@ -35,7 +35,7 @@ class PasswordInput extends FormzInput<String, PasswordValidationError> {
   static final _passwordRegex = RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$');
 
   @override
-  PasswordValidationError validator(String value) {
+  PasswordValidationError? validator(String value) {
     return _passwordRegex.hasMatch(value) ? null
         : PasswordValidationError.invalid;
   }

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:formz/formz.dart';
 import 'package:<%= baseName %>/shared/repository/account_repository.dart';
 import 'package:<%= baseName %>/account/register/bloc/register_models.dart';
@@ -14,7 +13,7 @@ part 'register_state.dart';
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   final AccountRepository _accountRepository;
 
-  RegisterBloc({@required AccountRepository accountRepository}) : assert(accountRepository != null),
+  RegisterBloc({required AccountRepository accountRepository}) :
         _accountRepository = accountRepository, super(const RegisterState());
 
   static final String passwordNotIdenticalKey = 'error.passwordnotidentical';
@@ -48,8 +47,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       yield state.copyWith(status: FormzStatus.submissionInProgress);
       User newUser = new User(state.login.value, state.email.value, state.password.value, 'en', null, null);
       try {
-        String result = await _accountRepository.register(newUser);
-        if (result.compareTo(HttpUtils.successResult) != 0) {
+        String? result = await _accountRepository.register(newUser);
+        if (result != null && result.compareTo(HttpUtils.successResult) != 0) {
           yield state.copyWith(status: FormzStatus.submissionFailure, generalErrorKey: result);
         } else {
           yield state.copyWith(status: FormzStatus.submissionSuccess);

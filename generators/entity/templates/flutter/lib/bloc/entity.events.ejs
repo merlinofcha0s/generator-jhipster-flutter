@@ -26,9 +26,9 @@ class Init<%= entityClass %>List extends <%= entityClass %>Event {}
 <%_ fields.forEach(field => { _%>
 class <%= field.fieldNameCapitalized %>Changed extends <%= entityClass %>Event {
   final <%= field.fieldType %> <%= field.fieldName %>;
-  
-  const <%= field.fieldNameCapitalized %>Changed({@required this.<%= field.fieldName %>});
-  
+
+  const <%= field.fieldNameCapitalized %>Changed({required this.<%= field.fieldName %>});
+
   @override
   List<Object> get props => [<%= field.fieldName %>];
 }
@@ -37,28 +37,28 @@ class <%= field.fieldNameCapitalized %>Changed extends <%= entityClass %>Event {
 class <%= entityClass %>FormSubmitted extends <%= entityClass %>Event {}
 
 class Load<%= entityClass %>ByIdForEdit extends <%= entityClass %>Event {
-  final int id;
+  final int? id;
 
-  const Load<%= entityClass %>ByIdForEdit({@required this.id});
+  const Load<%= entityClass %>ByIdForEdit({required this.id});
 
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [id as int];
 }
 
 class Delete<%= entityClass %>ById extends <%= entityClass %>Event {
-  final int id;
+  final int? id;
 
-  const Delete<%= entityClass %>ById({@required this.id});
+  const Delete<%= entityClass %>ById({required this.id});
 
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [id as int];
 }
 
 class Load<%= entityClass %>ByIdForView extends <%= entityClass %>Event {
-  final int id;
+  final int? id;
 
-  const Load<%= entityClass %>ByIdForView({@required this.id});
+  const Load<%= entityClass %>ByIdForView({required this.id});
 
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [id as int];
 }

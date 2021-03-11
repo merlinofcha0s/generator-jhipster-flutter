@@ -23,9 +23,9 @@ class HttpUtils {
     return utf8.decode(toEncode.runes.toList());
   }
 
-  static Future<Object> headers() async {
+  static Future<Map<String, String>> headers() async {
     FlutterSecureStorage storage = new FlutterSecureStorage();
-    String jwt = await storage.read(key: HttpUtils.keyForJWTToken);
+    String? jwt = await storage.read(key: HttpUtils.keyForJWTToken);
     if (jwt != null) {
       return {
         'Accept': 'application/json',
@@ -40,9 +40,9 @@ class HttpUtils {
   static Future<Response> postRequest<T>(String endpoint, T body) async {
     var headers = await HttpUtils.headers();
     final String json = JsonMapper.serialize(body, SerializationOptions(indent: ''));
-    Response response;
+    Response? response;
     try {
-      response = await http.post('${Constants.api}$endpoint', headers: headers, body: json,
+      response = await http.post(Uri.parse('${Constants.api}$endpoint'), headers: headers, body: json,
           encoding: Encoding.getByName('utf-8')).timeout(Duration(seconds: timeout));
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -55,7 +55,7 @@ class HttpUtils {
   static Future<Response> getRequest(String endpoint) async {
     var headers = await HttpUtils.headers();
     try {
-      return await http.get('${Constants.api}$endpoint', headers: headers)
+      return await http.get(Uri.parse('${Constants.api}$endpoint'), headers: headers)
           .timeout(Duration(seconds: timeout));
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -69,7 +69,7 @@ class HttpUtils {
     final String json = JsonMapper.serialize(body, SerializationOptions(indent: ''));
     Response response;
     try {
-      response = await http.put('${Constants.api}$endpoint', headers: headers, body: json,
+      response = await http.put(Uri.parse('${Constants.api}$endpoint'), headers: headers, body: json,
           encoding: Encoding.getByName('utf-8')).timeout(Duration(seconds: timeout));
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -82,7 +82,7 @@ class HttpUtils {
   static Future<Response> deleteRequest(String endpoint) async {
     var headers = await HttpUtils.headers();
     try {
-      return await http.delete('${Constants.api}$endpoint', headers: headers)
+      return await http.delete(Uri.parse('${Constants.api}$endpoint'), headers: headers)
           .timeout(Duration(seconds: timeout));
     } on SocketException {
       throw FetchDataException('No Internet connection');

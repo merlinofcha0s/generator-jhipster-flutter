@@ -29,7 +29,7 @@ import 'package:<%= baseName %>/shared/widgets/loading_indicator_widget.dart';
 import '<%= entityFileName %>_route.dart';
 
 class <%= entityClass %>ViewScreen extends StatelessWidget {
-  <%= entityClass %>ViewScreen({Key key}) : super(key: <%= entityClass %>Routes.createScreenKey);
+  <%= entityClass %>ViewScreen({Key? key}) : super(key: <%= entityClass %>Routes.createScreenKey);
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +73,7 @@ class <%= entityClass %>ViewScreen extends StatelessWidget {
             Text('<%= context.idField.fieldNameHumanized %> : ' + <%= entityInstance %>.<%= context.idField.fieldName %>.toString(), style: Theme.of(context).textTheme.bodyText1,),
             <%_ fields.forEach(field => { _%>
               <%_ if(field.fieldType === 'DateTime') { _%>
-              Text('<%= field.fieldNameHumanized %> : ' + (<%= entityInstance %>?.<%= field.fieldName %> != null ? DateFormat.yMMMMd(<%_ if(enableTranslation) { _%>S.of(context).locale<%_ } else { _%>'en'<%_ } _%>).format(<%= entityInstance %>.<%= field.fieldName %>) : ''), style: Theme.of(context).textTheme.bodyText1,),
+              Text('<%= field.fieldNameHumanized %> : ' + (<%= entityInstance %>.<%= field.fieldName %> != null ? DateFormat.yMMMMd(<%_ if(enableTranslation) { _%>S.of(context).locale<%_ } else { _%>'en'<%_ } _%>).format(<%= entityInstance %>.<%= field.fieldName %>!) : ''), style: Theme.of(context).textTheme.bodyText1,),
               <%_ } else if (field.fieldType === 'int' || field.fieldType === 'bool') {_%>
                 Text('<%= field.fieldNameHumanized %> : ' + <%= entityInstance %>.<%= field.fieldName %>.toString(), style: Theme.of(context).textTheme.bodyText1,),
               <%_ } else {_%>

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 <%_ if (enableTranslation) { _%>
 import 'package:<%= baseName %>/generated/l10n.dart';
@@ -16,7 +15,7 @@ part 'main_state.dart';
 class MainBloc extends Bloc<MainEvent, MainState> {
   final AccountRepository _accountRepository;
 
-  MainBloc({@required AccountRepository accountRepository}) : assert(accountRepository != null),
+  MainBloc({required AccountRepository accountRepository}) :
         _accountRepository = accountRepository, super(const MainState());
 
   @override
@@ -35,8 +34,8 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     User currentUser = await _accountRepository.getIdentity();
 
 <%_ if (enableTranslation) { _%>
-    if(currentUser.langKey.compareTo(S.current.locale) != 0) {
-      S.load(Locale(currentUser.langKey));
+    if(currentUser.langKey!.compareTo(S.current.locale) != 0) {
+      S.load(Locale(currentUser.langKey!));
     }
 <%_ } _%>
 

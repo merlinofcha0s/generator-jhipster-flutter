@@ -17,21 +17,21 @@ import 'package:<%= baseName %>/entities/<%= entityFileName %>/<%= entityFileNam
 enum <%= field.fieldNameCapitalized %>ValidationError { invalid }
   <%_ if(field.fieldType === 'DateTime') { _%>
 class <%= field.fieldNameCapitalized %>Input extends FormzInput<<%= field.fieldType %>, <%= field.fieldNameCapitalized %>ValidationError> {
-  <%= field.fieldNameCapitalized %>Input.pure() : super.pure(<%= field.fieldType %>.now());
-  <%= field.fieldNameCapitalized %>Input.dirty([<%= field.fieldType %> value]) : super.dirty(value);
+  const <%= field.fieldNameCapitalized %>Input.pure() : super.pure(null);
+  const <%= field.fieldNameCapitalized %>Input.dirty(<%= field.fieldType %> value) : super.dirty(value);
 
   @override
-  <%= field.fieldNameCapitalized %>ValidationError validator(<%= field.fieldType %> value) {
+  <%= field.fieldNameCapitalized %>ValidationError? validator(<%= field.fieldType %> value) {
     return null;
   }
 }
   <%_ } else if(field.fieldIsEnum) { _%>
 class <%= field.fieldNameCapitalized %>Input extends FormzInput<<%= field.fieldType %>, <%= field.fieldNameCapitalized %>ValidationError> {
   const <%= field.fieldNameCapitalized %>Input.pure() : super.pure(<%= field.fieldType %>.<%= field.fieldValues.split(',')[0] %>);
-  const <%= field.fieldNameCapitalized %>Input.dirty([<%= field.fieldType %> value]) : super.dirty(value);
+  const <%= field.fieldNameCapitalized %>Input.dirty(<%= field.fieldType %> value) : super.dirty(value);
 
   @override
-  <%= field.fieldNameCapitalized %>ValidationError validator(<%= field.fieldType %> value) {
+  <%= field.fieldNameCapitalized %>ValidationError? validator(<%= field.fieldType %> value) {
     return null;
   }
 }
@@ -41,7 +41,7 @@ class <%= field.fieldNameCapitalized %>Input extends FormzInput<<%= field.fieldT
   const <%= field.fieldNameCapitalized %>Input.dirty([<%= field.fieldType %> value = <%- field.defaultValue %>]) : super.dirty(value);
 
   @override
-  <%= field.fieldNameCapitalized %>ValidationError validator(<%= field.fieldType %> value) {
+  <%= field.fieldNameCapitalized %>ValidationError? validator(<%= field.fieldType %> value) {
     return null;
   }
 }

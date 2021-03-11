@@ -15,7 +15,7 @@ import 'package:dart_json_mapper/dart_json_mapper.dart';
 
 class <%= entityClass %>Repository {
     <%= entityClass %>Repository();
-  
+
   static final String uriEndpoint = '/<%= entityClassKebabCasePlural %>';
 
   Future<List<<%= entityClass %>>> getAll<%= entityClassPlural %>() async {
@@ -23,7 +23,7 @@ class <%= entityClass %>Repository {
     return JsonMapper.deserialize<List<<%= entityClass %>>>(all<%= entityClassPlural %>Request.body);
   }
 
-  Future<<%= entityClass %>> get<%= entityClass %>(int id) async {
+  Future<<%= entityClass %>> get<%= entityClass %>(int? id) async {
     final <%= entityInstance %>Request = await HttpUtils.getRequest('$uriEndpoint/$id');
     return JsonMapper.deserialize<<%= entityClass %>>(<%= entityInstance %>Request.body);
   }

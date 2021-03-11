@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:formz/formz.dart';
 import 'package:<%= baseName %>/account/settings/bloc/settings_models.dart';
@@ -22,7 +21,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
 
-  SettingsBloc({@required AccountRepository accountRepository}) : assert(accountRepository != null),
+  SettingsBloc({required AccountRepository accountRepository}) :
         _accountRepository = accountRepository, super(const SettingsState());
 
   static final String loginExistKey = 'error.userexists';
@@ -42,7 +41,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       yield* onLastnameChange(event);
     } else if (event is EmailChanged) {
       yield* onEmailChange(event);
-    } <%_ if (enableTranslation) { _%> 
+    } <%_ if (enableTranslation) { _%>
       else if (event is LanguageChanged) {
       yield* onLanguageChange(event);
     } <%_ } _%>
@@ -58,19 +57,19 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       yield state.copyWith(status: FormzStatus.submissionInProgress);
       SettingsAction action = SettingsAction.none;
       try {
-        <%_ if (enableTranslation) { _%> 
-        if(state.language.compareTo(state.currentUser.langKey) != 0) {
+        <%_ if (enableTranslation) { _%>
+        if(state.language.compareTo(state.currentUser.langKey!) != 0) {
           S.load(Locale(state.language));
           action = SettingsAction.reloadForLanguage;
         }
-        <%_ } _%> 
+        <%_ } _%>
 
         User newCurrentUser = User(state.currentUser.login, state.email.value,
             state.currentUser.password, <%_ if (enableTranslation) { _%> state.language <%_ } else { _%> null <%_ } _%> , state.firstname.value, state.lastname.value);
 
-        String result = await _accountRepository.saveAccount(newCurrentUser);
+        String? result = await _accountRepository.saveAccount(newCurrentUser);
 
-        if (result.compareTo(HttpUtils.successResult) != 0) {
+        if (result != null && result.compareTo(HttpUtils.successResult) != 0) {
           yield state.copyWith(status: FormzStatus.submissionFailure,
               generalNotificationKey: result);
         } else {
@@ -120,23 +119,27 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
   Stream<SettingsState> onLoadCurrentUser() async* {
     User currentUser = await _accountRepository.getIdentity();
-    final firstname = FirstnameInput.dirty(currentUser?.firstName != null ? currentUser.firstName: '');
-    final lastname = LastnameInput.dirty(currentUser?.lastName != null ? currentUser.lastName: '');
-    final email = EmailInput.dirty(currentUser?.email != null ? currentUser.email: '');
+    String firstName = (currentUser.firstName != null ? currentUser.firstName: '')!;
+    String lastName = (currentUser.lastName != null ? currentUser.lastName: '')!;
+    String email = (currentUser.email != null ? currentUser.email: '')!;
+
+    final firstNameInput = FirstnameInput.dirty(firstName);
+    final lastNameInput = LastnameInput.dirty(lastName);
+    final emailInput = EmailInput.dirty(email);
 
     yield state.copyWith(
-        firstname: firstname,
-        lastname: lastname,
-        email: email,
+        firstname: firstNameInput,
+        lastname: lastNameInput,
+        email: emailInput,
         <%_ if (enableTranslation) { _%>
         language: currentUser.langKey,
         <%_ } _%>
         currentUser: currentUser,
-        status: Formz.validate([firstname, lastname, email]));
+        status: Formz.validate([firstNameInput, lastNameInput, emailInput]));
 
-    emailController.text = currentUser.email;
-    lastNameController.text = currentUser.lastName;
-    firstNameController.text = currentUser.firstName;
+    emailController.text = email;
+    lastNameController.text = lastName;
+    firstNameController.text = firstName;
   }
 
   @override

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:formz/formz.dart';
 import 'package:equatable/equatable.dart';
@@ -15,7 +14,7 @@ part 'login_state.dart';
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final LoginRepository _loginRepository;
 
-  LoginBloc({@required LoginRepository loginRepository}) : assert(loginRepository != null),
+  LoginBloc({required LoginRepository loginRepository}) :
         _loginRepository = loginRepository, super(const LoginState());
 
   @override
