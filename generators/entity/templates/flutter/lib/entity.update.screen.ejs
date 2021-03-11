@@ -31,7 +31,7 @@ import 'package:<%= baseName %>/entities/<%= entityFileName %>/<%= entityFileNam
 import '<%= entityFileName %>_route.dart';
 
 class <%= entityClass %>UpdateScreen extends StatelessWidget {
-  <%= entityClass %>UpdateScreen({Key key}) : super(key: <%= entityClass %>Routes.editScreenKey);
+  <%= entityClass %>UpdateScreen({Key? key}) : super(key: <%= entityClass %>Routes.editScreenKey);
 
   @override
   Widget build(BuildContext context) {
@@ -80,8 +80,8 @@ class <%= entityClass %>UpdateScreen extends StatelessWidget {
             buildWhen: (previous, current) => previous.<%= field.fieldName %> != current.<%= field.fieldName %>,
             builder: (context, state) {
               return DateTimeField(
-                controller: context.bloc<<%= entityClass %>Bloc>().<%= field.fieldName %>Controller,
-                onChanged: (value) { context.bloc<<%= entityClass %>Bloc>().add(<%= field.fieldNameCapitalized %>Changed(<%= field.fieldName %>: value)); },
+                controller: context.read<<%= entityClass %>Bloc>().<%= field.fieldName %>Controller,
+                onChanged: (value) { context.read<<%= entityClass %>Bloc>().add(<%= field.fieldNameCapitalized %>Changed(<%= field.fieldName %>: value!)); },
                 format: DateFormat.yMMMMd(<%_ if(enableTranslation) { _%>S.of(context).locale<%_ } else { _%>'en'<%_ } _%>),
                 keyboardType: TextInputType.datetime,
             decoration: InputDecoration(labelText: <%_ if(enableTranslation) { _%>S.of(context).pageEntities<%= entityClass %><%= field.fieldNameCapitalized %>Field<%_ } else { _%>'<%= field.fieldName %>'<%_ } _%>,),
@@ -110,7 +110,7 @@ class <%= entityClass %>UpdateScreen extends StatelessWidget {
                     Text(<%_ if(enableTranslation) { _%>S.of(context).pageEntities<%= entityClass %><%= field.fieldNameCapitalized %>Field<%_ } else { _%>'<%= field.fieldName %>'<%_ } _%>, style: Theme.of(context).textTheme.bodyText1,),
                     DropdownButton<<%= field.fieldType %>>(
                         value: state.<%= field.fieldName %>.value,
-                        onChanged: (value) { context.bloc<<%= entityClass %>Bloc>().add(<%= field.fieldNameCapitalized %>Changed(<%= field.fieldName %>: value)); },
+                        onChanged: (value) { context.read<<%= entityClass %>Bloc>().add(<%= field.fieldNameCapitalized %>Changed(<%= field.fieldName %>: value!)); },
                         items: createDropdown<%= field.fieldType %>Items(<%= field.fieldType %>.values)),
                   ],
                 ),
@@ -143,8 +143,8 @@ class <%= entityClass %>UpdateScreen extends StatelessWidget {
             buildWhen: (previous, current) => previous.<%= field.fieldName %> != current.<%= field.fieldName %>,
             builder: (context, state) {
               return TextFormField(
-                  controller: context.bloc<<%= entityClass %>Bloc>().<%= field.fieldName %>Controller,
-                  onChanged: (value) { context.bloc<<%= entityClass %>Bloc>()
+                  controller: context.read<<%= entityClass %>Bloc>().<%= field.fieldName %>Controller,
+                  onChanged: (value) { context.read<<%= entityClass %>Bloc>()
                     .add(<%= field.fieldNameCapitalized %>Changed(<%= field.fieldName %>: <%_ if(field.fieldType === 'int') { _%> int.parse(value) <%_ } else { _%> value <%_ } _%>)); },
                   keyboardType:  <%_ if(field.fieldType === 'int') { _%> TextInputType.number,<%_ } else { _%> TextInputType.text,<%_ } _%>
                   decoration: InputDecoration(
@@ -152,20 +152,20 @@ class <%= entityClass %>UpdateScreen extends StatelessWidget {
             }
         );
       }
-    <%_ } _%> 
+    <%_ } _%>
   <%_ }); _%>
 
   <%_ fields.forEach(field => { _%>
     <%_ if(field.fieldIsEnum) { _%>
       List<DropdownMenuItem<<%= field.fieldType %>>> createDropdown<%= field.fieldType %>Items(List<<%= field.fieldType %>> <%= field.fieldName %>s) {
         List<DropdownMenuItem<<%= field.fieldType %>>> <%= field.fieldName %>DropDown = [];
-    
+
         for (<%= field.fieldType %> <%= field.fieldName %> in <%= field.fieldName %>s) {
           DropdownMenuItem<<%= field.fieldType %>> dropdown = DropdownMenuItem<<%= field.fieldType %>>(
               value: <%= field.fieldName %>, child: Text(<%= field.fieldName %>.toString()));
               <%= field.fieldName %>DropDown.add(dropdown);
         }
-    
+
         return <%= field.fieldName %>DropDown;
       }
     <%_ } _%>
@@ -185,7 +185,7 @@ class <%= entityClass %>UpdateScreen extends StatelessWidget {
 
   Widget generateNotificationText(<%= entityClass %>State state, BuildContext context) {
     String notificationTranslated = '';
-    MaterialColor notificationColors;
+    Color? notificationColors;
 
     if (state.generalNotificationKey.toString().compareTo(HttpUtils.errorServerKey) == 0) {
       notificationTranslated = <%_ if(enableTranslation) { _%>S.of(context).genericErrorServer<%_ } else { _%>'Something wrong when calling the server, please try again'<%_ } _%>;
@@ -198,7 +198,7 @@ class <%= entityClass %>UpdateScreen extends StatelessWidget {
     return Text(
       notificationTranslated,
       textAlign: TextAlign.center,
-      style: TextStyle(fontSize: Theme.of(context).textTheme.bodyText1.fontSize,
+      style: TextStyle(fontSize: Theme.of(context).textTheme.bodyText1!.fontSize,
           color: notificationColors),
     );
   }
