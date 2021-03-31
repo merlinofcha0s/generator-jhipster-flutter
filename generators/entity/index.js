@@ -43,7 +43,7 @@ module.exports = class extends BaseGenerator {
                 if (this.options.backendPath) {
                     this.configRootPath = this.options.backendPath;
                     this.context.backendPath = this.options.backendPath;
-                    this.jhipsterAppConfig = this.getAllJhipsterConfig();
+                    this.jhipsterAppConfig = this.getAllJhipsterConfig(this, true);
                 }
             },
             checkFlutterDirectory() {
@@ -109,7 +109,7 @@ module.exports = class extends BaseGenerator {
                 this.context.rootDir = this.contextRoot;
                 this.configRootPath = context.backendPath;
 
-                this.jhipsterAppConfig = this.getAllJhipsterConfig();
+                this.jhipsterAppConfig = this.getAllJhipsterConfig(this, true);
 
                 const rawdata = fs.readFileSync(path.normalize(`${context.backendPath}/.yo-rc.json`));
                 const yoRC = JSON.parse(rawdata);
