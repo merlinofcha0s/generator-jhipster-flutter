@@ -49,8 +49,8 @@ More informations [here](https://blog.herofactory.dev/using-the-flutter-entity-g
 
 As this is a [JHipster](https://www.jhipster.tech/) module, we expect you have JHipster and its related tools already installed:
 
-- [Installing JHipster (6.x.x)](https://www.jhipster.tech/installation/)
-- [Installing Flutter SDK (1.22.x)](https://flutter.dev/docs/get-started/install)
+- [Installing JHipster (6.x.x or 7.x.x)](https://www.jhipster.tech/installation/)
+- [Installing Flutter SDK (2.0.x)](https://flutter.dev/docs/get-started/install)
 - Generating your app with 
 
 ```bash
