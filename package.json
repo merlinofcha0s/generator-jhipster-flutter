@@ -1,6 +1,6 @@
 {
   "name": "generator-jhipster-flutter-merlin",
-  "version": "2.0.0-0",
+  "version": "2.0.0-3",
   "description": "A Flutter module for JHipster. It will use Flutter as the frontend",
   "keywords": [
     "yeoman-generator",
@@ -22,16 +22,16 @@
   },
   "dependencies": {
     "chalk": "4.1.0",
-    "eslint-config-airbnb": "18.2.1",
-    "generator-jhipster": ">=6.0.0",
-    "jhipster-core": "7.3.4",
+    "generator-jhipster": ">=6.0.0 <7.0.0",
     "lodash": "4.17.21",
     "mkdirp": "1.0.4",
     "pluralize": "8.0.0",
     "prettier": "2.2.1",
     "randexp": "0.5.3",
     "semver": "7.3.4",
-    "shelljs": "0.8.4"
+    "shelljs": "0.8.4",
+    "yeoman-generator": "5.2.0",
+    "yeoman-environment": "^3.2.0"
   },
   "devDependencies": {
     "chai": "4.3.3",
