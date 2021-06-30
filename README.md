@@ -9,7 +9,7 @@ Generate your Flutter mobile App (Android / iOS) for JHipster
 
 This is a [JHipster](https://www.jhipster.tech/) module.
 
-Get started and (Full not yet) documentation on my blog [here](https://blog.herofactory.dev/get-started-with-flutter-jhipster-generator/)
+Get started and (Full not yet) documentation on my blog [here](https://cyril-casaucau.medium.com/get-started-with-the-flutter-generator-for-jhipster-11ed2b1f038d)
 
 # What's inside
 
@@ -43,7 +43,7 @@ Generate your entity from your jhipster project
 - One by one
 - All your entities
 
-More informations [here](https://blog.herofactory.dev/using-the-flutter-entity-generator-jhipster/)
+More informations [here](https://cyril-casaucau.medium.com/using-the-flutter-entity-generator-for-jhipster-8b69579f35a2)
 
 # Prerequisites
 
