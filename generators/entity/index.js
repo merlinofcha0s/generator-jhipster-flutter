@@ -113,11 +113,11 @@ module.exports = class extends BaseGenerator {
 
                 const rawdata = fs.readFileSync(path.normalize(`${context.backendPath}/.yo-rc.json`));
                 const yoRC = JSON.parse(rawdata);
-                this.context.baseName = yoRC['generator-jhipster-flutter-merlin'].promptValues.baseName;
+                this.context.baseName = yoRC['generator-jhipster'].baseName;
                 this.context.camelizedBaseName = _.camelCase(this.context.baseName);
                 this.context.camelizedUpperFirstBaseName = _.upperFirst(this.context.camelizedBaseName);
-                this.context.packageName = yoRC['generator-jhipster-flutter-merlin'].promptValues.packageName;
-                this.context.enableTranslation = yoRC['generator-jhipster-flutter-merlin'].promptValues.enableTranslation;
+                this.context.packageName = yoRC['generator-jhipster'].packageName;
+                this.context.enableTranslation = yoRC['generator-jhipster'].enableTranslation;
 
                 if (context.backendPath) {
                     this.log(chalk.green('\nFound the entity folder configuration file, entity can be automatically generated!\n'));
