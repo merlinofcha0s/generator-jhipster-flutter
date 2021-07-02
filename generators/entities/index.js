@@ -17,7 +17,7 @@ module.exports = class extends BaseGenerator {
             },
             readConfig() {
                 try {
-                    this.jhipsterAppConfig = this.getAllJhipsterConfig();
+                    this.jhipsterAppConfig = this.getAllJhipsterConfig(this, true);
                     if (!this.jhipsterAppConfig.packageName) {
                         this.context.searchAutoBackendFolder = false;
                         this.warning('No JHipster project detected !');
@@ -102,7 +102,7 @@ module.exports = class extends BaseGenerator {
                 this.context.rootDir = this.contextRoot;
                 this.configRootPath = context.backendPath;
 
-                this.jhipsterAppConfig = this.getAllJhipsterConfig();
+                this.jhipsterAppConfig = this.getAllJhipsterConfig(this, true);
 
                 const rawdata = fs.readFileSync(`${this.context.backendPath}/.yo-rc.json`);
                 const yoRc = JSON.parse(rawdata);
